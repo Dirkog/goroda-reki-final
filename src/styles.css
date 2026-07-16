@@ -5,18 +5,18 @@
    ========================================================= */
 
 :root {
-  --bg: #eef6fb;
+  --bg: #f4f7f8;
   --surface: #ffffff;
-  --surface-2: #e0eef7;
-  --ink: #0d2436;
-  --muted: #56707f;
-  --primary: #0e86ab;
-  --primary-soft: #0aa0c4;
-  --accent: #ff7a54;
-  --accent-soft: #ffd1a3;
-  --aqua: #34c0b8;
-  --line: rgba(13, 36, 54, 0.1);
-  --line-strong: rgba(13, 36, 54, 0.18);
+  --surface-2: #eaf0f1;
+  --ink: #14262e;
+  --muted: #5c6f75;
+  --primary: #14707f;
+  --primary-soft: #1a8595;
+  --accent: #d98453;
+  --accent-soft: #e9c39f;
+  --aqua: #2f9aa0;
+  --line: rgba(20, 38, 46, 0.09);
+  --line-strong: rgba(20, 38, 46, 0.16);
   --radius: 28px;
   --radius-sm: 18px;
   --shadow-sm: 0 2px 14px rgba(14, 76, 110, 0.08);
@@ -38,8 +38,7 @@ body {
   margin: 0;
   overflow-x: hidden;
   background:
-    radial-gradient(1200px 600px at 15% -5%, rgba(52, 192, 184, 0.16), transparent 60%),
-    radial-gradient(1100px 620px at 100% 0%, rgba(14, 134, 171, 0.14), transparent 55%),
+    radial-gradient(1100px 560px at 20% -8%, rgba(47, 154, 160, 0.06), transparent 62%),
     var(--bg);
   background-attachment: fixed;
 }
@@ -87,11 +86,11 @@ p { margin: 0; line-height: 1.6; }
 .btn:hover { transform: translateY(-2px); }
 
 .btn.light {
-  background: linear-gradient(135deg, var(--primary), var(--aqua));
+  background: var(--primary);
   color: #fff;
-  box-shadow: 0 10px 26px rgba(14, 134, 171, 0.32);
+  box-shadow: 0 6px 18px rgba(20, 112, 127, 0.22);
 }
-.btn.light:hover { box-shadow: 0 16px 38px rgba(14, 134, 171, 0.42); }
+.btn.light:hover { background: var(--primary-soft); box-shadow: 0 10px 26px rgba(20, 112, 127, 0.28); }
 
 .btn.glass {
   background: rgba(255, 255, 255, 0.12);
@@ -179,12 +178,12 @@ p { margin: 0; line-height: 1.6; }
   padding: 12px 22px;
   font-weight: 600;
   font-size: 14px;
-  background: linear-gradient(135deg, var(--accent), #ff9a6b);
+  background: var(--accent);
   color: #fff;
-  box-shadow: 0 8px 20px rgba(255, 122, 84, 0.34);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 5px 14px rgba(217, 132, 83, 0.24);
+  transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
 }
-.header-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(255, 122, 84, 0.46); }
+.header-cta:hover { transform: translateY(-2px); background: #c9743f; box-shadow: 0 9px 22px rgba(217, 132, 83, 0.3); }
 
 .btn.ghost {
   background: transparent;
@@ -315,7 +314,7 @@ p { margin: 0; line-height: 1.6; }
   z-index: 0;
   overflow: hidden;
   border-radius: 0 0 44px 44px;
-  background: linear-gradient(160deg, #0e86ab, #34c0b8);
+  background: linear-gradient(160deg, #14707f, #2f9aa0);
 }
 .hero-photo-fallback,
 .flight-video {
