@@ -621,6 +621,29 @@ p { margin: 0; line-height: 1.6; }
 .travel-info-block b { font-size: 17px; font-family: "Inter", system-ui, sans-serif; font-weight: 600; }
 .travel-info-block span { color: var(--muted); font-size: 15px; }
 
+.lead-block { max-width: 64ch; margin: 22px 0 8px; }
+.lead-block p { color: var(--muted); font-size: 18px; }
+.lead-block p + p { margin-top: 16px; }
+
+.page-cta {
+  margin-top: 72px;
+  padding: 52px 44px;
+  border-radius: var(--radius);
+  background: linear-gradient(150deg, var(--primary), var(--aqua) 92%);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+}
+.page-cta .page-cta-copy { min-width: 260px; flex: 1; }
+.page-cta h2 { font-size: clamp(24px, 3vw, 34px); max-width: 24ch; }
+.page-cta p { color: rgba(255, 255, 255, 0.88); margin-top: 12px; max-width: 52ch; font-size: 16px; }
+.page-cta .btn.glass { background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.45); color: #fff; flex-shrink: 0; }
+.page-cta .btn.glass:hover { background: rgba(255, 255, 255, 0.28); }
+
 /* =========================================================
    PROCESS
    ========================================================= */

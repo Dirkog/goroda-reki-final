@@ -10,7 +10,33 @@ export default function Olga({ setPage }) {
         <blockquote>«Хороший тур — это когда детали не мешают отдыху»</blockquote>
         <article className="editorial-card accent"><b>11 экспертов</b><span>Семейный отдых, индивидуальные маршруты, круизы, события и корпоративные выезды.</span></article>
       </div>
-      <button className="btn light" onClick={() => setPage('process')}>Как оформляется тур</button>
+      <section className="travel-info-block">
+        <h2>Направления, за которые отвечает команда</h2>
+        <div>
+          <article><b>Семейный отдых</b><span>Пляжные направления с понятной логистикой, отелями для детей и удобными перелётами.</span></article>
+          <article><b>Индивидуальные маршруты</b><span>Авторские поездки под ваш темп: города, переезды, гастрономия и впечатления.</span></article>
+          <article><b>Круизы и события</b><span>Речные и морские круизы, концерты, фестивали и выезды под конкретную дату.</span></article>
+          <article><b>Корпоративные выезды</b><span>Поездки для команд, клиентов и партнёров с деловой частью и отдыхом.</span></article>
+        </div>
+      </section>
+
+      <section className="travel-info-block">
+        <h2>Как мы работаем</h2>
+        <div>
+          <article><b>11 менеджеров</b><span>Каждая отвечает за свои направления и форматы — вы работаете со специалистом.</span></article>
+          <article><b>Свой опыт поездок</b><span>Команда сама часто путешествует, поэтому советует то, что проверено лично.</span></article>
+          <article><b>География без границ</b><span>Туристы из городов России и из-за рубежа — маршруты на регулярных рейсах.</span></article>
+          <article><b>Личный контакт</b><span>Внимание к компании, темпу, логистике и ощущению безопасности поездки.</span></article>
+        </div>
+      </section>
+
+      <section className="page-cta">
+        <div className="page-cta-copy">
+          <h2>Хотите узнать, как оформляется тур?</h2>
+          <p>Покажем весь путь — от первой заявки до документов перед вылетом и связи в поездке.</p>
+        </div>
+        <button className="btn glass" onClick={() => setPage('process')}>Как оформляется тур</button>
+      </section>
     </Page>
   )
 }
