@@ -1,9 +1,7 @@
 import { useEffect } from 'react'
 
-/* Анимации при прокрутке — только transform и opacity (композитор, без дёрганья).
-   Переход «кадр → сцены»: вариант по умолчанию — мягкое слияние (dissolve),
-   второй вариант — «водопад» (?anim=waterfall). При системном «уменьшить движение»
-   всё показывается сразу. */
+/* Появление сцен при прокрутке. Вариант «водопад» (?anim=waterfall) добавляет
+   каскад элементам списков. Анимируются только transform и opacity. */
 
 export default function ScrollMotion() {
   useEffect(() => {
@@ -27,30 +25,14 @@ export default function ScrollMotion() {
       const items = document.querySelectorAll('.reveal')
       if (reduce || !('IntersectionObserver' in window)) {
         items.forEach(el => el.classList.add('is-in'))
-      } else {
-        const io = new IntersectionObserver(entries => {
-          for (const e of entries) {
-            if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target) }
-          }
-        }, { rootMargin: '-5% 0px -8% 0px', threshold: 0.05 })
-        items.forEach(el => { if (!el.classList.contains('is-in')) io.observe(el) })
+        return
       }
-
-      // «мост» между кадром и первой сценой: одна переменная --bridge, остальное делает CSS
-      const frame = document.querySelector('.home-frame')
-      if (!frame || reduce || frame.dataset.bridge === 'on') return
-      frame.dataset.bridge = 'on'
-      let raf = 0
-      const update = () => {
-        raf = 0
-        const h = frame.offsetHeight || window.innerHeight
-        const p = Math.min(1, Math.max(0, window.scrollY / (h * 0.7)))
-        frame.style.setProperty('--bridge', p.toFixed(3))
-      }
-      const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
-      update()
-      window.addEventListener('scroll', onScroll, { passive: true })
-      window.addEventListener('resize', onScroll, { passive: true })
+      const io = new IntersectionObserver(entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target) }
+        }
+      }, { rootMargin: '-5% 0px -8% 0px', threshold: 0.05 })
+      items.forEach(el => { if (!el.classList.contains('is-in')) io.observe(el) })
     }
 
     setup()

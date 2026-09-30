@@ -1439,3 +1439,65 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
   .interlude { min-height: 52vh; }
   .interlude figcaption { padding: 30px 18px; }
 }
+
+/* =========================================================
+   ФИЛЬМ ПО ПРОКРУТКЕ: кадр «прилипает», кадры сменяются от прокрутки
+   ========================================================= */
+.hero-film { position: relative; height: 260vh; }
+.home-frame {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 100svh;
+  overflow: hidden;
+}
+.cinema-media { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.hero-frame-img, .hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-canvas { opacity: 0; transition: opacity .5s ease; }
+.hero-film.is-ready .hero-canvas { opacity: 1; }
+
+/* рампы: текст уходит в начале, «подъём бумаги» — в середине, рваный край — к концу прокрутки */
+.home-frame .cinema-media { transform: scale(calc(1 + var(--bridge) * 0.05)); transform-origin: 50% 45%; }
+.home-frame .cinema-inner { opacity: calc(1 - var(--bridge) * 2.8); transform: translateY(calc(var(--bridge) * -34px)); }
+.home-frame .cinema-grade { opacity: calc(1 - var(--bridge) * 0.35); }
+.frame-spill {
+  opacity: clamp(0, calc((var(--bridge) - 0.5) * 3), 1);
+  transform: translateY(calc(58% - clamp(0, calc((var(--bridge) - 0.5) * 3), 1) * 58%));
+}
+.frame-tear {
+  opacity: clamp(0, calc((var(--bridge) - 0.68) * 3.4), 1);
+  transform: translateY(calc(80% - clamp(0, calc((var(--bridge) - 0.68) * 3.4), 1) * 80%));
+}
+/* тонкая линия прогресса фильма */
+.hero-film::after {
+  content: "";
+  position: absolute;
+  left: max(24px, calc((100vw - var(--maxw)) / 2));
+  bottom: 26px;
+  width: 120px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.35);
+  z-index: 5;
+  opacity: calc(1 - var(--bridge) * 1.4);
+}
+.film-progress {
+  position: absolute;
+  left: max(24px, calc((100vw - var(--maxw)) / 2));
+  bottom: 26px;
+  width: 120px;
+  height: 1px;
+  background: #fff;
+  transform-origin: 0 50%;
+  transform: scaleX(var(--bridge, 0));
+  z-index: 6;
+  opacity: calc(1 - var(--bridge) * 1.4);
+}
+@media (max-width: 820px) {
+  .hero-film { height: 180vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-film { height: 100svh; }
+  .hero-canvas { display: none; }
+  .home-frame .cinema-inner, .home-frame .cinema-media { opacity: 1 !important; transform: none !important; }
+  .frame-spill, .frame-tear, .film-progress { display: none; }
+}

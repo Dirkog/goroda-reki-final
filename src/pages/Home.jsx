@@ -1,40 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Page } from '../components/Page'
 import LeadForm from '../components/LeadForm'
 import EventsCalendar from '../components/EventsCalendar'
 import { TripImage } from '../components/Media'
-import { contacts, heroVideo, site, steps, tripCards, faq, pastTrips, team, waText } from '../data/site'
+import HeroFilm from '../components/HeroFilm'
+import { contacts, site, steps, tripCards, faq, pastTrips, team, waText } from '../data/site'
 import { track } from '../lib/analytics'
-
-// Видео грузим только там, где оно не вредит: не на мобильных, не при экономии трафика,
-// не при отключённой анимации — и только после того, как страница отрисовалась.
-function HeroMedia() {
-  const [videoOn, setVideoOn] = useState(false)
-  const [failed, setFailed] = useState(false)
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const small = window.matchMedia('(max-width: 760px)').matches
-    const conn = navigator.connection || {}
-    const saveData = conn.saveData || /2g|slow-2g|3g/.test(conn.effectiveType || '')
-    if (reduce || small || saveData) return
-    const start = () => setVideoOn(true)
-    if (window.requestIdleCallback) window.requestIdleCallback(start, { timeout: 2500 })
-    else setTimeout(start, 1500)
-  }, [])
-
-  return (
-    <div className="cinema-media">
-      <img src={heroVideo.poster} alt="Вид с высоты на реку, лесистые берега и город" width="1600" height="900" fetchpriority="high" decoding="async" />
-      {videoOn && !failed && (
-        <video autoPlay muted loop playsInline preload="none" poster={heroVideo.poster} onError={() => setFailed(true)} aria-hidden="true">
-          <source src={heroVideo.mp4} type="video/mp4" />
-        </video>
-      )}
-    </div>
-  )
-}
 
 // Каждая секция страницы — «сцена»: номер слева, заголовок на одной линии во всех сценах,
 // одинаковая ширина колонки и один и тот же вертикальный ритм.
@@ -62,14 +33,8 @@ export default function Home() {
   return (
     <Page className="home-page">
       {/* Кадр во весь экран: видео/фото, грейд, заголовок как титр, факты в нижней строке */}
-      <section className="home-frame">
-        <HeroMedia />
-        <div className="cinema-grade" aria-hidden="true" />
-        <span className="frame-spill" aria-hidden="true" />
-        <svg className="frame-tear" viewBox="0 0 1440 130" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0,84 C90,44 168,104 268,84 C372,63 448,108 560,88 C668,68 742,112 860,90 C968,70 1042,110 1150,88 C1256,66 1330,104 1440,74 L1440,130 L0,130 Z" fill="#f4f1ea" />
-        </svg>
-        <div className="cinema-inner">
+      <HeroFilm>
+
           <div className="cinema-copy">
             <h1 className="cinema-title">Подберу поездку{' '}<br />и останусь на связи</h1>
             <p className="cinema-lead">
@@ -94,8 +59,7 @@ export default function Home() {
             <div><b>На связи в поездке</b><span>не только до вылета</span></div>
             <span className="cinema-scroll" aria-hidden="true">листайте<i /></span>
           </div>
-        </div>
-      </section>
+      </HeroFilm>
 
       <Scene num="01" id="scene-01" kicker="календарь событий" title="Куда ехать за впечатлениями"
         note="Фестивали, парады, цветение и сезонные события с точными датами. Выберите месяц — покажу, что происходит в это время, и подберу поездку под эти даты.">
