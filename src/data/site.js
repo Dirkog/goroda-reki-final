@@ -15,7 +15,11 @@ export const site = {
   // ID счётчика Яндекс.Метрики. Пока пусто — код аналитики не подключается.
   metrikaId: '',
   // Необязательный вебхук для заявок (Formspree, Getform, свой эндпоинт).
-  formEndpoint: 'https://formsubmit.co/ajax/omonaenkovao@gmail.com',
+  // Ключ Web3Forms (web3forms.com, бесплатно, ключ приходит на почту):
+  // как только он появится — заявки с формы начнут приходить на указанную почту,
+  // а пока форма отправляет готовое сообщение в WhatsApp.
+  web3formsKey: '',
+  formEndpoint: '',
   email: 'omonaenkovao@gmail.com',
   phone: '+7 915 054-74-07',
   phoneHref: 'tel:+79150547407',

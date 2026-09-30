@@ -25,18 +25,27 @@ export default function LeadForm({ preset = {}, compact = false }) {
       leadSource() ? `Источник: ${leadSource()}` : ''
     ].filter(Boolean).join('\n')
 
+  const endpoint = site.formEndpoint || (site.web3formsKey ? 'https://api.web3forms.com/submit' : '')
+
   const submit = async (e) => {
     e.preventDefault()
     if (!form.name.trim() || !form.contact.trim()) { setError('Заполните имя и контакт — как с вами связаться.'); return }
     if (!form.consent) { setError('Нужно согласие на обработку персональных данных.'); return }
     setError('')
     track('lead_submit', { direction: form.direction })
-    if (site.formEndpoint) {
+    if (endpoint) {
       try {
-        const r = await fetch(site.formEndpoint, {
+        const r = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ ...form, _subject: 'Заявка с сайта «Города и реки»', source: leadSource(), page: window.location.pathname })
+          body: JSON.stringify({
+            ...(site.web3formsKey && !site.formEndpoint ? { access_key: site.web3formsKey } : {}),
+            ...form,
+            subject: 'Заявка с сайта «Города и реки»',
+            from_name: 'Сайт «Города и реки»',
+            source: leadSource(),
+            page: window.location.pathname
+          })
         })
         if (!r.ok) throw new Error('HTTP ' + r.status)
       } catch (e) {
@@ -79,7 +88,7 @@ export default function LeadForm({ preset = {}, compact = false }) {
         <span>Согласен(на) с <a href="/politika-konfidencialnosti/" target="_blank" rel="noopener noreferrer">политикой обработки персональных данных</a></span>
       </label>
       {error && <p className="lead-form-error" role="alert">{error}</p>}
-      <button className="btn light" type="submit">{site.formEndpoint ? 'Отправить заявку' : 'Отправить в WhatsApp'}</button>
+      <button className="btn light" type="submit">{endpoint ? 'Отправить заявку' : 'Отправить в WhatsApp'}</button>
       <p className="lead-form-note">Паспортные данные не нужны до выбора тура и оформления договора.</p>
     </form>
   )
