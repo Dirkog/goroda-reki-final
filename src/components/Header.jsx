@@ -44,7 +44,7 @@ export default function Header({ page }) {
         ))}
       </nav>
 
-      <a className="header-cta" href={waText(`Здравствуйте! Хочу подобрать тур. Направление: ___, даты: ___, состав: ___.`)} onClick={() => track('click_whatsapp_header')}>Написать</a>
+      <a className="header-cta" href={waText(`Здравствуйте! Хочу подобрать тур. Направление: ___, даты: ___, состав: ___.`)} onClick={() => track('click_whatsapp', { place: 'header' })}>Написать</a>
 
       <button
         ref={toggleRef}
@@ -67,7 +67,7 @@ export default function Header({ page }) {
             ))}
           </nav>
           <div className="mobile-menu-contacts">
-            <a className="btn light mobile-menu-cta" href={waText('Здравствуйте! Хочу подобрать тур.')} onClick={() => track('click_whatsapp_menu')}>WhatsApp</a>
+            <a className="btn light mobile-menu-cta" href={waText('Здравствуйте! Хочу подобрать тур.')} onClick={() => track('click_whatsapp', { place: 'menu' })}>WhatsApp</a>
             <a className="btn ghost mobile-menu-cta" href={contacts.telegram}>Telegram</a>
             <a className="mobile-menu-phone" href={site.phoneHref}>{site.phone}</a>
             <p className="mobile-menu-hours">{site.workHours}</p>

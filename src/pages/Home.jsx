@@ -49,7 +49,7 @@ export default function Home() {
             Договор до оплаты, оплата на расчётный счёт, поддержка до возвращения домой.
           </p>
           <div className="hero-actions">
-            <a className="btn light" href={waText('Здравствуйте! Хочу подобрать тур: направление ___, даты ___, состав ___.')} onClick={() => track('click_whatsapp_hero')}>Написать в WhatsApp</a>
+            <a className="btn light" href={waText('Здравствуйте! Хочу подобрать тур: направление ___, даты ___, состав ___.')} onClick={() => track('click_whatsapp', { place: 'hero' })}>Написать в WhatsApp</a>
             <a className="btn glass" href="/napravleniya/">Смотреть направления</a>
           </div>
           <p className="hero-note">Отвечаем в течение 15 минут в рабочее время. Подбор — бесплатно.</p>

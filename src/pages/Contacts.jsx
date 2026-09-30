@@ -17,11 +17,11 @@ export default function Contacts() {
       <div className="contact-layout">
         <div>
           <div className="contact-grid">
-            <a href={waText('Здравствуйте! Хочу подобрать тур: направление ___, даты ___, состав ___.')} onClick={() => track('click_whatsapp_contacts')}>WhatsApp <span>{site.phone}</span></a>
+            <a href={waText('Здравствуйте! Хочу подобрать тур: направление ___, даты ___, состав ___.')} onClick={() => track('click_whatsapp', { place: 'contacts' })}>WhatsApp <span>{site.phone}</span></a>
             <a href={contacts.telegram}>Telegram <span>@Olgagorodareki</span></a>
             <a href={contacts.max}>MAX <span>написать в мессенджере</span></a>
             <a href={contacts.vk}>ВКонтакте <span>vk.com/gorodareki</span></a>
-            <a href={site.phoneHref} onClick={() => track('click_phone_contacts')}>Телефон <span>{site.phone}</span></a>
+            <a href={site.phoneHref} onClick={() => track('click_phone', { place: 'contacts' })}>Телефон <span>{site.phone}</span></a>
             <a href={`mailto:${site.email}`}>Почта <span>{site.email}</span></a>
           </div>
           <p className="contact-hours"><b>Режим работы:</b> {site.workHours}</p>
