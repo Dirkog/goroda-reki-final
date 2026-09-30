@@ -420,6 +420,13 @@ summary:focus-visible {
 .home-lead-alt { margin-top: 20px; font-size: 14.5px; }
 .home-lead-alt a { color: var(--primary); font-weight: 600; }
 
+.experience-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.experience-grid article { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; box-shadow: var(--shadow-sm); }
+.experience-grid b { display: block; margin-bottom: 8px; }
+.experience-grid p { color: var(--muted); font-size: 14.6px; }
+.experience-note { margin-top: 18px; color: var(--muted); font-size: 14.8px; }
+@media (max-width: 900px) { .experience-grid { grid-template-columns: 1fr; } }
+
 .faq-list { display: grid; gap: 12px; }
 .faq-list details {
   background: var(--surface);
@@ -594,6 +601,13 @@ summary:focus-visible {
   font-size: 20px;
   line-height: 1.4;
 }
+
+/* ---------- списки фактов ---------- */
+.facts-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 26px !important; }
+.plain-list { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
+.plain-list li { position: relative; padding-left: 18px; color: var(--muted); font-size: 14.6px; }
+.plain-list li::before { content: "—"; position: absolute; left: 0; color: var(--accent); }
+@media (max-width: 900px) { .facts-grid { grid-template-columns: 1fr !important; } }
 
 /* ---------- «Надёжность» ---------- */
 .registry-hero {

@@ -33,8 +33,17 @@ export default function LeadForm({ preset = {}, compact = false }) {
     track('lead_submit', { direction: form.direction })
     if (site.formEndpoint) {
       try {
-        await fetch(site.formEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, source: leadSource(), page: window.location.pathname }) })
-      } catch { /* даже при ошибке даём пользователю путь в мессенджер */ }
+        const r = await fetch(site.formEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ ...form, _subject: 'Заявка с сайта «Города и реки»', source: leadSource(), page: window.location.pathname })
+        })
+        if (!r.ok) throw new Error('HTTP ' + r.status)
+      } catch (e) {
+        // если внешний сервис не ответил — не теряем заявку, уводим в WhatsApp
+        track('lead_fallback_whatsapp', { reason: String(e).slice(0, 60) })
+        window.open(waText(message()), '_blank', 'noopener')
+      }
     } else {
       window.open(waText(message()), '_blank', 'noopener')
     }

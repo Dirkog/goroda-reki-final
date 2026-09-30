@@ -19,7 +19,7 @@ export default function Corporate() {
         <p className="eyebrow">командам и партнёрам</p>
         <h1>Корпоративный выезд как событие</h1>
         <p>Поездка для команды, клиентов или партнёров: подберём направление, перелёты, размещение, программу и оформим всё официально — с договором и закрывающими документами для компании.</p>
-        <div className="mini-list"><span>Красная Поляна</span><span>Турция</span><span>Куба</span><span>Индонезия</span><span>Марокко</span><span>Таиланд</span></div>
+        <div className="mini-list"><span>Красная Поляна</span><span>Подмосковье</span><span>Турция</span><span>Куба</span><span>Индонезия</span><span>Марокко</span><span>Таиланд</span></div>
         <div className="corporate-actions">
           <a className="btn light" href={waText('Здравствуйте! Нужен корпоративный выезд. Группа: ___, даты: ___, задача: ___')}>Обсудить выезд</a>
           <a className="btn ghost" href="#brief">Прислать бриф</a>

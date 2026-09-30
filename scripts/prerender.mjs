@@ -120,6 +120,12 @@ fs.writeFileSync(path.join(dist, 'llms.txt'), [
   ''
 ].join('\n'))
 
+// Служебные файлы хостингов (Cloudflare Pages): заголовки кеша и безопасности
+for (const f of ['_headers', '_redirects']) {
+  const src = path.join('public', f)
+  if (fs.existsSync(src)) fs.copyFileSync(src, path.join(dist, f))
+}
+
 // .nojekyll — чтобы GitHub Pages отдавал все файлы как есть
 fs.writeFileSync(path.join(dist, '.nojekyll'), '')
 

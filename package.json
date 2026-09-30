@@ -9,7 +9,9 @@
     "build:ssr": "vite build --ssr src/entry-server.jsx --outDir dist-ssr",
     "prerender": "node scripts/prerender.mjs",
     "build": "npm run build:client && npm run build:ssr && npm run prerender",
-    "preview": "vite preview --host 0.0.0.0 --port 4173"
+    "preview": "vite preview --host 0.0.0.0 --port 4173",
+    "build:cf": "node scripts/build-cf.mjs",
+    "deploy:cf": "node scripts/deploy-cf.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "4.3.4",

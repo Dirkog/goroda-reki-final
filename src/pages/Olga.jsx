@@ -1,6 +1,6 @@
 import React from 'react'
 import { Page, SplitTitle, Breadcrumbs } from '../components/Page'
-import { site, waText } from '../data/site'
+import { site, team, pastTrips, waText } from '../data/site'
 
 export default function Olga() {
   return (
@@ -11,14 +11,27 @@ export default function Olga() {
         title="Личный контакт внутри сильной команды"
         text="«Города и реки» — онлайн-турагентство под руководством Анны Рогалёвой. В команде 11 менеджеров, и каждая отвечает за свои направления и форматы путешествий."
       />
+
       <div className="olga-grid">
         <article className="editorial-card big">
-          <p>Мы работаем с туристами из разных городов России и из-за рубежа. География не ограничивает: из городов РФ можно организовать любые туры, а из других стран — маршруты на регулярных рейсах.</p>
-          <p>Команда сама часто путешествует, поэтому подбор строится не только по параметрам отеля. Важны компания, темп, логистика, настроение поездки и ощущение безопасности.</p>
+          <p>
+            Меня зовут <b>{team.lead}</b>, я менеджер команды «Города и реки»: {team.leadExperience} подбираю путешествия
+            для наших туристов. Мы работаем полностью онлайн и полностью официально — под руководством {team.owner},
+            {' '}{team.ownerRole}.
+          </p>
+          <p>
+            Наши туристы живут в разных городах России и за её пределами, поэтому география не ограничивает:
+            из городов РФ можно организовать любой тур, из других стран — маршруты на регулярных рейсах.
+          </p>
+          <p>
+            Мы с вами одной крови: команда сама постоянно в пути — {team.ownTravels.toLowerCase()}. Поэтому советуем не
+            по параметрам отеля, а по тому, что проверено лично: какие переезды комфортны, где стоит брать экскурсии,
+            как построить темп поездки, чтобы детали не мешали отдыху.
+          </p>
         </article>
         <blockquote>«Хороший тур — это когда детали не мешают отдыху»</blockquote>
         <article className="editorial-card accent">
-          <b>11 экспертов</b>
+          <b>{team.managers} экспертов</b>
           <span>Семейный отдых, индивидуальные маршруты, круизы, события и корпоративные выезды.</span>
         </article>
       </div>
@@ -26,10 +39,41 @@ export default function Olga() {
       <section className="travel-info-block">
         <h2>Направления, за которые отвечает команда</h2>
         <div>
-          <article><b>Семейный отдых</b><span>Пляжные направления с понятной логистикой, отелями для детей и удобными перелётами.</span></article>
-          <article><b>Индивидуальные маршруты</b><span>Авторские поездки под ваш темп: города, переезды, гастрономия и впечатления.</span></article>
-          <article><b>Круизы и события</b><span>Речные и морские круизы, концерты, фестивали и выезды под конкретную дату.</span></article>
-          <article><b>Корпоративные выезды</b><span>Поездки для команд, клиентов и партнёров с деловой частью и отдыхом.</span></article>
+          <article><b>Семейный отдых</b><span>{pastTrips.family.slice(0, 8).join(', ')} и другие направления с понятной логистикой.</span></article>
+          <article><b>Событийные поездки</b><span>Концерты, фестивали и чемпионаты: подбираем отель и перелёт под дату события.</span></article>
+          <article><b>Круизы</b><span>{pastTrips.cruises.join(', ')} — речные и морские маршруты.</span></article>
+          <article><b>Корпоративные выезды</b><span>{pastTrips.corporate.join(', ')} — для команд, клиентов и партнёров.</span></article>
+        </div>
+      </section>
+
+      <section className="travel-info-block">
+        <h2>Что мы уже организовали</h2>
+        <div className="facts-grid">
+          <article>
+            <b>События</b>
+            <ul className="plain-list">{pastTrips.events.map(x => <li key={x}>{x}</li>)}</ul>
+          </article>
+          <article>
+            <b>Круизы и корпоративы</b>
+            <ul className="plain-list">
+              {pastTrips.cruises.map(x => <li key={x}>Круиз {x}</li>)}
+              {pastTrips.corporate.map(x => <li key={x}>Корпоративный выезд: {x}</li>)}
+            </ul>
+          </article>
+          <article>
+            <b>Семейные поездки</b>
+            <ul className="plain-list">{pastTrips.family.map(x => <li key={x}>{x}</li>)}</ul>
+          </article>
+          <article>
+            <b>Как мы работаем</b>
+            <ul className="plain-list">
+              <li>Договор оформляем до оплаты</li>
+              <li>Оплата — на расчётный счёт, чек на почту</li>
+              <li>Документы за 4–7 дней до выезда</li>
+              <li>Связь с вами до возвращения домой</li>
+              <li>Номер агентства в реестре: {site.registry.label}</li>
+            </ul>
+          </article>
         </div>
       </section>
 
@@ -46,9 +90,8 @@ export default function Olga() {
           <h2>Или сразу к делу</h2>
           <p>Напишите, куда и когда хотите поехать — вернёмся с вариантами.</p>
         </div>
-        <a className="btn light" href={waText(`Здравствуйте! Хочу подобрать тур.`)}>Написать в WhatsApp</a>
+        <a className="btn light" href={waText('Здравствуйте! Хочу подобрать тур. Направление: ___, даты: ___.')}>Написать в WhatsApp</a>
       </section>
-      <p className="page-note">Официально: {site.registry.label} — проверить можно в <a href={site.registry.url} target="_blank" rel="noopener noreferrer">{site.registry.note.toLowerCase()}</a>.</p>
     </Page>
   )
 }

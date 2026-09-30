@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Page } from '../components/Page'
 import LeadForm from '../components/LeadForm'
 import { TripImage } from '../components/Media'
-import { contacts, heroVideo, site, steps, tripCards, faq, waText } from '../data/site'
+import { contacts, heroVideo, site, steps, tripCards, faq, pastTrips, team, waText } from '../data/site'
 import { track } from '../lib/analytics'
 
 // Видео грузим только там, где оно не вредит: не на мобильных, не при экономии трафика,
@@ -124,6 +124,26 @@ export default function Home() {
           <p className="home-lead-alt">Удобнее сразу в мессенджер: <a href={contacts.telegram}>Telegram</a> · <a href={contacts.vk}>ВКонтакте</a> · <a href={contacts.max}>MAX</a> · <a href={site.phoneHref}>{site.phone}</a></p>
         </div>
         <LeadForm compact />
+      </section>
+
+      <section className="home-section">
+        <div className="section-head">
+          <div>
+            <p className="eyebrow">опыт команды</p>
+            <h2>Что мы уже организовали</h2>
+          </div>
+          <a className="section-link" href="/komanda/">О команде →</a>
+        </div>
+        <div className="experience-grid">
+          <article><b>События и фестивали</b><p>{pastTrips.events.slice(0, 5).join(' · ')}</p></article>
+          <article><b>Круизы</b><p>По рекам России, Персидский залив, Средиземное море, Норвежские фьорды.</p></article>
+          <article><b>Корпоративные выезды</b><p>{pastTrips.corporate.join(' · ')}</p></article>
+          <article><b>Семейный отдых</b><p>{pastTrips.family.join(' · ')}</p></article>
+        </div>
+        <p className="experience-note">
+          {team.lead} — {team.leadRole.toLowerCase()}, {team.leadExperience}. Команда сама путешествует 1–2 раза в месяц,
+          поэтому советуем только проверенное лично.
+        </p>
       </section>
 
       <section className="home-section">
