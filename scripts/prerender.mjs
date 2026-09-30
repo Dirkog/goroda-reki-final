@@ -2,14 +2,21 @@
 // Пререндер: превращает SPA в набор статических страниц с уникальными мета-тегами.
 // Запускается после vite build (клиент) и vite build --ssr (серверный бандл).
 import fs from 'node:fs'
+import { pathToFileURL } from 'node:url'
 import path from 'node:path'
 
 const dist = path.resolve('dist')
-const ssr = await import(path.resolve('dist-ssr/entry-server.js'))
+const ssr = await import(pathToFileURL(path.resolve('dist-ssr/entry-server.js')).href)
 const { render, routes, site, contacts, headFor, basePath } = ssr
 
 const template = fs.readFileSync(path.join(dist, 'index.html'), 'utf8')
 const base = basePath()
+
+// ВАЖНО: переносим из собранного Vite шаблона теги стилей и скриптов —
+// иначе пререндер сотрёт подключение CSS и JS.
+const cssTags = (template.match(/<link[^>]*rel="stylesheet"[^>]*>/g) || []).join('\n    ')
+const preloadTags = (template.match(/<link[^>]*rel="modulepreload"[^>]*>/g) || []).join('\n    ')
+const scriptTags = (template.match(/<script[^>]*type="module"[^>]*>\s*<\/script>/g) || []).join('\n    ')
 
 function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -39,6 +46,8 @@ function fullHead(route) {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+    ${cssTags}
+    ${preloadTags}
     <meta name="format-detection" content="telephone=no" />
   </head>`
 }
@@ -47,6 +56,7 @@ function pageHtml(route, body) {
   return template
     .replace(/<head>[\s\S]*?<\/head>/, fullHead(route))
     .replace('<div id="root"></div>', `<div id="root">${body}</div>`)
+    .replace('</body>', `    ${scriptTags}\n  </body>`)
 }
 
 let count = 0

@@ -54,5 +54,5 @@ export function navigate(id, { replace = false } = {}) {
   const url = withBase(route.path)
   if (replace) window.history.replaceState({ id }, '', url)
   else window.history.pushState({ id }, '', url)
-  window.dispatchEvent(new PopStateEvent('popstate'))
+  window.dispatchEvent(new Event('gr:navigate'))
 }

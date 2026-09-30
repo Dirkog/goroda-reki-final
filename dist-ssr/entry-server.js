@@ -1,5 +1,5 @@
 import { jsxs, jsx, Fragment } from "react/jsx-runtime";
-import { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { renderToString } from "react-dom/server";
 const site = {
   name: "Города и реки",
@@ -1379,21 +1379,6 @@ function routeByPath(pathname) {
   if (exact) return { route: exact, found: true };
   return { route: routeById("home"), found: false };
 }
-const PAGES = { home: Home, olga: Olga, trips: Trips, process: Process, trust: Trust, corporate: Corporate, contacts: Contacts, oferta: Legal, privacy: Legal };
-function App({ url }) {
-  const { route, found } = url ? routeByPath(url) : { route: routeById("home"), found: true };
-  const id = found ? route.id : "notfound";
-  const Page2 = PAGES[id] || NotFound;
-  const active = found ? route : routeById("home");
-  return /* @__PURE__ */ jsxs("div", { className: `site page-${id}`, children: [
-    /* @__PURE__ */ jsx("a", { className: "skip-link", href: "#main", children: "Перейти к содержимому" }),
-    /* @__PURE__ */ jsx(Header, { page: active.id }),
-    /* @__PURE__ */ jsx("main", { id: "main", children: /* @__PURE__ */ jsx(Page2, { route: active }) }),
-    /* @__PURE__ */ jsx(Footer, {}),
-    /* @__PURE__ */ jsx(StickyCta, {}),
-    /* @__PURE__ */ jsx(CookieNotice, {})
-  ] });
-}
 const __vite_import_meta_env__ = { "BASE_URL": "/goroda-reki-final/", "DEV": false, "MODE": "production", "PROD": true, "SSR": true };
 function basePath() {
   const b = __vite_import_meta_env__ && "/goroda-reki-final/" || "/";
@@ -1487,6 +1472,86 @@ function headFor(route, origin = site.origin) {
     ],
     jsonLd: jsonLdFor(route.id, origin)
   };
+}
+function setMeta(attr, key, content) {
+  let el = document.head.querySelector(`meta[${attr}="${key}"]`);
+  if (!el) {
+    el = document.createElement("meta");
+    el.setAttribute(attr, key);
+    document.head.appendChild(el);
+  }
+  el.setAttribute("content", content);
+}
+function setLink(rel, href) {
+  let el = document.head.querySelector(`link[rel="${rel}"]`);
+  if (!el) {
+    el = document.createElement("link");
+    el.setAttribute("rel", rel);
+    document.head.appendChild(el);
+  }
+  el.setAttribute("href", href);
+}
+function applyMeta(route) {
+  if (typeof document === "undefined") return;
+  const head = headFor(route, site.origin);
+  document.title = head.title;
+  for (const [attr, key, value] of head.metas) setMeta(attr, key, value);
+  setLink("canonical", head.url);
+  head.jsonLd.forEach((data, i) => {
+    const id = "ld-" + i;
+    let el = document.getElementById(id);
+    if (!el) {
+      el = document.createElement("script");
+      el.type = "application/ld+json";
+      el.id = id;
+      document.head.appendChild(el);
+    }
+    el.textContent = JSON.stringify(data);
+  });
+}
+const PAGES = { home: Home, olga: Olga, trips: Trips, process: Process, trust: Trust, corporate: Corporate, contacts: Contacts, oferta: Legal, privacy: Legal };
+const NOT_FOUND = {
+  id: "notfound",
+  path: "/404",
+  label: "Страница не найдена",
+  title: "Страница не найдена — Города и реки",
+  description: "Такой страницы нет. Вернитесь на главную или напишите нам — подберём тур.",
+  noindex: true
+};
+function App({ url }) {
+  const [current, setCurrent] = useState(() => url || (typeof window !== "undefined" ? normalize(window.location.pathname) : "/"));
+  const first = React.useRef(!url);
+  useEffect(() => {
+    if (url) return;
+    const onPop = () => setCurrent(normalize(window.location.pathname));
+    window.addEventListener("popstate", onPop);
+    window.addEventListener("gr:navigate", onPop);
+    return () => {
+      window.removeEventListener("popstate", onPop);
+      window.removeEventListener("gr:navigate", onPop);
+    };
+  }, [url]);
+  const { route, found } = routeByPath(current);
+  const active = found ? route : NOT_FOUND;
+  const Page2 = PAGES[active.id] || NotFound;
+  useEffect(() => {
+    if (url || typeof document === "undefined") return;
+    applyMeta(active);
+    if (first.current) {
+      first.current = false;
+    } else {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      track("page_view", { path: current });
+    }
+  }, [current, url]);
+  return /* @__PURE__ */ jsxs("div", { className: `site page-${active.id}`, children: [
+    /* @__PURE__ */ jsx("a", { className: "skip-link", href: "#main", children: "Перейти к содержимому" }),
+    /* @__PURE__ */ jsx(Header, { page: active.id }),
+    /* @__PURE__ */ jsx("main", { id: "main", children: /* @__PURE__ */ jsx(Page2, { route: active }) }),
+    /* @__PURE__ */ jsx(Footer, {}),
+    /* @__PURE__ */ jsx(StickyCta, {}),
+    /* @__PURE__ */ jsx(CookieNotice, {})
+  ] });
 }
 function render(url) {
   return renderToString(/* @__PURE__ */ jsx(App, { url }));

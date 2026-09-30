@@ -2,10 +2,8 @@ import React from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
 import './styles.css'
 import App from './App'
-import { applyMeta } from './lib/seo'
-import { migrateLegacyHash, navigate, normalize, routeByPath, withBase } from './lib/router'
+import { migrateLegacyHash, navigate } from './lib/router'
 import { site } from './data/site'
-import { track } from './lib/analytics'
 
 class ErrorBoundary extends React.Component {
   constructor(props) { super(props); this.state = { error: null } }
@@ -16,7 +14,7 @@ class ErrorBoundary extends React.Component {
       return (
         <div className="fatal-error">
           <h1>Страница не загрузилась</h1>
-          <p>Обновите страницу или напишите нам в WhatsApp — мы поможем с подбором тура.</p>
+          <p>Обновите страницу или напишите нам в WhatsApp — поможем с подбором тура.</p>
           <a className="btn light" href="https://wa.me/79150547407">Написать в WhatsApp</a>
         </div>
       )
@@ -25,58 +23,31 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-function currentUrl() {
-  return normalize(window.location.pathname)
-}
-
-function render() {
-  const el = document.getElementById('root')
-  const app = (
-    <ErrorBoundary>
-      <App />
-    </ErrorBoundary>
-  )
-  if (el.hasChildNodes()) hydrateRoot(el, app)
-  else createRoot(el).render(app)
-}
-
-function syncMeta() {
-  const { route, found } = routeByPath(currentUrl())
-  applyMeta(found ? route : { id: 'notfound', title: 'Страница не найдена — Города и реки', description: 'Такой страницы нет. Вернитесь на главную или напишите нам — подберём тур.', path: '/404', noindex: true })
-}
-
-function onNavigate(path, { replace = false } = {}) {
-  if (replace) window.history.replaceState(null, '', path)
-  render()
-  syncMeta()
-  window.scrollTo({ top: 0, behavior: 'auto' })
-  track('page_view', { path })
-}
-
-// Перехват внутренних ссылок: работают и обычные <a href>, и кнопки с data-route
+// Перехват внутренних ссылок: переход без перезагрузки, но с реальными URL.
 document.addEventListener('click', (e) => {
-  const a = e.target.closest && e.target.closest('a[href]')
-  const btn = e.target.closest && e.target.closest('[data-route]')
-  if (btn && !a) {
+  if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+  const el = e.target.closest && e.target.closest('a[href], [data-route]')
+  if (!el) return
+
+  if (el.hasAttribute('data-route')) {
     e.preventDefault()
-    navigate(btn.getAttribute('data-route'))
+    navigate(el.getAttribute('data-route'))
     return
   }
-  if (!a) return
-  const href = a.getAttribute('href')
-  if (!href || a.target === '_blank' || a.hasAttribute('download')) return
-  if (/^(https?:|mailto:|tel:|#)/.test(href)) return
-  const url = new URL(a.href, window.location.href)
+  const href = el.getAttribute('href') || ''
+  if (!href || el.target === '_blank' || el.hasAttribute('download') || href.startsWith('#')) return
+  if (/^(https?:|mailto:|tel:)/.test(href)) return
+  const url = new URL(el.href, window.location.href)
   if (url.origin !== window.location.origin) return
+
   e.preventDefault()
-  const target = normalize(url.pathname)
-  if (target === currentUrl()) return
-  onNavigate(url.pathname)
+  if (url.pathname !== window.location.pathname || url.search !== window.location.search) {
+    window.history.pushState(null, '', url.pathname + url.search + url.hash)
+    window.dispatchEvent(new Event('gr:navigate'))
+  }
 })
 
-window.addEventListener('popstate', () => { render(); syncMeta() })
-
-// Первый запуск: чиним старые #/ссылки и сохраняем UTM-метки сессии
+// Старые ссылки вида #/trips → нормальный путь + UTM-метки сессии
 migrateLegacyHash()
 try {
   const utm = new URLSearchParams(window.location.search)
@@ -84,9 +55,11 @@ try {
     sessionStorage.setItem('gr_utm', window.location.search)
   }
 } catch {}
-render()
-syncMeta()
-track('page_view', { path: currentUrl() })
 
-// Аналитика грузится лениво, чтобы не мешать отрисовке
+const el = document.getElementById('root')
+const app = <ErrorBoundary><App /></ErrorBoundary>
+if (el.hasChildNodes()) hydrateRoot(el, app)
+else createRoot(el).render(app)
+
+// Аналитика подключается лениво и только если задан счётчик
 if (site.metrikaId) import('./lib/metrika.js').then(m => m.initMetrika(site.metrikaId))

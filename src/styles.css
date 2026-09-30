@@ -295,7 +295,7 @@ summary:focus-visible {
 /* ---------- home hero ---------- */
 .home-hero {
   position: relative;
-  padding: 150px 40px 210px;
+  padding: 140px 40px 60px;
   max-width: 1400px;
   margin: 0 auto;
   border-radius: 0 0 48px 48px;
@@ -349,7 +349,7 @@ summary:focus-visible {
 
 .home-trust {
   max-width: var(--maxw);
-  margin: -140px auto 0;
+  margin: 26px auto 0;
   position: relative;
   background: var(--surface);
   border: 1px solid var(--line);
@@ -823,7 +823,7 @@ summary:focus-visible {
   .header-cta { display: none; }
   .nav-toggle { display: block; margin-left: auto; }
   .split-title { grid-template-columns: 1fr; align-items: start; gap: 18px; }
-  .home-hero { padding: 130px 24px 120px; border-radius: 0 0 32px 32px; }
+  .home-hero { padding: 122px 24px 46px; border-radius: 0 0 32px 32px; }
   .hero-search { grid-template-columns: 1fr; }
   .hero-search > div { border-right: 0; border-bottom: 1px solid var(--line); }
   .hero-search > div:nth-child(3) { border-bottom: 0; }
@@ -840,7 +840,7 @@ summary:focus-visible {
   .trip-grid.home-grid, .trip-grid.catalog, .travel-info-block > div, .trust-list, .steps-track, .home-steps { grid-template-columns: 1fr; }
   .travel-info-block { padding: 24px 20px; }
   .trust-list { margin-top: 20px; }
-  .home-trust { grid-template-columns: 1fr 1fr; padding: 20px; }
+  .home-trust { grid-template-columns: 1fr 1fr; padding: 20px; margin-top: 18px; }
   .home-trust div { border-right: 0; }
   .lead-form-row { grid-template-columns: 1fr; }
   .tour-search-panel { grid-template-columns: 1fr; }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import StickyCta from './components/StickyCta'
@@ -12,19 +12,47 @@ import Corporate from './pages/Corporate'
 import Contacts from './pages/Contacts'
 import Legal from './pages/Legal'
 import NotFound from './pages/NotFound'
-import { routeByPath, routeById } from './lib/router'
+import { normalize, routeByPath } from './lib/router'
+import { applyMeta } from './lib/seo'
+import { track } from './lib/analytics'
 
 const PAGES = { home: Home, olga: Olga, trips: Trips, process: Process, trust: Trust, corporate: Corporate, contacts: Contacts, oferta: Legal, privacy: Legal }
 
-// url — используется при пререндере (сборке). На клиенте берётся из location.
+const NOT_FOUND = {
+  id: 'notfound', path: '/404', label: 'Страница не найдена',
+  title: 'Страница не найдена — Города и реки',
+  description: 'Такой страницы нет. Вернитесь на главную или напишите нам — подберём тур.',
+  noindex: true
+}
+
+// url передаётся только при пререндере (сборке). В браузере маршрут берётся из адреса.
 export default function App({ url }) {
-  const { route, found } = url ? routeByPath(url) : { route: routeById('home'), found: true }
-  const id = found ? route.id : 'notfound'
-  const Page = PAGES[id] || NotFound
-  const active = found ? route : routeById('home')
+  const [current, setCurrent] = useState(() => url || (typeof window !== 'undefined' ? normalize(window.location.pathname) : '/'))
+  const first = React.useRef(!url)
+
+  useEffect(() => {
+    if (url) return // при пререндере слушатели не нужны
+    const onPop = () => setCurrent(normalize(window.location.pathname))
+    window.addEventListener('popstate', onPop)
+    window.addEventListener('gr:navigate', onPop)
+    return () => {
+      window.removeEventListener('popstate', onPop)
+      window.removeEventListener('gr:navigate', onPop)
+    }
+  }, [url])
+
+  const { route, found } = routeByPath(current)
+  const active = found ? route : NOT_FOUND
+  const Page = PAGES[active.id] || NotFound
+
+  useEffect(() => {
+    if (url || typeof document === 'undefined') return
+    applyMeta(active)
+    if (first.current) { first.current = false } else { window.scrollTo({ top: 0, behavior: 'auto' }); track('page_view', { path: current }) }
+  }, [current, url])
 
   return (
-    <div className={`site page-${id}`}>
+    <div className={`site page-${active.id}`}>
       <a className="skip-link" href="#main">Перейти к содержимому</a>
       <Header page={active.id} />
       <main id="main">
