@@ -33,33 +33,37 @@ export default function LeadForm({ preset = {}, compact = false }) {
     if (!form.consent) { setError('Нужно согласие на обработку персональных данных.'); return }
     setError('')
     track('lead_submit', { direction: form.direction })
-    if (endpoint) {
+    // Порядок каналов: свой приём заявок на сайте → Web3Forms → WhatsApp.
+    // Заявка уходит в первый, который ответил; если все молчат — открываем WhatsApp.
+    const payload = () => {
+      const fd = new FormData()
+      if (site.web3formsKey && !site.formEndpoint) fd.append('access_key', site.web3formsKey)
+      fd.append('subject', 'Заявка с сайта «Города и реки»')
+      fd.append('from_name', 'Сайт «Города и реки»')
+      fd.append('name', form.name)
+      fd.append('contact', form.contact)
+      fd.append('direction', form.direction)
+      fd.append('dates', form.dates)
+      fd.append('people', form.people)
+      fd.append('comment', form.comment)
+      fd.append('source', leadSource())
+      fd.append('page', typeof window !== 'undefined' ? window.location.pathname : '')
+      fd.append('botcheck', '')
+      return fd
+    }
+
+    let delivered = false
+    for (const url of ['/api/lead', endpoint].filter(Boolean)) {
       try {
-        // Отправляем FormData: это «простой» запрос — браузер не делает preflight,
-        // значит нет лишних CORS-проблем и защиты от ботов.
-        const fd = new FormData()
-        if (site.web3formsKey && !site.formEndpoint) fd.append('access_key', site.web3formsKey)
-        fd.append('subject', 'Заявка с сайта «Города и реки»')
-        fd.append('from_name', 'Сайт «Города и реки»')
-        fd.append('name', form.name)
-        fd.append('contact', form.contact)
-        fd.append('direction', form.direction)
-        fd.append('dates', form.dates)
-        fd.append('people', form.people)
-        fd.append('comment', form.comment)
-        fd.append('source', leadSource())
-        fd.append('page', typeof window !== 'undefined' ? window.location.pathname : '')
-        fd.append('botcheck', '')
-        const r = await fetch(endpoint, { method: 'POST', body: fd })
-        if (!r.ok) throw new Error('HTTP ' + r.status)
-      } catch (e) {
-        // сервис не ответил — заявку не теряем, уводим в WhatsApp
-        track('lead_fallback_whatsapp', { reason: String(e).slice(0, 60) })
-        window.open(waText(message()), '_blank', 'noopener')
-      }
-    } else {
+        const r = await fetch(url, { method: 'POST', body: payload() })
+        if (r.ok) { delivered = true; track('lead_delivered', { channel: url === '/api/lead' ? 'site' : 'email' }); break }
+      } catch (e) { /* пробуем следующий канал */ }
+    }
+    if (!delivered) {
+      track('lead_fallback_whatsapp', {})
       window.open(waText(message()), '_blank', 'noopener')
     }
+
     setSent(true)
   }
 
