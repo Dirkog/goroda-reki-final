@@ -1446,9 +1446,11 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
   overflow: hidden;
 }
 .cinema-media { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-.hero-frame-img, .hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-.hero-canvas { opacity: 0; transition: opacity .5s ease; }
-.hero-film.is-ready .hero-canvas { opacity: 1; }
+.hero-frame-img, .hero-layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-layer { opacity: 0; transition: opacity .22s linear; z-index: 1; }
+.hero-layer.is-front { opacity: 1; }
+.hero-frame-img { opacity: 1; transition: opacity .5s ease; z-index: 0; }
+.hero-film.is-ready .hero-frame-img { opacity: 0; }
 
 /* рампы: текст уходит в начале, «подъём бумаги» — в середине, рваный край — к концу прокрутки */
 .home-frame .cinema-media { transform: scale(calc(1 + var(--bridge) * 0.05)); transform-origin: 50% 45%; }
@@ -1480,7 +1482,7 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-film { height: 100svh; }
-  .hero-canvas { display: none; }
+  .hero-layer { display: none; }
   .home-frame .cinema-inner, .home-frame .cinema-media { opacity: 1 !important; transform: none !important; }
   .frame-spill, .frame-tear, .film-progress { display: none; }
 }

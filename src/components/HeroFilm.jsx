@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-/* «Фильм по прокрутке»: кадры видео рисуются на холсте по мере прокрутки.
-   Видео не проигрывается само — кадр задаёт прокрутка, поэтому картинка идёт
-   ровно, без пережатия потоком, и на телефоне это дешевле автоплея.
-   При системном «уменьшить движение» остаётся один статичный кадр. */
+/* «Фильм по прокрутке»: кадры видео сменяются по мере прокрутки, без автоплея.
+   Память держим под контролем: одновременно живёт небольшое окно кадров
+   (сзади 3, впереди 12), остальные отпускаем — иначе браузеру не хватит памяти
+   на телефоне. Кадры после первой прокрутки лежат в кеше браузера. */
 
-const COUNT = 212           // кадров в наборе (манифест /frames/manifest.json)
+const COUNT = 212            // кадров в наборе (/frames/manifest.json)
 const SET_BIG = '/frames/1600'
 const SET_SMALL = '/frames/1024'
-const LOOKAHEAD = 26        // сколько кадров вперёд держим готовыми
-const AHEAD_KEEP = 8        // сколько кадров назад оставляем
+const AHEAD = 12             // держим готовыми вперёд
+const BEHIND = 3             // и чуть назад — на случай прокрутки вверх
+const POOL_MAX = 22          // предел изображений в памяти одновременно
 
-// мягкие рампы: без изломов на краях, поэтому ничего не «дёргается»
 const smoothstep = (a, b, x) => {
   const t = Math.min(1, Math.max(0, (x - a) / (b - a)))
   return t * t * (3 - 2 * t)
@@ -20,93 +20,79 @@ const smoothstep = (a, b, x) => {
 export default function HeroFilm({ children }) {
   const wrapRef = useRef(null)
   const stickyRef = useRef(null)
-  const canvasRef = useRef(null)
-  const [ready, setReady] = useState(0)
+  const frontRef = useRef(null)
+  const backRef = useRef(null)
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
     const wrap = wrapRef.current
     const sticky = stickyRef.current
-    const canvas = canvasRef.current
-    if (!wrap || !sticky || !canvas) return
+    let front = frontRef.current
+    let back = backRef.current
+    if (!wrap || !sticky || !front || !back) return
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const dir = window.innerWidth < 820 ? SET_SMALL : SET_BIG
-    const ctx = canvas.getContext('2d')
-    const frames = Array.from({ length: COUNT }, () => ({ img: null, ready: false }))
-    let drawn = -1
+    const url = i => `${dir}/f${String(i).padStart(3, '0')}.webp`
+
+    const pool = new Map()            // idx → { img, ready }
+    let shown = -1                    // что сейчас на экране
+    let raf = 0
     let wrapTop = wrap.offsetTop
     let span = Math.max(1, wrap.offsetHeight - window.innerHeight)
 
-    const url = i => `${dir}/f${String(i).padStart(3, '0')}.webp`
+    const release = (i) => {
+      const e = pool.get(i)
+      if (!e) return
+      pool.delete(i)
+      try { e.img.removeAttribute('src') } catch {}
+    }
 
-    const load = (i) => {
-      if (i < 0 || i >= COUNT) return
-      const f = frames[i]
-      if (f.img) return
+    const trim = (center) => {
+      // отпускаем кадры, которые далеко от текущего положения
+      for (const i of [...pool.keys()]) {
+        if (i < center - BEHIND - 6 || i > center + AHEAD + 8) release(i)
+      }
+      if (pool.size > POOL_MAX) {
+        const far = [...pool.keys()].sort((a, b) => Math.abs(b - center) - Math.abs(a - center))
+        for (const i of far.slice(0, pool.size - POOL_MAX)) release(i)
+      }
+    }
+
+    const want = (i) => {
+      if (i < 0 || i >= COUNT || pool.has(i)) return
       const img = new Image()
       img.decoding = 'async'
+      const entry = { img, ready: false }
+      pool.set(i, entry)
       img.src = url(i)
-      f.img = img
-      const done = () => { if (!f.ready) { f.ready = true; setReady(n => n + 1) } }
+      const done = () => { entry.ready = true; if (i === wanted && wanted !== shown) paint(i) }
       if (img.decode) img.decode().then(done).catch(done)
       else img.onload = done
     }
 
-    // фоновая подгрузка: идём от текущего кадра вперёд небольшими порциями,
-    // чтобы к моменту прокрутки кадр уже лежал в памяти
-    let cursor = 0
-    let idle = 0
-    const pump = () => {
-      let n = 0
-      while (n < 3 && cursor < COUNT) { load(cursor); cursor += 1; n += 1 }
-      if (cursor < COUNT) idle = (window.requestIdleCallback || window.setTimeout)(pump, 220)
-    }
-    if (!reduce) idle = (window.requestIdleCallback || window.setTimeout)(pump, 300)
-
-    const sizeCanvas = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
-      const w = Math.round(window.innerWidth * dpr)
-      const h = Math.round(window.innerHeight * dpr)
-      if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w
-        canvas.height = h
-        if (drawn >= 0) drawFrame(drawn, true)
-      }
+    // два слоя-картинки: показываем новый кадр только когда он готов — мигания нет
+    const paint = (i) => {
+      const e = pool.get(i)
+      if (!e || !e.ready) return
+      back.src = url(i)
+      back.alt = ''
+      back.classList.add('is-front')
+      front.classList.remove('is-front')
+      const t = front
+      front = back
+      back = t
+      shown = i
+      if (!ready) setReady(true)
+      sticky.dataset.frame = String(i)
     }
 
-    const best = (i) => {                     // ближайший готовый кадр
-      if (frames[i] && frames[i].ready) return i
-      for (let d = 1; d < 60; d++) {
-        if (frames[i - d] && frames[i - d].ready) return i - d
-        if (frames[i + d] && frames[i + d].ready) return i + d
-      }
-      return -1
-    }
-
-    const drawFrame = (i, force) => {
-      const f = frames[i]
-      if (!ctx || !f || !f.ready) return
-      if (!force && i === drawn) return
-      const img = f.img
-      ctx.imageSmoothingEnabled = true
-      ctx.imageSmoothingQuality = 'high'
-      const cw = canvas.width, ch = canvas.height
-      const s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight)  // как object-fit: cover
-      const w = img.naturalWidth * s, h = img.naturalHeight * s
-      ctx.clearRect(0, 0, cw, ch)
-      ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h)
-      drawn = i
-      canvas.dataset.frame = String(i)
-    }
-
-    let raf = 0
+    let wanted = 0
     const update = () => {
       raf = 0
       const p = Math.min(1, Math.max(0, (window.scrollY - wrapTop) / span))
-      // всё движение считаем здесь, один раз на кадр, — рампы совпадают идеально
       sticky.style.setProperty('--bridge', p.toFixed(4))
-      // движение видно сразу: наезд идёт «на выходе» (быстро в начале, мягко в конце)
       const easeOut = 1 - (1 - p) * (1 - p)
       sticky.style.setProperty('--zoom', (1 + easeOut * 0.07).toFixed(4))
       sticky.style.setProperty('--pan', (easeOut * -1.6).toFixed(3))
@@ -114,40 +100,54 @@ export default function HeroFilm({ children }) {
       sticky.style.setProperty('--spill', smoothstep(0.42, 0.86, p).toFixed(4))
       sticky.style.setProperty('--tear', smoothstep(0.6, 1, p).toFixed(4))
 
-      const idx = Math.round(p * (COUNT - 1))
-      for (let i = idx - AHEAD_KEEP; i <= Math.min(COUNT - 1, idx + LOOKAHEAD); i++) load(i)
-      if (reduce) { drawFrame(0); return }
-      const b = best(idx)
-      if (b >= 0) drawFrame(b)
+      if (reduce) return
+      wanted = Math.round(p * (COUNT - 1))
+      // не создаём десятки запросов разом: по три новых кадра за кадр прокрутки
+      let started = 0
+      for (let d = 1; d <= AHEAD && started < 3; d++) {
+        if (!pool.has(wanted + d)) { want(wanted + d); started += 1 }
+      }
+      for (let d = 0; d <= BEHIND && started < 4; d++) {
+        if (!pool.has(wanted - d)) { want(wanted - d); started += 1 }
+      }
+      if (pool.has(wanted) && pool.get(wanted).ready) paint(wanted)
+      trim(wanted)
     }
 
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
     const onResize = () => {
       wrapTop = wrap.offsetTop
       span = Math.max(1, wrap.offsetHeight - window.innerHeight)
-      sizeCanvas()
       onScroll()
     }
 
-    sizeCanvas()
-    update()
+    if (reduce) {
+      // при системном «уменьшить движение» остаётся постер, ничего не грузим
+      front.src = url(0)
+      front.alt = 'Зелёная река и лес с высоты'
+      front.classList.add('is-front')
+    } else {
+      want(0)
+      update()
+    }
+
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onResize)
-
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onResize)
-      if (idle) (window.cancelIdleCallback || window.clearTimeout)(idle)
+      for (const i of [...pool.keys()]) release(i)
     }
   }, [])
 
   return (
-    <div className={`hero-film ${ready > 0 ? 'is-ready' : ''}`} ref={wrapRef}>
+    <div className={`hero-film ${ready ? 'is-ready' : ''}`} ref={wrapRef}>
       <div className="home-frame" ref={stickyRef}>
         <div className="cinema-media">
-          {/* первый кадр — обычная картинка: виден мгновенно, работает без JS и при «уменьшить движение» */}
+          {/* постер виден мгновенно и работает без JS */}
           <img className="hero-frame-img" src="/videos/hero-frame0.jpg" alt="Зелёная река и лес с высоты" width="1600" height="900" fetchpriority="high" decoding="async" />
-          <canvas className="hero-canvas" ref={canvasRef} aria-hidden="true" />
+          <img className="hero-layer" ref={frontRef} alt="" aria-hidden="true" decoding="async" />
+          <img className="hero-layer" ref={backRef} alt="" aria-hidden="true" decoding="async" />
         </div>
         <div className="cinema-grade" aria-hidden="true" />
         <div className="cinema-grain" aria-hidden="true" />
