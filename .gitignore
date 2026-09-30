@@ -4,3 +4,6 @@ dist/
 *.log
 .env
 .env.*
+
+dist/
+dist-ssr/
