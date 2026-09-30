@@ -19,7 +19,7 @@ export const site = {
   // Ключ Web3Forms (web3forms.com, бесплатно, ключ приходит на почту):
   // как только он появится — заявки с формы начнут приходить на указанную почту,
   // а пока форма отправляет готовое сообщение в WhatsApp.
-  web3formsKey: '',
+  web3formsKey: 'f6164d5e-d48b-4924-a131-b80bccd1bfb4',
   formEndpoint: '',
   email: 'omonaenkovao@gmail.com',
   phone: '+7 915 054-74-07',
