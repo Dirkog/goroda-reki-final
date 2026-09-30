@@ -104,12 +104,19 @@ export default function Home() {
 
       <Scene num="02" kicker="направления" title="Что подбираю чаще всего"
         note="Витрина направлений: бюджет, сезон и длительность. Если нужного нет — соберу под ваш запрос, в том числе комбинированные маршруты.">
-        <figure className="scene-strip">
-          <picture>
-            {stripKruiz.imageWebp && <source type="image/webp" srcSet={stripKruiz.imageWebp} />}
-            <img src={stripKruiz.image} alt={`${stripKruiz.title} — ${stripKruiz.region}`} width="1200" height="514" loading="lazy" decoding="async" />
-          </picture>
-          <figcaption>{stripKruiz.title}: {stripKruiz.region}. Ниже — направления, по которым чаще всего приходят запросы.</figcaption>
+        <figure className="interlude reveal">
+          <span className="interlude-media" aria-hidden="true">
+            <picture>
+              {stripKruiz.imageWebp && <source type="image/webp" srcSet={stripKruiz.imageWebp} />}
+              <img src={stripKruiz.image} alt={`${stripKruiz.title} — ${stripKruiz.region}`} width="1800" height="771" loading="lazy" decoding="async" />
+            </picture>
+          </span>
+          <span className="interlude-scrim" aria-hidden="true" />
+          <figcaption>
+            <em>направление месяца</em>
+            <b>{stripKruiz.title}</b>
+            <span>{stripKruiz.region} · маршруты от 6 дней, сезон с мая по сентябрь</span>
+          </figcaption>
         </figure>
         <div className="trip-grid home-grid">
           {tripCards.slice(0, 6).map((card, i) => (
@@ -159,12 +166,19 @@ export default function Home() {
       </Scene>
 
       <Scene num="05" kicker="опыт" title="Что уже организовано">
-        <figure className="scene-strip">
-          <picture>
-            {stripSakura.imageWebp && <source type="image/webp" srcSet={stripSakura.imageWebp} />}
-            <img src={stripSakura.image} alt={`${stripSakura.title} — ${stripSakura.region}`} width="1200" height="514" loading="lazy" decoding="async" />
-          </picture>
-          <figcaption>{stripSakura.title}: {stripSakura.region}.</figcaption>
+        <figure className="interlude reveal">
+          <span className="interlude-media" aria-hidden="true">
+            <picture>
+              {stripSakura.imageWebp && <source type="image/webp" srcSet={stripSakura.imageWebp} />}
+              <img src={stripSakura.image} alt={`${stripSakura.title} — ${stripSakura.region}`} width="1800" height="771" loading="lazy" decoding="async" />
+            </picture>
+          </span>
+          <span className="interlude-scrim" aria-hidden="true" />
+          <figcaption>
+            <em>куда поехать за впечатлениями</em>
+            <b>{stripSakura.title}</b>
+            <span>{stripSakura.region} · весна и осень, 4–7 дней, удобно совместить с соседними городами</span>
+          </figcaption>
         </figure>
         <div className="experience-grid">
           <article><b>События и фестивали</b><p>{pastTrips.events.slice(0, 5).join(' · ')}</p></article>

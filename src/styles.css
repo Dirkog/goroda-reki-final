@@ -1372,3 +1372,70 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
   .calendar-sort { display: none; }
   .frame-tear { height: 78px; }
 }
+
+/* =========================================================
+   КИНЕМАТОГРАФИЧЕСКИЕ ПАНЕЛИ: фото на весь экран, текст поверх
+   (референс: кадр во всю ширину, центрированная подпись, тёмная подложка)
+   ========================================================= */
+.interlude {
+  position: relative;
+  width: 100vw;
+  margin: 0 calc(50% - 50vw);
+  min-height: min(70vh, 620px);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--ink);
+  isolation: isolate;
+}
+.interlude-media { position: absolute; inset: 0; z-index: 0; display: block; }
+.interlude-media picture, .interlude-media img { display: block; width: 100%; height: 100%; }
+.interlude-media img { object-fit: cover; transform: scale(1.02); }
+.interlude-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(120% 80% at 50% 45%, rgba(8, 10, 12, 0.18) 0%, rgba(8, 10, 12, 0.62) 100%),
+    linear-gradient(180deg, rgba(8, 10, 12, 0.42) 0%, rgba(8, 10, 12, 0.2) 40%, rgba(8, 10, 12, 0.72) 100%);
+}
+.interlude figcaption {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: #fff;
+  padding: 40px 24px;
+  max-width: 780px;
+}
+.interlude figcaption em {
+  display: block;
+  font-style: normal;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.76);
+  margin-bottom: 18px;
+}
+.interlude figcaption b {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(30px, 4.6vw, 62px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 26px rgba(6, 8, 10, 0.4);
+}
+.interlude figcaption span { display: block; margin-top: 16px; font-size: clamp(14px, 1.3vw, 17px); color: rgba(255, 255, 255, 0.84); }
+.interlude::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -1px; height: 90px;
+  z-index: 2; pointer-events: none;
+  background: linear-gradient(180deg, rgba(244, 241, 234, 0) 0%, rgba(244, 241, 234, 0.7) 70%, var(--paper) 100%);
+  opacity: 0.55;
+}
+@media (max-width: 680px) {
+  .interlude { min-height: 52vh; }
+  .interlude figcaption { padding: 30px 18px; }
+}
