@@ -41,9 +41,9 @@ export default function Header({ page }) {
 
   return (
     <header className={`header ${solid ? 'is-solid' : 'is-transparent'}`}>
-      <a className="brand" href="/" aria-label={`Ольга Дударева, личный турагент — на главную`}>
+      <a className="brand" href="/" aria-label="Личный турагент Ольга Дударева — на главную">
         <span className="brand-mark" aria-hidden="true">ОД</span>
-        <span><b>Ольга Дударева</b><small>личный турагент · {site.name}</small></span>
+        <span><b>Личный турагент</b></span>
       </a>
 
       <nav className="nav" aria-label="Основная навигация">

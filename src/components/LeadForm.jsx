@@ -38,8 +38,8 @@ export default function LeadForm({ preset = {}, compact = false }) {
     const payload = () => {
       const fd = new FormData()
       if (site.web3formsKey && !site.formEndpoint) fd.append('access_key', site.web3formsKey)
-      fd.append('subject', 'Заявка с сайта «Города и реки»')
-      fd.append('from_name', 'Сайт «Города и реки»')
+      fd.append('subject', `Заявка с сайта «${site.name}»`)
+      fd.append('from_name', `Сайт «${site.name}»`)
       fd.append('name', form.name)
       fd.append('contact', form.contact)
       fd.append('direction', form.direction)

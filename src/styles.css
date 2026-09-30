@@ -984,6 +984,7 @@ summary:focus-visible {
 }
 .footer-logo { font-family: var(--serif); font-size: 24px; font-weight: 600; color: #fff; }
 .footer-main p { margin-top: 14px; font-size: 14.5px; max-width: 44ch; }
+.footer-main .footer-role { margin-top: 6px; color: var(--accent-soft); font-size: 13.5px; }
 .footer-registry { font-size: 13.5px; }
 .footer-registry b { color: #fff; }
 .footer-registry a, .footer-cols a { color: #fff; }

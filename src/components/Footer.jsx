@@ -6,6 +6,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer-main">
         <a className="footer-logo" href="/">Ольга Дударева</a>
+        <p className="footer-role">Личный турагент · города и реки, море и круизы, события</p>
         <p>Личный турагент: подбираю и бронирую поездки для семей, пар и компаний — море, города, события, круизы, корпоративные выезды. Работаю по договору, оплата на расчётный счёт, документы заранее.</p>
         <p className="footer-registry">
           <b>{site.registry.label}</b> — <a href={site.registry.url} target="_blank" rel="noopener noreferrer">проверить в реестре турагентов</a>
@@ -14,7 +15,7 @@ export default function Footer() {
       <div className="footer-cols">
         <div>
           <b>Официально</b>
-          <span>Агентство «{site.name}», реестр турагентов {site.registry.label}</span>
+          <span>{site.legalName} — реестр турагентов {site.registry.label}</span>
           <span>Реквизиты — в договоре, который вы получаете до оплаты</span>
         </div>
         <div>

@@ -67,7 +67,6 @@ export default function Home() {
         <div className="cinema-grade" aria-hidden="true" />
         <div className="cinema-inner">
           <div className="cinema-copy">
-            <p className="cinema-eyebrow">личный турагент · реестр РТА 0005142</p>
             <h1 className="cinema-title">Подберу поездку{' '}<br />и останусь на связи</h1>
             <p className="cinema-lead">
               Меня зовут Ольга Дударева. Подбираю и бронирую путешествия для семей, пар и компаний: море, города,

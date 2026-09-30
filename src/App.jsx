@@ -21,7 +21,7 @@ const PAGES = { home: Home, olga: Olga, trips: Trips, process: Process, trust: T
 
 const NOT_FOUND = {
   id: 'notfound', path: '/404', label: 'Страница не найдена',
-  title: 'Страница не найдена — Города и реки',
+  title: 'Страница не найдена — Личный турагент',
   description: 'Такой страницы нет. Вернитесь на главную или напишите нам — подберём тур.',
   noindex: true
 }
