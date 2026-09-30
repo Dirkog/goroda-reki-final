@@ -31,7 +31,8 @@ export default function Footer() {
           <b>Разделы</b>
           {nav.filter(n => n.id !== 'home').map(n => <a key={n.id} href={n.path}>{n.label}</a>)}
           <a href="/oferta/">Договор и оферта</a>
-          <a href="/politika-konfidencialnosti/">Политика обработки данных</a>
+          <a href="/politika-konfidencialnosti/">Политика конфиденциальности</a>
+          <a href="/istochniki-foto/">Источники фотографий</a>
         </div>
       </div>
       <div className="footer-bottom">

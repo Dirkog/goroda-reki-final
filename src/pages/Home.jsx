@@ -54,9 +54,9 @@ function Scene({ num, kicker, title, note, children, id }) {
   )
 }
 
-const tripBySlug = (slug) => tripCards.find(c => c.slug === slug) || tripCards[0]
-const stripKruiz = tripBySlug('kruizy')
-const stripSakura = tripBySlug('sakura-v-yaponii')
+// Широкие полосы между сценами: отдельные снимки 21:9, чтобы не повторять карточки
+const stripKruiz = { image: '/images/strips/fjord.jpg', imageWebp: '/images/strips/fjord.webp', title: 'Норвежские фьорды', region: 'Согнефьорд, Норвегия' }
+const stripSakura = { image: '/images/strips/tulips.jpg', imageWebp: '/images/strips/tulips.webp', title: 'Фестиваль тюльпанов', region: 'Болленстрек, Нидерланды' }
 
 export default function Home() {
   return (
@@ -132,14 +132,7 @@ export default function Home() {
             <article className="step" key={num}><span>{num}</span><h3>{title}</h3><p>{text}</p></article>
           ))}
         </div>
-        <div className="home-quote">
-          <blockquote>
-            Я не охочусь за «горящими» турами и не продаю то, что не выбрала бы себе. Сначала разговор: с кем едете,
-            зачем и что важнее — море, город или события. Дальше собираю два-три варианта и объясняю разницу
-            простыми словами. Если поездка вам не нужна — так и скажу.
-          </blockquote>
-          <p className="home-quote-sign">Ольга Дударева · личный турагент</p>
-        </div>
+
       </Scene>
 
       <Scene num="04" kicker="заявка на подбор" title="Расскажите о поездке — подберу варианты"

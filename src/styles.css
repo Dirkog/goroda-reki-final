@@ -1065,3 +1065,19 @@ summary:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
 }
+
+/* ---------- страница «Источники фотографий» ---------- */
+.credits-list { display: grid; border-top: 1px solid var(--line); }
+.credits-list article {
+  display: grid;
+  grid-template-columns: 260px 1fr 300px;
+  gap: 22px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+}
+.credits-list b { font-weight: 600; }
+.credits-list span { color: var(--muted); font-size: 14px; }
+.credits-meta { font-size: 13px !important; }
+.credits-meta a { color: var(--primary); text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 860px) { .credits-list article { grid-template-columns: 1fr; gap: 6px; } }

@@ -11,13 +11,14 @@ import Trust from './pages/Trust'
 import Corporate from './pages/Corporate'
 import Contacts from './pages/Contacts'
 import Legal from './pages/Legal'
+import Credits from './pages/Credits'
 import NotFound from './pages/NotFound'
 import { normalize, routeByPath } from './lib/router'
 import { applyMeta } from './lib/seo'
 import { track } from './lib/analytics'
 import { metrikaHit } from './lib/metrika'
 
-const PAGES = { home: Home, olga: Olga, trips: Trips, process: Process, trust: Trust, corporate: Corporate, contacts: Contacts, oferta: Legal, privacy: Legal }
+const PAGES = { home: Home, olga: Olga, trips: Trips, process: Process, trust: Trust, corporate: Corporate, contacts: Contacts, oferta: Legal, privacy: Legal, credits: Credits }
 
 const NOT_FOUND = {
   id: 'notfound', path: '/404', label: 'Страница не найдена',
