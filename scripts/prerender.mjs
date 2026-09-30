@@ -25,7 +25,7 @@ function esc(s) {
 function buildHead(route) {
   const head = headFor(route, site.origin)
   const metas = head.metas.map(([a, k, v]) => `<meta ${a}="${k}" content="${esc(v)}" />`).join('\n    ')
-  const jsonLd = head.jsonLd.map(d => `<script type="application/ld+json">${JSON.stringify(d)}</script>`).join('\n    ')
+  const jsonLd = head.jsonLd.map((d, i) => `<script type="application/ld+json" id="ld-${i}">${JSON.stringify(d)}</script>`).join('\n    ')
   return `<title>${esc(head.title)}</title>
     ${metas}
     <link rel="canonical" href="${esc(head.url)}" />
