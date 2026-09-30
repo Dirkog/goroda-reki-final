@@ -65,38 +65,44 @@ export default function EventsCalendar({ limit, bare = false }) {
         ))}
       </div>
 
+      <div className="calendar-bar">
+        <span className="calendar-count">{shown.length} {shown.length === 1 ? 'событие' : (shown.length < 5 ? 'события' : 'событий')}{month !== 'все' ? ` · ${month}` : ' · все месяцы'}</span>
+        <span className="calendar-sort">сначала ближайшие</span>
+      </div>
+
       <div className="calendar-list">
         {shown.map(ev => {
           const hot = /идёт|сейчас/i.test(ev.status || '')
           return (
             <article className="event-row" key={ev.title}>
               <div className="event-when">
-                {hot && <span className="event-next">идёт сейчас</span>}
                 <b>{ev.dates}</b>
                 <span>{ev.place}</span>
+                {ev.verified && <small>сверено {fmtDate(ev.verified)}</small>}
               </div>
               <div className="event-body">
+                {hot && <span className="event-next">идёт сейчас</span>}
                 <h3>{ev.title}</h3>
-                <p>{ev.note}</p>
+                <p className="event-note">{ev.note}</p>
                 {ev.source && (
-                  <p className="event-src">
-                    Источник: <a href={ev.source} target="_blank" rel="noopener noreferrer">{hostOf(ev.source)}</a>
-                    {ev.verified ? <> · проверено {fmtDate(ev.verified)}</> : null}
-                  </p>
+                  <a className="event-src" href={ev.source} target="_blank" rel="noopener noreferrer">
+                    Источник: {hostOf(ev.source)} ↗
+                  </a>
                 )}
               </div>
-              <div className="event-status">
+              <div className="event-side">
                 <em className={hot ? 'hot' : ''}>{ev.status}</em>
                 <a
+                  className="event-cta"
                   href={waText(`Здравствуйте! Интересует событие: ${ev.title} (${ev.dates}, ${ev.place}). Хочу поездку под эти даты. Состав: ___, бюджет: ___.`)}
                   onClick={() => track('click_request_tour', { place: 'calendar', event: ev.title })}
                 >
-                  Подобрать к дате
+                  Подобрать к дате →
                 </a>
               </div>
             </article>
           )
-        })}
+        })        })}
       </div>
 
       <div className="calendar-foot">

@@ -66,6 +66,9 @@ export default function Home() {
         <HeroMedia />
         <div className="cinema-grade" aria-hidden="true" />
         <span className="frame-spill" aria-hidden="true" />
+        <svg className="frame-tear" viewBox="0 0 1440 130" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0,84 C90,44 168,104 268,84 C372,63 448,108 560,88 C668,68 742,112 860,90 C968,70 1042,110 1150,88 C1256,66 1330,104 1440,74 L1440,130 L0,130 Z" fill="#f4f1ea" />
+        </svg>
         <div className="cinema-inner">
           <div className="cinema-copy">
             <h1 className="cinema-title">Подберу поездку{' '}<br />и останусь на связи</h1>

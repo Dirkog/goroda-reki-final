@@ -5,7 +5,14 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-main">
-        <a className="footer-logo" href="/">Ольга Дударева</a>
+        <a className="footer-logo" href="/">
+          <svg viewBox="0 0 64 64" width="30" height="30" fill="none" aria-hidden="true">
+            <path d="M5 40c6-8 13-8 19 0s13 8 19 0 9-6 16 0" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+            <path d="M5 51c6-8 13-8 19 0s13 8 19 0 9-6 16 0" stroke="currentColor" strokeWidth="4" strokeLinecap="round" opacity=".6" />
+            <path d="M21 12h12l6 11h8v11H21z" fill="currentColor" />
+          </svg>
+          Ольга Дударева
+        </a>
         <p className="footer-role">Личный турагент · города и реки, море и круизы, события</p>
         <p>Личный турагент: подбираю и бронирую поездки для семей, пар и компаний — море, города, события, круизы, корпоративные выезды. Работаю по договору, оплата на расчётный счёт, документы заранее.</p>
         <p className="footer-registry">

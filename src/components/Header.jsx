@@ -42,7 +42,15 @@ export default function Header({ page }) {
   return (
     <header className={`header ${solid ? 'is-solid' : 'is-transparent'}`}>
       <a className="brand" href="/" aria-label="Личный турагент Ольга Дударева — на главную">
-        <span className="brand-mark" aria-hidden="true">ОД</span>
+        <span className="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="26" height="26" fill="none">
+            <path d="M5 40c6-8 13-8 19 0s13 8 19 0 9-6 16 0" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+            <path d="M5 51c6-8 13-8 19 0s13 8 19 0 9-6 16 0" stroke="currentColor" strokeWidth="4" strokeLinecap="round" opacity=".6" />
+            <path d="M21 12h12l6 11h8v11H21z" fill="currentColor" />
+            <rect x="26" y="29" width="6" height="6" fill="var(--paper)" />
+            <rect x="36" y="29" width="6" height="6" fill="var(--paper)" />
+          </svg>
+        </span>
         <span><b>Личный турагент</b></span>
       </a>
 
