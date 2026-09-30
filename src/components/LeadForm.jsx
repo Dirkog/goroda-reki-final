@@ -35,21 +35,25 @@ export default function LeadForm({ preset = {}, compact = false }) {
     track('lead_submit', { direction: form.direction })
     if (endpoint) {
       try {
-        const r = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({
-            ...(site.web3formsKey && !site.formEndpoint ? { access_key: site.web3formsKey } : {}),
-            ...form,
-            subject: 'Заявка с сайта «Города и реки»',
-            from_name: 'Сайт «Города и реки»',
-            source: leadSource(),
-            page: window.location.pathname
-          })
-        })
+        // Отправляем FormData: это «простой» запрос — браузер не делает preflight,
+        // значит нет лишних CORS-проблем и защиты от ботов.
+        const fd = new FormData()
+        if (site.web3formsKey && !site.formEndpoint) fd.append('access_key', site.web3formsKey)
+        fd.append('subject', 'Заявка с сайта «Города и реки»')
+        fd.append('from_name', 'Сайт «Города и реки»')
+        fd.append('name', form.name)
+        fd.append('contact', form.contact)
+        fd.append('direction', form.direction)
+        fd.append('dates', form.dates)
+        fd.append('people', form.people)
+        fd.append('comment', form.comment)
+        fd.append('source', leadSource())
+        fd.append('page', typeof window !== 'undefined' ? window.location.pathname : '')
+        fd.append('botcheck', '')
+        const r = await fetch(endpoint, { method: 'POST', body: fd })
         if (!r.ok) throw new Error('HTTP ' + r.status)
       } catch (e) {
-        // если внешний сервис не ответил — не теряем заявку, уводим в WhatsApp
+        // сервис не ответил — заявку не теряем, уводим в WhatsApp
         track('lead_fallback_whatsapp', { reason: String(e).slice(0, 60) })
         window.open(waText(message()), '_blank', 'noopener')
       }
