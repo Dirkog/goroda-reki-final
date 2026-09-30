@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Page } from '../components/Page'
 import LeadForm from '../components/LeadForm'
+import EventsCalendar from '../components/EventsCalendar'
 import { TripImage } from '../components/Media'
 import { contacts, heroVideo, site, steps, tripCards, faq, pastTrips, team, waText } from '../data/site'
 import { track } from '../lib/analytics'
@@ -24,67 +25,93 @@ function HeroMedia() {
   }, [])
 
   return (
-    <div className="flight-hero">
-      <img className="hero-photo" src={heroVideo.poster} alt="Вид с высоты на реку, лесистые берега и город" width="1920" height="1080" fetchpriority="high" decoding="async" />
+    <div className="cinema-media">
+      <img src={heroVideo.poster} alt="Вид с высоты на реку, лесистые берега и город" width="1600" height="900" fetchpriority="high" decoding="async" />
       {videoOn && !failed && (
-        <video className="flight-video" autoPlay muted loop playsInline preload="none" poster={heroVideo.poster} onError={() => setFailed(true)} aria-hidden="true">
+        <video autoPlay muted loop playsInline preload="none" poster={heroVideo.poster} onError={() => setFailed(true)} aria-hidden="true">
           <source src={heroVideo.mp4} type="video/mp4" />
         </video>
       )}
-      <div className="horizon-glow" aria-hidden="true" />
     </div>
   )
 }
 
+// Каждая секция страницы — «сцена»: номер слева, заголовок на одной линии во всех сценах,
+// одинаковая ширина колонки и один и тот же вертикальный ритм.
+function Scene({ num, kicker, title, note, children, id }) {
+  return (
+    <section className="scene" id={id}>
+      <div className="scene-head">
+        <span className="scene-num">{num}</span>
+        <div>
+          {kicker && <p className="eyebrow">{kicker}</p>}
+          <h2>{title}</h2>
+        </div>
+      </div>
+      {note && <p className="scene-note" style={{ marginBottom: '28px' }}>{note}</p>}
+      {children}
+    </section>
+  )
+}
+
+const tripBySlug = (slug) => tripCards.find(c => c.slug === slug) || tripCards[0]
+const stripKruiz = tripBySlug('kruizy')
+const stripSakura = tripBySlug('sakura-v-yaponii')
+
 export default function Home() {
   return (
     <Page className="home-page">
-      <section className="home-hero">
+      {/* Кадр во весь экран: видео/фото, грейд, заголовок как титр, факты в нижней строке */}
+      <section className="home-frame">
         <HeroMedia />
-        <div className="hero-content">
-          <p className="eyebrow">официальное турагентство · РТА 0005142</p>
-          <h1>Путешествия, которые хочется вспоминать</h1>
-          <p className="hero-lead">
-            Подбираем и бронируем туры для семей, пар, компаний и корпоративных групп: море, города, круизы, события.
-            Договор до оплаты, оплата на расчётный счёт, поддержка до возвращения домой.
-          </p>
-          <div className="hero-actions">
-            <a className="btn light" href={waText('Здравствуйте! Хочу подобрать тур: направление ___, даты ___, состав ___.')} onClick={() => track('click_whatsapp', { place: 'hero' })}>Написать в WhatsApp</a>
-            <a className="btn glass" href="/napravleniya/">Смотреть направления</a>
+        <div className="cinema-grade" aria-hidden="true" />
+        <div className="cinema-inner">
+          <div className="cinema-copy">
+            <p className="cinema-eyebrow">личный турагент · реестр РТА 0005142</p>
+            <h1 className="cinema-title">Подберу поездку{' '}<br />и останусь на связи</h1>
+            <p className="cinema-lead">
+              Меня зовут Ольга Дударева. Подбираю и бронирую путешествия для семей, пар и компаний: море, города,
+              события, круизы. Один человек от первого сообщения до возвращения домой — без «передаю ваш вопрос менеджеру».
+            </p>
+            <div className="cinema-actions">
+              <a className="btn light" href={waText('Здравствуйте, Ольга! Хочу подобрать тур: направление ___, даты ___, состав ___.')} onClick={() => track('click_whatsapp', { place: 'hero' })}>Написать в WhatsApp</a>
+              <a className="btn glass" href="#scene-01">Календарь событий</a>
+            </div>
+            <div className="cinema-sign">
+              <b>Ольга Дударева</b>
+              <span>личный турагент · {team.leadExperience.toLowerCase()}</span>
+              <a href={site.phoneHref} onClick={() => track('click_phone', { place: 'hero' })}>{site.phone}</a>
+            </div>
           </div>
-          <p className="hero-note">Отвечаем в течение 15 минут в рабочее время. Подбор — бесплатно.</p>
+
+          <div className="cinema-foot">
+            <div><b>РТА 0005142</b><span>агентство в реестре турагентов</span></div>
+            <div><b>Договор до оплаты</b><span>оплата на расчётный счёт, чек</span></div>
+            <div><b>{team.managers} специалистов</b><span>подключаю по сложным направлениям</span></div>
+            <div><b>На связи в поездке</b><span>не только до вылета</span></div>
+            <span className="cinema-scroll" aria-hidden="true">листайте<i /></span>
+          </div>
         </div>
-        <nav className="hero-search" aria-label="Быстрый переход">
-          <div><span>Куда</span><b>море · город · круиз</b></div>
-          <div><span>Когда</span><b>даты или месяц</b></div>
-          <div><span>Кто едет</span><b>семья · пара · команда</b></div>
-          <a className="hero-search-go" href="/napravleniya/">Подобрать тур</a>
-        </nav>
       </section>
 
-      <aside className="home-trust" aria-label="Ключевые факты">
-        {[
-          ['РТА 0005142', 'агентство в реестре турагентов'],
-          ['Договор до оплаты', 'оплата на расчётный счёт и чек'],
-          ['11 менеджеров', 'свой специалист по направлению'],
-          ['Связь 24/7', 'помогаем и в поездке, не только до'],
-          ['Документы заранее', 'за 4–7 дней до выезда'],
-          ['Работаем из любой страны', 'маршруты на регулярных рейсах']
-        ].map(([b, s]) => <div key={b}><b>{b}</b><span>{s}</span></div>)}
-      </aside>
+      <Scene num="01" id="scene-01" kicker="календарь событий" title="Куда ехать за впечатлениями"
+        note="Фестивали, парады, цветение и сезонные события с точными датами. Выберите месяц — покажу, что происходит в это время, и подберу поездку под эти даты.">
+        <EventsCalendar bare />
+      </Scene>
 
-      <section className="home-section">
-        <div className="section-head">
-          <div>
-            <p className="eyebrow">направления</p>
-            <h2>Что подбираем чаще всего</h2>
-          </div>
-          <a className="section-link" href="/napravleniya/">Все направления →</a>
-        </div>
+      <Scene num="02" kicker="направления" title="Что подбираю чаще всего"
+        note="Витрина направлений: бюджет, сезон и длительность. Если нужного нет — соберу под ваш запрос, в том числе комбинированные маршруты.">
+        <figure className="scene-strip">
+          <picture>
+            {stripKruiz.imageWebp && <source type="image/webp" srcSet={stripKruiz.imageWebp} />}
+            <img src={stripKruiz.image} alt={`${stripKruiz.title} — ${stripKruiz.region}`} width="1200" height="514" loading="lazy" decoding="async" />
+          </picture>
+          <figcaption>{stripKruiz.title}: {stripKruiz.region}. Ниже — направления, по которым чаще всего приходят запросы.</figcaption>
+        </figure>
         <div className="trip-grid home-grid">
           {tripCards.slice(0, 6).map((card, i) => (
             <a className="trip-teaser" key={card.slug} href="/napravleniya/">
-              <TripImage card={card} eager={i === 0} />
+              <TripImage card={card} eager={false} />
               <span className="trip-teaser-body">
                 <em>{card.category}</em>
                 <b>{card.title}</b>
@@ -94,46 +121,54 @@ export default function Home() {
             </a>
           ))}
         </div>
-      </section>
+        <p className="scene-note" style={{ marginTop: '24px' }}>
+          <a className="section-link" href="/napravleniya/">Все направления и цены →</a>
+        </p>
+      </Scene>
 
-      <section className="home-section">
-        <div className="section-head">
-          <div>
-            <p className="eyebrow">как это работает</p>
-            <h2>Четыре шага до поездки</h2>
-          </div>
-          <a className="section-link" href="/kak-rabotaem/">Подробно о процессе →</a>
-        </div>
+      <Scene num="03" kicker="как проходит работа" title="Четыре шага до поездки"
+        note="Никаких «оставьте заявку — менеджер свяжется»: работаем разговором и понятными шагами. Договор оформляем до оплаты, документы приходят заранее.">
         <div className="steps-track home-steps">
           {steps.slice(0, 4).map(([num, title, text]) => (
             <article className="step" key={num}><span>{num}</span><h3>{title}</h3><p>{text}</p></article>
           ))}
         </div>
-      </section>
-
-      <section className="home-section home-lead-block">
-        <div className="home-lead-copy">
-          <p className="eyebrow">заявка на подбор</p>
-          <h2>Расскажите о поездке — подберём варианты</h2>
-          <p>Заполните короткую форму: направление, даты, состав и бюджет. Первые варианты пришлём в течение дня, в рабочее время — обычно за 1–2 часа.</p>
-          <ul className="check-list">
-            <li>Подбор и консультация — бесплатно, без обязательств</li>
-            <li>Сравниваем перелёты, отели и условия, объясняем разницу</li>
-            <li>Договор оформляем до оплаты, оплата — на расчётный счёт</li>
-          </ul>
-          <p className="home-lead-alt">Удобнее сразу в мессенджер: <a href={contacts.telegram}>Telegram</a> · <a href={contacts.vk}>ВКонтакте</a> · <a href={contacts.max}>MAX</a> · <a href={site.phoneHref}>{site.phone}</a></p>
+        <div className="home-quote">
+          <blockquote>
+            Я не охочусь за «горящими» турами и не продаю то, что не выбрала бы себе. Сначала разговор: с кем едете,
+            зачем и что важнее — море, город или события. Дальше собираю два-три варианта и объясняю разницу
+            простыми словами. Если поездка вам не нужна — так и скажу.
+          </blockquote>
+          <p className="home-quote-sign">Ольга Дударева · личный турагент</p>
         </div>
-        <LeadForm compact />
-      </section>
+      </Scene>
 
-      <section className="home-section">
-        <div className="section-head">
-          <div>
-            <p className="eyebrow">опыт команды</p>
-            <h2>Что мы уже организовали</h2>
+      <Scene num="04" kicker="заявка на подбор" title="Расскажите о поездке — подберу варианты"
+        note="Напишите направление, даты, состав и бюджет. Первые варианты пришлю в течение дня, в рабочее время — обычно за 1–2 часа.">
+        <div className="home-lead-block">
+          <div className="home-lead-copy">
+            <ul className="check-list">
+              <li>Подбор и консультация — бесплатно, без обязательств</li>
+              <li>Сравниваю перелёты, отели и условия, объясняю разницу простыми словами</li>
+              <li>Договор оформляем до оплаты, оплата — на расчётный счёт</li>
+              <li>Отвечаю лично, обычно в течение 15 минут в рабочее время</li>
+            </ul>
+            <p className="home-lead-alt">
+              Удобнее сразу в мессенджер: <a href={contacts.telegram}>Telegram</a> · <a href={contacts.vk}>ВКонтакте</a> · <a href={contacts.max}>MAX</a> · <a href={site.phoneHref}>{site.phone}</a>
+            </p>
           </div>
-          <a className="section-link" href="/komanda/">О команде →</a>
+          <LeadForm compact />
         </div>
+      </Scene>
+
+      <Scene num="05" kicker="опыт" title="Что уже организовано">
+        <figure className="scene-strip">
+          <picture>
+            {stripSakura.imageWebp && <source type="image/webp" srcSet={stripSakura.imageWebp} />}
+            <img src={stripSakura.image} alt={`${stripSakura.title} — ${stripSakura.region}`} width="1200" height="514" loading="lazy" decoding="async" />
+          </picture>
+          <figcaption>{stripSakura.title}: {stripSakura.region}.</figcaption>
+        </figure>
         <div className="experience-grid">
           <article><b>События и фестивали</b><p>{pastTrips.events.slice(0, 5).join(' · ')}</p></article>
           <article><b>Круизы</b><p>По рекам России, Персидский залив, Средиземное море, Норвежские фьорды.</p></article>
@@ -141,18 +176,16 @@ export default function Home() {
           <article><b>Семейный отдых</b><p>{pastTrips.family.join(' · ')}</p></article>
         </div>
         <p className="experience-note">
-          {team.lead} — {team.leadRole.toLowerCase()}, {team.leadExperience}. Команда сама путешествует 1–2 раза в месяц,
-          поэтому советуем только проверенное лично.
+          Веду поездки вместе с командой «Города и реки»: {team.owner} отвечает за договоры и оплату,
+          коллеги-специалисты подключаются по сложным направлениям. Но общаетесь вы со мной — это моя работа,
+          {team.ownTravels.toLowerCase()}.
         </p>
-      </section>
+        <p className="scene-note" style={{ marginTop: '20px' }}>
+          <a className="section-link" href="/komanda/">О команде →</a>
+        </p>
+      </Scene>
 
-      <section className="home-section">
-        <div className="section-head">
-          <div>
-            <p className="eyebrow">частые вопросы</p>
-            <h2>Отвечаем честно</h2>
-          </div>
-        </div>
+      <Scene num="06" kicker="частые вопросы" title="Отвечаю честно">
         <div className="faq-list">
           {faq.map(([q, a]) => (
             <details key={q}>
@@ -161,8 +194,8 @@ export default function Home() {
             </details>
           ))}
         </div>
-        <p className="faq-more">Не нашли ответ? <a href="/kontakty/">Задайте вопрос — ответим без обязательств</a>.</p>
-      </section>
+        <p className="faq-more">Не нашли ответ? <a href="/kontakty/">Задайте вопрос — отвечу без обязательств</a>.</p>
+      </Scene>
     </Page>
   )
 }

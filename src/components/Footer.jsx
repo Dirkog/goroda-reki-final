@@ -5,8 +5,8 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-main">
-        <a className="footer-logo" href="/">{site.name}</a>
-        <p>Онлайн-турагентство для семейных поездок, событийных маршрутов, круизов, индивидуальных туров и корпоративных выездов. Работаем по договору, оплата — на расчётный счёт.</p>
+        <a className="footer-logo" href="/">Ольга Дударева</a>
+        <p>Личный турагент: подбираю и бронирую поездки для семей, пар и компаний — море, города, события, круизы, корпоративные выезды. Работаю по договору, оплата на расчётный счёт, документы заранее.</p>
         <p className="footer-registry">
           <b>{site.registry.label}</b> — <a href={site.registry.url} target="_blank" rel="noopener noreferrer">проверить в реестре турагентов</a>
         </p>
@@ -14,8 +14,8 @@ export default function Footer() {
       <div className="footer-cols">
         <div>
           <b>Официально</b>
+          <span>Агентство «{site.name}», реестр турагентов {site.registry.label}</span>
           <span>Реквизиты — в договоре, который вы получаете до оплаты</span>
-          <span>Реквизиты — в договоре до оплаты</span>
         </div>
         <div>
           <b>Связаться</b>

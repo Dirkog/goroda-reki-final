@@ -4,8 +4,18 @@ import { track } from '../lib/analytics'
 
 export default function Header({ page }) {
   const [open, setOpen] = useState(false)
+  // На главной шапка лежит поверх кинематографического кадра и «проявляется»
+  // в плотную строку после прокрутки.
+  const [solid, setSolid] = useState(page !== 'home')
   const panelRef = useRef(null)
   const toggleRef = useRef(null)
+
+  useEffect(() => {
+    const onScroll = () => setSolid(page !== 'home' || window.scrollY > 72)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [page])
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
@@ -30,10 +40,10 @@ export default function Header({ page }) {
   }, [open])
 
   return (
-    <header className="header">
-      <a className="brand" href="/" aria-label={`${site.name} — на главную`}>
-        <span className="brand-mark" aria-hidden="true">гр</span>
-        <span><b>{site.name}</b><small>онлайн-турагентство</small></span>
+    <header className={`header ${solid ? 'is-solid' : 'is-transparent'}`}>
+      <a className="brand" href="/" aria-label={`Ольга Дударева, личный турагент — на главную`}>
+        <span className="brand-mark" aria-hidden="true">ОД</span>
+        <span><b>Ольга Дударева</b><small>личный турагент · {site.name}</small></span>
       </a>
 
       <nav className="nav" aria-label="Основная навигация">
@@ -44,7 +54,7 @@ export default function Header({ page }) {
         ))}
       </nav>
 
-      <a className="header-cta" href={waText(`Здравствуйте! Хочу подобрать тур. Направление: ___, даты: ___, состав: ___.`)} onClick={() => track('click_whatsapp', { place: 'header' })}>Написать</a>
+      <a className="header-cta" href={waText(`Здравствуйте! Хочу подобрать тур. Направление: ___, даты: ___, состав: ___.`)} onClick={() => track('click_whatsapp', { place: 'header' })}>Написать Ольге</a>
 
       <button
         ref={toggleRef}
