@@ -1,0 +1,170 @@
+backend:
+  name: github
+  repo: Dirkog/goroda-reki-final
+  branch: tour-agency-website
+  # Вход: кнопка «Sign in with Token» → GitHub выдаст токен с нужными правами.
+  # Позже можно подключить вход в один клик через OAuth-прокси (Cloudflare Worker).
+
+# Куда складывать загруженные фотографии
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+site_url: https://olgatour.pages.dev
+display_url: https://olgatour.pages.dev
+logo_url: https://olgatour.pages.dev/icon.svg
+
+locale: ru
+
+collections:
+  # ---------- Контакты, команда, документы ----------
+  - name: settings
+    label: Контакты и команда
+    icon: settings
+    files:
+      - name: main
+        label: Основные данные сайта
+        file: src/content/settings.json
+        fields:
+          - name: site
+            label: О сайте и контактах
+            widget: object
+            fields:
+              - { name: name, label: Название, widget: string }
+              - { name: legalName, label: Полное название, widget: string }
+              - { name: tagline, label: Короткая подпись, widget: string }
+              - { name: defaultTitle, label: Заголовок для поиска (title главной), widget: string }
+              - { name: defaultDescription, label: Описание для поиска, widget: text }
+              - { name: email, label: E-mail, widget: string }
+              - { name: phone, label: Телефон (как показывать), widget: string }
+              - { name: phoneHref, label: Телефон (ссылка tel:), widget: string }
+              - { name: workHours, label: Режим работы, widget: text }
+              - { name: manager, label: Менеджер, widget: string }
+              - { name: managerRole, label: Роль менеджера, widget: string }
+              - name: registry
+                label: Реестр турагентов
+                widget: object
+                fields:
+                  - { name: label, label: Номер, widget: string }
+                  - { name: url, label: Ссылка на реестр, widget: string }
+                  - { name: note, label: Пояснение, widget: string }
+              - { name: metrikaId, label: Номер счётчика Яндекс.Метрики, widget: string, required: false, hint: "Пусто — аналитика не подключается" }
+              - { name: web3formsKey, label: Ключ Web3Forms (заявки на почту), widget: string, required: false }
+              - { name: formEndpoint, label: Свой адрес приёма заявок (если есть), widget: string, required: false }
+          - name: contacts
+            label: Мессенджеры и соцсети
+            widget: object
+            fields:
+              - { name: whatsapp, label: WhatsApp (ссылка), widget: string }
+              - { name: telegram, label: Telegram (ссылка), widget: string }
+              - { name: max, label: MAX (ссылка), widget: string }
+              - { name: vk, label: ВКонтакте (ссылка), widget: string }
+          - name: team
+            label: Команда
+            widget: object
+            fields:
+              - { name: owner, label: Собственник, widget: string }
+              - { name: ownerRole, label: Роль собственника, widget: string }
+              - { name: lead, label: Личный менеджер, widget: string }
+              - { name: leadRole, label: Роль менеджера, widget: string }
+              - { name: leadExperience, label: Опыт менеджера, widget: string }
+              - { name: managers, label: Менеджеров в команде, widget: number }
+              - { name: ownTravels, label: Как часто ездит команда, widget: string }
+          - name: pastTrips
+            label: Опыт команды (что уже организовали)
+            widget: object
+            fields:
+              - { name: events, label: События и фестивали, widget: list, field: { name: item, label: Событие, widget: string } }
+              - { name: corporate, label: Корпоративные выезды, widget: list, field: { name: item, label: Место, widget: string } }
+              - { name: cruises, label: Круизы, widget: list, field: { name: item, label: Маршрут, widget: string } }
+              - { name: family, label: Семейные направления, widget: list, field: { name: item, label: Страна, widget: string } }
+          - name: legal
+            label: Документы
+            widget: object
+            fields:
+              - { name: entity, label: Наименование исполнителя (если появится), widget: string, required: false }
+              - { name: agentNote, label: Формулировка о турагенте, widget: text }
+              - { name: contractNote, label: Формулировка о договоре, widget: text }
+              - { name: privacyUpdated, label: Дата политики ПД, widget: string }
+
+  # ---------- Направления и цены ----------
+  - name: trips
+    label: Направления и цены
+    icon: map
+    files:
+      - name: list
+        label: Витрина направлений
+        file: src/content/trips.json
+        fields:
+          - name: items
+            label: Направления
+            label_singular: Направление
+            widget: list
+            summary: "{{fields.title}} — {{fields.budget}}"
+            fields:
+              - { name: slug, label: Код (латиницей, без пробелов), widget: string, hint: "Используется в имени файла фото: images/trips/<код>.jpg" }
+              - { name: title, label: Название, widget: string }
+              - { name: category, label: Категория, widget: string, hint: "Море, Сезоны, События, Круизы, Природа..." }
+              - { name: region, label: Страны и города, widget: string }
+              - { name: budget, label: Цена (текст), widget: string, hint: "например: от 180 000 ₽ или индивидуально" }
+              - { name: budgetNote, label: Условия цены, widget: string }
+              - { name: duration, label: Длительность, widget: string }
+              - { name: season, label: Сезон, widget: string }
+              - { name: text, label: Описание, widget: text }
+              - { name: tags, label: Теги, widget: list, required: false, field: { name: tag, label: Тег, widget: string } }
+              - { name: image, label: Фото (если своё), widget: image, required: false, hint: "Необязательно. Без фото берётся images/trips/<код>.jpg" }
+
+  # ---------- События и фестивали ----------
+  - name: events
+    label: События и фестивали
+    icon: calendar
+    files:
+      - name: list
+        label: Календарь событий
+        file: src/content/events.json
+        fields:
+          - { name: updated, label: Когда обновляли (ГГГГ-ММ-ДД), widget: string }
+          - { name: policy, label: Правило обновления, widget: text }
+          - name: events
+            label: События
+            label_singular: Событие
+            widget: list
+            summary: "{{fields.dates}} — {{fields.title}}"
+            fields:
+              - { name: title, label: Название, widget: string }
+              - { name: place, label: Где, widget: string }
+              - { name: dates, label: Даты, widget: string, hint: "Если даты ещё не объявлены — напишите «уточняется»" }
+              - { name: month, label: Месяц (для подбора), widget: string }
+              - { name: status, label: Статус, widget: select, options: [анонс, идёт, прошло, уточняется] }
+              - { name: source, label: Источник (ссылка или пояснение), widget: string, hint: "Обязательно: событие без источника не публикуем" }
+              - { name: note, label: Что важно знать клиенту, widget: text, required: false }
+              - { name: verified, label: Дата проверки (ГГГГ-ММ-ДД), widget: string }
+              - { name: error, label: Ошибка при проверке, widget: string, required: false }
+
+  # ---------- Шаги и вопросы ----------
+  - name: content
+    label: Как работаем и вопросы
+    icon: list
+    files:
+      - name: steps
+        label: Шаги оформления тура
+        file: src/content/steps.json
+        fields:
+          - name: items
+            label: Шаги
+            widget: list
+            summary: "{{fields.num}} {{fields.title}}"
+            fields:
+              - { name: num, label: Номер (01, 02...), widget: string }
+              - { name: title, label: Заголовок, widget: string }
+              - { name: text, label: Текст, widget: text }
+      - name: faq
+        label: Частые вопросы
+        file: src/content/faq.json
+        fields:
+          - name: items
+            label: Вопросы
+            widget: list
+            summary: "{{fields.q}}"
+            fields:
+              - { name: q, label: Вопрос, widget: string }
+              - { name: a, label: Ответ, widget: text }

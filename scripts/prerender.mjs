@@ -81,6 +81,7 @@ const origin = site.origin.replace(/\/$/, '')
 if (!MIRROR) fs.writeFileSync(path.join(dist, 'robots.txt'), [
   'User-agent: *',
   'Allow: /',
+  'Disallow: /admin/',
   'Disallow: /assets/',
   'Disallow: /*?utm_',
   'Disallow: /*?yclid=',

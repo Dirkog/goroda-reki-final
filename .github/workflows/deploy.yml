@@ -1,0 +1,36 @@
+name: Сборка и публикация сайта
+
+# Запускается при любом изменении контента: правки в админке (/admin),
+# коммиты в файлы src/content/*.json, изменения кода.
+on:
+  push:
+    branches: [tour-agency-website, main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Установка зависимостей
+        run: npm ci
+
+      - name: Сборка сайта (Cloudflare Pages, корень домена)
+        env:
+          SITE_ORIGIN: https://olgatour.pages.dev
+        run: npm run build:cf
+
+      - name: Публикация на Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=olgatour --branch=main
