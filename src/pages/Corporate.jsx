@@ -37,7 +37,7 @@ export default function Corporate() {
       </section>
 
       <section className="travel-info-block">
-        <h2>Что мы берём на себя</h2>
+        <h2>Что я беру на себя</h2>
         <div>
           <article><b>Перелёты и трансферы</b><span>Групповые перелёты, встреча в аэропорту и вся логистика на месте.</span></article>
           <article><b>Отели и площадки</b><span>Размещение под размер группы и залы для деловой части выезда.</span></article>

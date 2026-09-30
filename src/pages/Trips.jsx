@@ -64,24 +64,26 @@ export default function Trips() {
     <Page className="trips-page inner-page">
       <SplitTitle
         eyebrow="каталог идей"
-        title="Поиск тура начинается с настроения"
-        text="Это не полный прайс, а витрина направлений: фильтруйте по формату, смотрите сезон и бюджет. По каждой идее можно сразу запросить варианты — подберём конкретные отели и даты."
+        title="Направления: откуда начать"
+        text="Это не прайс, а витрина: по каждому направлению видно сезон, бюджет и длительность. Выберите формат или напишите мне — соберу конкретные отели, даты и цены под вашу поездку."
       />
 
-      <div className="tour-search-panel">
-        <label>
-          <span>Поиск по направлениям</span>
+      <div className="trips-tools">
+        <label className="trips-search">
+          <span>Поиск по витрине</span>
           <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Япония, море, круиз, команда…" type="search" />
         </label>
-        <label>
-          <span>Сортировка</span>
+        <label className="trips-sort">
+          <span>Порядок</span>
           <select value={sort} onChange={e => setSort(e.target.value)}>
             <option value="popular">Рекомендуемые</option>
             <option value="az">По алфавиту</option>
             <option value="budget">Сначала дешевле</option>
           </select>
         </label>
-        <a className="tour-search-cta" href="/kontakty/">Оставить заявку</a>
+        <a className="trips-calendar-link" href="/#scene-01">
+          Сначала посмотреть календарь событий →
+        </a>
       </div>
 
       <div className="filter-row" role="tablist" aria-label="Фильтр по формату">

@@ -619,6 +619,32 @@ summary:focus-visible {
 .faq-list p { margin-top: 12px; color: var(--muted); font-size: 15px; max-width: 84ch; }
 .faq-more { margin-top: 20px; color: var(--muted); font-size: 14.5px; }
 
+/* ---------- каталог: строка фильтров вместо «калькулятора» ---------- */
+.trips-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 24px;
+  align-items: end;
+  padding: 18px 0 22px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.trips-tools label { display: grid; gap: 7px; }
+.trips-tools span { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--muted); }
+.trips-search { flex: 1 1 320px; }
+.trips-sort { flex: 0 0 190px; }
+.trips-tools input, .trips-tools select {
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  padding: 12px 14px;
+  background: var(--surface);
+  width: 100%;
+}
+.trips-tools input:focus, .trips-tools select:focus { outline: 2px solid var(--primary); border-color: var(--primary); }
+.trips-calendar-link { font-weight: 600; color: var(--primary); padding-bottom: 12px; border-bottom: 1px solid var(--line-strong); white-space: nowrap; }
+.trips-calendar-link:hover { border-color: var(--primary); }
+@media (max-width: 680px) { .trips-sort { flex: 1 1 100%; } }
+
 /* ---------- каталог ---------- */
 .tour-search-panel {
   display: grid;

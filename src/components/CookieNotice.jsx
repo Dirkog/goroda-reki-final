@@ -20,7 +20,7 @@ export default function CookieNotice() {
   return (
     <div className="cookie-notice" role="dialog" aria-label="Использование cookie">
       <p>
-        Мы используем cookie и обезличенную статистику, чтобы сайт работал корректно и был удобнее.
+        Использую cookie и обезличенную статистику, чтобы сайт работал корректно и был удобнее.
         Подробнее — в <a href="/politika-konfidencialnosti/">политике обработки персональных данных</a>.
       </p>
       <button className="btn light" onClick={accept}>Понятно</button>

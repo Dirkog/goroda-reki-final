@@ -44,7 +44,7 @@ export default function Contacts() {
       </section>
 
       <section className="travel-info-block">
-        <h2>Как мы отвечаем</h2>
+        <h2>Как я отвечаю</h2>
         <div>
           <article><b>Быстрый ответ</b><span>В рабочее время — как правило, в течение 15–60 минут; вне часов работы отвечаем утром.</span></article>
           <article><b>Полностью онлайн</b><span>Всё общение, подбор и оформление проходят в мессенджере — приезжать в офис не нужно.</span></article>

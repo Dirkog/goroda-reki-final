@@ -8,7 +8,7 @@ export default function Process() {
       <Breadcrumbs items={[{ label: 'Главная', path: '/' }, { label: 'Как работаем' }]} />
       <SplitTitle
         eyebrow="полностью онлайн"
-        title="Как мы оформляем тур"
+        title="Как я оформляю тур"
         text="Процесс прозрачный: сначала выбор и договор, затем официальная оплата и документы перед путешествием."
       />
       <div className="steps-track">
