@@ -5,6 +5,7 @@ import fs from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import path from 'node:path'
 
+const MIRROR = !!process.env.PRERENDER_MIRROR   // зеркало (GitHub Pages) не выпускает robots/sitemap/llms
 const dist = path.resolve('dist')
 const ssr = await import(pathToFileURL(path.resolve('dist-ssr/entry-server.js')).href)
 const { render, routes, site, contacts, headFor, basePath } = ssr
@@ -77,7 +78,7 @@ console.log('  prerender /404')
 
 // robots.txt
 const origin = site.origin.replace(/\/$/, '')
-fs.writeFileSync(path.join(dist, 'robots.txt'), [
+if (!MIRROR) fs.writeFileSync(path.join(dist, 'robots.txt'), [
   'User-agent: *',
   'Allow: /',
   'Disallow: /assets/',
@@ -101,11 +102,11 @@ const urls = routes.map(r => {
   const priority = r.id === 'home' ? '1.0' : ['trips', 'contacts'].includes(r.id) ? '0.9' : '0.7'
   return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>${priority}</priority>\n  </url>`
 }).join('\n')
-fs.writeFileSync(path.join(dist, 'sitemap.xml'),
+if (!MIRROR) fs.writeFileSync(path.join(dist, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`)
 
 // llms.txt — краткая карточка сайта для AI-поиска
-fs.writeFileSync(path.join(dist, 'llms.txt'), [
+if (!MIRROR) fs.writeFileSync(path.join(dist, 'llms.txt'), [
   `# ${site.name}`,
   '',
   `> ${site.defaultDescription}`,
@@ -120,6 +121,8 @@ fs.writeFileSync(path.join(dist, 'llms.txt'), [
   ''
 ].join('\n'))
 
+// Зеркало (GitHub Pages) не выпускает robots/sitemap/llms — это дело основного сайта
+
 // Служебные файлы хостингов (Cloudflare Pages): заголовки кеша и безопасности
 for (const f of ['_headers', '_redirects']) {
   const src = path.join('public', f)
@@ -129,4 +132,4 @@ for (const f of ['_headers', '_redirects']) {
 // .nojekyll — чтобы GitHub Pages отдавал все файлы как есть
 fs.writeFileSync(path.join(dist, '.nojekyll'), '')
 
-console.log(`Готово: ${count} страниц + 404, robots.txt, sitemap.xml, llms.txt`)
+console.log(`Готово: ${count} страниц + 404${MIRROR ? ' (зеркало: без robots/sitemap/llms)' : ', robots.txt, sitemap.xml, llms.txt'}`)

@@ -6,14 +6,22 @@ export function basePath() {
   return b.endsWith('/') ? b : b + '/'
 }
 
+// База для canonical: у зеркала (GitHub Pages) она отличается от пути сборки —
+// VITE_CANONICAL_BASE='/' указывает на основной сайт.
+function canonicalBase() {
+  const c = import.meta.env && import.meta.env.VITE_CANONICAL_BASE
+  if (c === undefined) return basePath()
+  return c.endsWith('/') ? c : c + '/'
+}
+
 export function canonicalUrl(route, origin = site.origin) {
-  const b = basePath()
+  const b = canonicalBase()
   const p = route.path === '/' ? '' : route.path.replace(/^\//, '')
   return origin.replace(/\/$/, '') + '/' + (b === '/' ? '' : b.replace(/^\//, '')) + p
 }
 
 export function ogImageUrl(origin = site.origin) {
-  return site.origin.replace(/\/$/, '') + basePath() + site.ogImage
+  return site.origin.replace(/\/$/, '') + canonicalBase() + site.ogImage
 }
 
 export function jsonLdFor(id, origin = site.origin) {

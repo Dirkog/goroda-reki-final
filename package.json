@@ -11,7 +11,8 @@
     "build": "npm run build:client && npm run build:ssr && npm run prerender",
     "preview": "vite preview --host 0.0.0.0 --port 4173",
     "build:cf": "node scripts/build-cf.mjs",
-    "deploy:cf": "node scripts/deploy-cf.mjs"
+    "deploy:cf": "node scripts/deploy-cf.mjs",
+    "build:gh": "node scripts/build-gh.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "4.3.4",
