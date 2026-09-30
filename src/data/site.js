@@ -7,7 +7,7 @@ export const site = {
   tagline: 'Подбор и бронирование путешествий онлайн',
   // Прод-адрес. Меняется в одном месте при переезде на свой домен.
   // Адрес сайта подставляется при сборке: GitHub Pages или Cloudflare Pages.
-  origin: (import.meta.env && import.meta.env.VITE_SITE_ORIGIN) || 'https://dirkog.github.io/goroda-reki-final',
+  origin: (import.meta.env && import.meta.env.VITE_SITE_ORIGIN) || 'https://dirkog.github.io',
   // Базовый путь (для GitHub Pages в подпапке). Подставляется из vite base автоматически.
   defaultTitle: 'Города и реки — подбор и бронирование туров онлайн',
   defaultDescription:
