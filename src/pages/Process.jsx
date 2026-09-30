@@ -1,13 +1,20 @@
 import React from 'react'
-import { steps } from '../data/site'
-import { Page, SplitTitle } from '../components/Page'
+import { Page, SplitTitle, Breadcrumbs } from '../components/Page'
+import { steps, waText } from '../data/site'
 
-export default function Process({ setPage }) {
+export default function Process() {
   return (
     <Page className="process-page inner-page">
-      <SplitTitle eyebrow="полностью онлайн" title="Как мы оформляем тур" text="Процесс прозрачный: сначала выбор и договор, затем официальная оплата и документы перед путешествием." />
+      <Breadcrumbs items={[{ label: 'Главная', path: '/' }, { label: 'Как работаем' }]} />
+      <SplitTitle
+        eyebrow="полностью онлайн"
+        title="Как мы оформляем тур"
+        text="Процесс прозрачный: сначала выбор и договор, затем официальная оплата и документы перед путешествием."
+      />
       <div className="steps-track">
-        {steps.map(([num, title, text]) => <article className="step" key={num}><span>{num}</span><h2>{title}</h2><p>{text}</p></article>)}
+        {steps.map(([num, title, text]) => (
+          <article className="step" key={num}><span>{num}</span><h2>{title}</h2><p>{text}</p></article>
+        ))}
       </div>
 
       <section className="travel-info-block">
@@ -20,12 +27,22 @@ export default function Process({ setPage }) {
         </div>
       </section>
 
+      <section className="travel-info-block">
+        <h2>Сроки, к которым стоит готовиться</h2>
+        <div>
+          <article><b>Подбор вариантов</b><span>Первые предложения — в течение дня, обычно 1–2 часа в рабочее время.</span></article>
+          <article><b>Бронирование</b><span>После согласования бронь подтверждается туроператором — обычно в течение суток.</span></article>
+          <article><b>Оплата и документы</b><span>Оплата по договору, чек — сразу после платежа, документы — за 4–7 дней до выезда.</span></article>
+          <article><b>Перед поездкой</b><span>Присылаем памятку: маршрут, время вылета, трансфер, важные детали направления.</span></article>
+        </div>
+      </section>
+
       <section className="page-cta">
         <div className="page-cta-copy">
           <h2>Готовы начать подбор?</h2>
           <p>Оставьте заявку — соберём варианты под ваши даты, состав и бюджет, а дальше пройдём все шаги вместе.</p>
         </div>
-        <button className="btn glass" onClick={() => setPage('contacts')}>Оставить заявку</button>
+        <a className="btn glass" href={waText('Здравствуйте! Готов(а) начать подбор тура. Направление: ___, даты: ___')}>Оставить заявку</a>
       </section>
     </Page>
   )

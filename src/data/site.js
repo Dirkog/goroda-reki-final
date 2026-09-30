@@ -1,120 +1,185 @@
-export const nav = [
-  { id: 'home', label: 'Главная' },
-  { id: 'olga', label: 'Команда' },
-  { id: 'trips', label: 'Путешествия' },
-  { id: 'process', label: 'Как работаем' },
-  { id: 'trust', label: 'Надёжность' },
-  { id: 'corporate', label: 'Корпоративным' },
-  { id: 'contacts', label: 'Контакты' }
-]
+// Единый источник данных сайта: маршруты, контакты, SEO-мета, туры, шаги, юр. информация.
+// ВАЖНО: всё, что меняется (телефон, менеджер, цены), правится только здесь.
+
+export const site = {
+  name: 'Города и реки',
+  legalName: 'Онлайн-турагентство «Города и реки»',
+  tagline: 'Подбор и бронирование путешествий онлайн',
+  // Прод-адрес. Меняется в одном месте при переезде на свой домен.
+  origin: 'https://dirkog.github.io',
+  // Базовый путь (для GitHub Pages в подпапке). Подставляется из vite base автоматически.
+  defaultTitle: 'Города и реки — подбор и бронирование туров онлайн',
+  defaultDescription:
+    'Онлайн-турагентство «Города и реки»: подбор туров для семей, пар и компаний, круизы, события и корпоративные выезды. Договор до оплаты, оплата на расчётный счёт, поддержка до возвращения домой.',
+  ogImage: 'images/og-image.jpg',
+  // ID счётчика Яндекс.Метрики. Пока пусто — код аналитики не подключается.
+  metrikaId: '',
+  // Необязательный вебхук для заявок (Formspree, Getform, свой эндпоинт).
+  formEndpoint: '',
+  email: 'info@goroda-reki.ru',
+  phone: '+7 915 054-74-07',
+  phoneHref: 'tel:+79150547407',
+  workHours: 'Ежедневно 10:00–21:00 (МСК). Отвечаем в течение 15 минут в рабочее время.',
+  manager: 'Ольга Дударева',
+  managerRole: 'менеджер по подбору путешествий',
+  registry: {
+    label: 'РТА 0005142',
+    url: 'https://ефрт.рф/',
+    note: 'Единый федеральный реестр турагентов'
+  }
+}
+
+export const legal = {
+  // Заполнить перед публикацией: юр. данные из договора.
+  entity: 'ИП / ООО — заполнить',
+  inn: '—',
+  ogrn: '—',
+  address: '—',
+  bank: '—',
+  privacyUpdated: '01.10.2026'
+}
 
 export const contacts = {
-  whatsapp: 'http://wa.me/79150547407',
+  whatsapp: 'https://wa.me/79150547407',
   telegram: 'https://t.me/Olgagorodareki',
   max: 'https://clck.su/Tpcuu',
   vk: 'https://vk.com/gorodareki'
 }
 
+export const waText = (text) => contacts.whatsapp + '?text=' + encodeURIComponent(text)
+
+// Маршруты: id → путь. Пути реальные (индексируются), а не hash.
+export const routes = [
+  { id: 'home', path: '/', label: 'Главная', title: 'Турагентство «Города и реки» — подбор туров онлайн', description: 'Подберём и забронируем тур под ваши даты, состав и бюджет: море, города, круизы, события, корпоративные выезды. Договор до оплаты, поддержка до возвращения.' },
+  { id: 'olga', path: '/komanda/', label: 'Команда', title: 'Команда «Города и реки»: 11 менеджеров и Ольга Дударева', description: 'Онлайн-турагентство «Города и реки»: 11 менеджеров по направлениям, личный контакт, опыт собственных поездок, туристы из городов России и из-за рубежа.' },
+  { id: 'trips', path: '/napravleniya/', label: 'Направления', title: 'Направления и туры: море, круизы, события, природа', description: 'Витрина направлений с бюджетом, сезоном и длительностью: Турция, ОАЭ, Таиланд, Япония, Норвегия, круизы и корпоративные выезды. Отправьте запрос — соберём варианты.' },
+  { id: 'process', path: '/kak-rabotaem/', label: 'Как работаем', title: 'Как мы оформляем тур: 6 шагов от заявки до документов', description: 'Прозрачный процесс: заявка в мессенджер, подбор вариантов, договор, официальная оплата на расчётный счёт, чек и документы за 4–7 дней до выезда, поддержка в поездке.' },
+  { id: 'trust', path: '/nadezhnost/', label: 'Надёжность', title: 'Надёжность: РТА 0005142, договор, расчётный счёт и чек', description: 'Проверьте нас: номер РТА 0005142 в Едином федеральном реестре турагентов, договор до оплаты, оплата на расчётный счёт агентства, фискальный чек и полный комплект документов.' },
+  { id: 'corporate', path: '/korporativnym/', label: 'Корпоративным', title: 'Корпоративные выезды: тимбилдинг, инсентив, конференции', description: 'Организуем выезд для команды, клиентов или партнёров: перелёты, размещение, программа, деловая часть и закрывающие документы. Пришлите бриф — подготовим варианты.' },
+  { id: 'contacts', path: '/kontakty/', label: 'Контакты', title: 'Контакты: WhatsApp, Telegram, MAX и ВКонтакте', description: 'Оставьте заявку на подбор тура: WhatsApp, Telegram, MAX, ВКонтакте или форма на сайте. Укажите направление, даты, состав и бюджет — ответим в течение 15 минут.' },
+  { id: 'oferta', path: '/oferta/', label: 'Договор и оферта', title: 'Договор и публичная оферта', description: 'Условия оказания услуг по подбору и бронированию туров: порядок оформления договора, внесения предоплаты, возврата и обмена документами.', noindex: false },
+  { id: 'privacy', path: '/politika-konfidencialnosti/', label: 'Политика конфиденциальности', title: 'Политика обработки персональных данных', description: 'Как мы обрабатываем и защищаем персональные данные, полученные через формы и мессенджеры, в соответствии с Федеральным законом № 152-ФЗ.', noindex: false }
+]
+
+export const nav = routes.filter(r => !['oferta', 'privacy'].includes(r.id))
+
 export const heroVideo = {
-  src: `${import.meta.env.BASE_URL}videos/hero-flight.mp4`,
-  poster: 'https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=1800'
+  // Облегчённая версия: 1280×720, CRF 26, без звука — ~0,5 МБ вместо 18,6 МБ.
+  mp4: `${import.meta.env.BASE_URL}videos/hero-flight.mp4`,
+  poster: `${import.meta.env.BASE_URL}videos/hero-poster.jpg`
 }
 
 export const tripCards = [
   {
+    slug: 'more-semejnyj-otdyh',
     title: 'Семейный отдых на море',
     category: 'Море',
     region: 'Турция · ОАЭ · Таиланд · Мальдивы',
     budget: 'от 180 000 ₽',
+    budgetNote: 'на двоих, 7 ночей, вылет из Москвы',
     duration: '7–14 ночей',
     season: 'круглый год',
     text: 'Пляжный отдых с понятной логистикой, отелями для детей, удобными перелётами и поддержкой до возвращения домой.',
-    image: 'https://images.pexels.com/photos/3155666/pexels-photo-3155666.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    video: 'https://www.pexels.com/download/video/5593133/',
-    tags: ['семья', 'море', 'дети', 'all inclusive']
+    image: `${import.meta.env.BASE_URL}images/trips/more-semejnyj-otdyh.jpg`,
+    imageWebp: `${import.meta.env.BASE_URL}images/trips/more-semejnyj-otdyh.webp`,
+    tags: ['семья', 'море', 'дети', 'всё включено']
   },
   {
+    slug: 'sakura-v-yaponii',
     title: 'Сакура в Японии',
     category: 'Сезоны',
     region: 'Токио · Киото · Осака',
     budget: 'индивидуально',
+    budgetNote: 'считаем под даты цветения',
     duration: '8–12 дней',
     season: 'март — апрель',
     text: 'Маршрут под цветение: города, переезды, отели, прогулки, гастрономия и спокойный темп без перегруза.',
-    image: 'https://images.pexels.com/photos/1440476/pexels-photo-1440476.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    video: 'https://www.pexels.com/download/video/4321733/',
+    image: `${import.meta.env.BASE_URL}images/trips/sakura-v-yaponii.jpg`,
+    imageWebp: `${import.meta.env.BASE_URL}images/trips/sakura-v-yaponii.webp`,
     tags: ['Япония', 'сакура', 'индивидуальный тур']
   },
   {
+    slug: 'evropejskie-sobytiya',
     title: 'Европейские события',
     category: 'События',
     region: 'Лондон · Стамбул · Амстердам',
     budget: 'по запросу',
+    budgetNote: 'зависит от даты события и категории мест',
     duration: '3–7 дней',
     season: 'под дату события',
     text: 'Концерты, фестивали, культурные выезды и городские путешествия с отелем, перелётом и программой.',
-    image: 'https://images.pexels.com/photos/460672/pexels-photo-460672.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    video: 'https://www.pexels.com/download/video/38172683/',
+    image: `${import.meta.env.BASE_URL}images/trips/evropejskie-sobytiya.jpg`,
+    imageWebp: `${import.meta.env.BASE_URL}images/trips/evropejskie-sobytiya.webp`,
     tags: ['концерт', 'город', 'фестиваль']
   },
   {
+    slug: 'kruizy',
     title: 'Круизы по рекам и морям',
     category: 'Круизы',
     region: 'Россия · Персидский залив · Средиземное море',
     budget: 'от 120 000 ₽',
+    budgetNote: 'на человека, внутренняя каюта, 4 ночи',
     duration: '4–14 ночей',
     season: 'по расписанию',
     text: 'Круизы для тех, кто хочет просыпаться в новом месте и не собирать чемодан каждый день.',
-    image: 'https://images.pexels.com/photos/358220/pexels-photo-358220.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    video: 'https://www.pexels.com/download/video/855465/',
+    image: `${import.meta.env.BASE_URL}images/trips/kruizy.jpg`,
+    imageWebp: `${import.meta.env.BASE_URL}images/trips/kruizy.webp`,
     tags: ['круиз', 'река', 'море']
   },
   {
+    slug: 'korporativnyj-vyezd',
     title: 'Корпоративный выезд',
     category: 'Корпоративным',
     region: 'Красная Поляна · Турция · Марокко · Таиланд',
     budget: 'по брифу',
+    budgetNote: 'считаем после брифа: группа, даты, программа',
     duration: '2–7 дней',
     season: 'под задачу',
     text: 'Поездка для команды, клиентов или партнёров: перелёты, размещение, активности, деловая часть и отдых.',
-    image: 'https://images.pexels.com/photos/62623/wing-plane-flying-airplane-62623.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    video: 'https://www.pexels.com/download/video/5608241/',
+    image: `${import.meta.env.BASE_URL}images/trips/korporativnyj-vyezd.jpg`,
+    imageWebp: `${import.meta.env.BASE_URL}images/trips/korporativnyj-vyezd.webp`,
     tags: ['команда', 'ретрит', 'бизнес']
   },
   {
+    slug: 'festivali-tyulpanov',
     title: 'Фестивали тюльпанов',
     category: 'Сезоны',
     region: 'Амстердам · Стамбул',
     budget: 'по запросу',
+    budgetNote: 'зависит от дат и города вылета',
     duration: '4–6 дней',
     season: 'апрель — май',
     text: 'Короткий яркий выезд в сезон цветения: город, прогулки, красивые парки, отели в удобной локации.',
-    image: 'https://images.pexels.com/photos/69776/tulips-bed-colorful-color-69776.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    video: 'https://www.pexels.com/download/video/2806063/',
+    image: `${import.meta.env.BASE_URL}images/trips/festivali-tyulpanov.jpg`,
+    imageWebp: `${import.meta.env.BASE_URL}images/trips/festivali-tyulpanov.webp`,
     tags: ['тюльпаны', 'весна', 'Европа']
   },
   {
+    slug: 'norvezhskie-fordy',
     title: 'Норвежские фьорды',
     category: 'Природа',
     region: 'Норвегия',
     budget: 'индивидуально',
+    budgetNote: 'маршрут собираем под вас',
     duration: '7–10 дней',
     season: 'май — сентябрь',
     text: 'Маршрут для тех, кто хочет тишину, воду, горы, панорамные дороги и сильное ощущение природы.',
-    image: 'https://images.pexels.com/photos/290386/pexels-photo-290386.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    video: 'https://www.pexels.com/download/video/9851047/',
+    image: `${import.meta.env.BASE_URL}images/trips/norvezhskie-fordy.jpg`,
+    imageWebp: `${import.meta.env.BASE_URL}images/trips/norvezhskie-fordy.webp`,
     tags: ['фьорды', 'природа', 'маршрут']
   },
   {
+    slug: 'oae-i-oman',
     title: 'ОАЭ и Оман',
     category: 'Море',
     region: 'Дубай · Абу-Даби · Маскат',
     budget: 'от 220 000 ₽',
+    budgetNote: 'на двоих, 7 ночей, отель 5*',
     duration: '6–10 ночей',
     season: 'октябрь — апрель',
     text: 'Тёплое море, высокий сервис, отели под разные бюджеты, экскурсии, пустыня, города и комфортные перелёты.',
-    image: 'https://images.pexels.com/photos/2044434/pexels-photo-2044434.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    video: 'https://www.pexels.com/download/video/38425805/',
+    image: `${import.meta.env.BASE_URL}images/trips/oae-i-oman.jpg`,
+    imageWebp: `${import.meta.env.BASE_URL}images/trips/oae-i-oman.webp`,
     tags: ['ОАЭ', 'Оман', 'сервис']
   }
 ]
@@ -126,4 +191,15 @@ export const steps = [
   ['04', 'Договор', 'Паспортные данные нужны после выбора тура и оформления договора.'],
   ['05', 'Официальная оплата', 'Предоплата — на расчётный счёт агентства, после оплаты приходит чек.'],
   ['06', 'Документы и связь', 'Документы отправляем за 4–7 дней до выезда и остаёмся на связи до возвращения.']
+]
+
+export const faq = [
+  ['Сколько стоит ваша работа?', 'Стоимость тура не выше, чем при самостоятельном бронировании: мы работаем по договору с туроператором и получаем агентское вознаграждение от него. Отдельную плату за подбор берём только в редких случаях и предупреждаем об этом заранее.'],
+  ['Когда нужны паспортные данные?', 'Только после того, как вы выбрали тур и мы оформили договор. До этого достаточно направления, дат, состава поездки и бюджета.'],
+  ['Как проходит оплата?', 'Предоплата вносится на расчётный счёт агентства по договору. После оплаты вы получаете фискальный чек на электронную почту. Оплата на личные карты не практикуется.'],
+  ['Что если изменится расписание или рейс отменят?', 'Мы остаёмся на связи всё время поездки: подскажем порядок действий, поможем связаться с туроператором, отелем или страховой и предложим варианты.'],
+  ['Можно ли оформить тур, если я не в России?', 'Да. Мы работаем с туристами из-за рубежа и собираем маршруты на регулярных рейсах, подбирая стыковки под ваш город.'],
+  ['Вы делаете визы?', 'Мы консультируем по визовым требованиям направления и подсказываем порядок оформления документов, но не гарантируем выдачу визы: решение принимает консульство.'],
+  ['Сколько ждать подбор?', 'Первые варианты — в течение дня, в рабочее время обычно в течение 1–2 часов после получения всех деталей. Сложные индивидуальные маршруты могут занять 1–2 дня.'],
+  ['Можно ли поехать большой группой или компанией?', 'Да, корпоративные и групповые выезды — отдельное направление: перелёты, размещение, программа, деловая часть и закрывающие документы для компании.']
 ]

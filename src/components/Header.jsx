@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { createPortal } from 'react-dom'
-import { motion, AnimatePresence } from 'framer-motion'
-import { nav, contacts } from '../data/site'
+import React, { useEffect, useRef, useState } from 'react'
+import { nav, contacts, site, waText } from '../data/site'
+import { track } from '../lib/analytics'
 
-export default function Header({ page, setPage }) {
+export default function Header({ page }) {
   const [open, setOpen] = useState(false)
+  const panelRef = useRef(null)
+  const toggleRef = useRef(null)
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
@@ -12,32 +13,41 @@ export default function Header({ page, setPage }) {
   }, [open])
 
   useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') setOpen(false) }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [])
-
-  const go = (id) => { setPage(id); setOpen(false) }
+    if (!open) return
+    const onKey = (e) => {
+      if (e.key === 'Escape') { setOpen(false); toggleRef.current?.focus() }
+      if (e.key === 'Tab' && panelRef.current) {
+        const focusables = panelRef.current.querySelectorAll('a[href], button:not([disabled])')
+        if (!focusables.length) return
+        const first = focusables[0], last = focusables[focusables.length - 1]
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+      }
+    }
+    const t = setTimeout(() => panelRef.current?.querySelector('a, button')?.focus(), 60)
+    document.addEventListener('keydown', onKey)
+    return () => { clearTimeout(t); document.removeEventListener('keydown', onKey) }
+  }, [open])
 
   return (
     <header className="header">
-      <button className="brand" onClick={() => go('home')}>
-        <span className="brand-mark">гр</span>
-        <span><b>Города и реки</b><small>онлайн-турагентство</small></span>
-      </button>
+      <a className="brand" href="/" aria-label={`${site.name} — на главную`}>
+        <span className="brand-mark" aria-hidden="true">гр</span>
+        <span><b>{site.name}</b><small>онлайн-турагентство</small></span>
+      </a>
 
-      <nav className="nav">
+      <nav className="nav" aria-label="Основная навигация">
         {nav.map(item => (
-          <button key={item.id} className={page === item.id ? 'active' : ''} onClick={() => setPage(item.id)}>
-            {page === item.id && <motion.i layoutId="activeNav" />}
+          <a key={item.id} href={item.path} className={page === item.id ? 'active' : ''} aria-current={page === item.id ? 'page' : undefined}>
             <span>{item.label}</span>
-          </button>
+          </a>
         ))}
       </nav>
 
-      <button className="header-cta" onClick={() => setPage('contacts')}>Запрос</button>
+      <a className="header-cta" href={waText(`Здравствуйте! Хочу подобрать тур. Направление: ___, даты: ___, состав: ___.`)} onClick={() => track('click_whatsapp_header')}>Написать</a>
 
       <button
+        ref={toggleRef}
         className="nav-toggle"
         aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
         aria-expanded={open}
@@ -47,49 +57,23 @@ export default function Header({ page, setPage }) {
         <span className={open ? 'is-open' : ''} aria-hidden="true" />
       </button>
 
-      {createPortal(
-        <AnimatePresence>
-          {open && (
-            <>
-              <motion.div
-                className="menu-scrim"
-              onClick={() => setOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-            />
-            <motion.div
-              id="mobile-menu"
-              className="mobile-menu"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Меню навигации"
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 40 }}
-              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <p className="mobile-menu-label">Навигация</p>
-              <nav className="mobile-nav">
-                {nav.map(item => (
-                  <button
-                    key={item.id}
-                    className={page === item.id ? 'active' : ''}
-                    onClick={() => go(item.id)}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </nav>
-              <a className="btn light mobile-menu-cta" href={contacts.whatsapp}>Написать в WhatsApp</a>
-              <button className="btn ghost mobile-menu-cta" onClick={() => go('contacts')}>Оставить запрос</button>
-            </motion.div>
-            </>
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
+      <div className={`mobile-wrap ${open ? 'is-open' : ''}`} aria-hidden={!open}>
+        <div className="menu-scrim" onClick={() => setOpen(false)} />
+        <div id="mobile-menu" className="mobile-menu" role="dialog" aria-modal="true" aria-label="Меню навигации" ref={panelRef}>
+          <p className="mobile-menu-label">Навигация</p>
+          <nav className="mobile-nav">
+            {nav.map(item => (
+              <a key={item.id} href={item.path} className={page === item.id ? 'active' : ''} onClick={() => setOpen(false)}>{item.label}</a>
+            ))}
+          </nav>
+          <div className="mobile-menu-contacts">
+            <a className="btn light mobile-menu-cta" href={waText('Здравствуйте! Хочу подобрать тур.')} onClick={() => track('click_whatsapp_menu')}>WhatsApp</a>
+            <a className="btn ghost mobile-menu-cta" href={contacts.telegram}>Telegram</a>
+            <a className="mobile-menu-phone" href={site.phoneHref}>{site.phone}</a>
+            <p className="mobile-menu-hours">{site.workHours}</p>
+          </div>
+        </div>
+      </div>
     </header>
   )
 }

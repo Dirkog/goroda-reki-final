@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Города и реки">
+  <rect width="64" height="64" rx="16" fill="#14707f"/>
+  <path d="M6 42c6-7 12-7 18 0s12 7 18 0 10-5 16 0" fill="none" stroke="#7fd6dc" stroke-width="4" stroke-linecap="round"/>
+  <path d="M6 52c6-7 12-7 18 0s12 7 18 0 10-5 16 0" fill="none" stroke="#2f9aa0" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+  <path d="M20 14h12l6 10h8v10H20z" fill="#f4f7f8"/>
+  <rect x="24" y="30" width="6" height="6" fill="#14707f"/>
+  <rect x="34" y="30" width="6" height="6" fill="#14707f"/>
+</svg>

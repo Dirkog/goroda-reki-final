@@ -1,19 +1,32 @@
 import React from 'react'
-import { Page } from '../components/Page'
+import { Page, Breadcrumbs } from '../components/Page'
+import LeadForm from '../components/LeadForm'
+import { waText } from '../data/site'
+import { Img } from '../components/Media'
 
-export default function Corporate({ setPage }) {
+export default function Corporate() {
   return (
     <Page className="corporate-page inner-page">
-      <div className="corporate-photo"><img src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Корпоративный выезд" /></div>
+      <Breadcrumbs items={[{ label: 'Главная', path: '/' }, { label: 'Корпоративным' }]} />
+      <div className="corporate-photo">
+        <Img
+          src={`${import.meta.env.BASE_URL}images/trips/corporate-team.jpg`}
+          webp={`${import.meta.env.BASE_URL}images/trips/corporate-team.webp`}
+          alt="Команда на корпоративном выезде" width="1200" height="800"
+        />
+      </div>
       <div className="corporate-copy">
         <p className="eyebrow">командам и партнёрам</p>
         <h1>Корпоративный выезд как событие</h1>
-        <p>Будь то поездка для команды, клиентов или партнёров — мы подберём направление, перелёты, размещение, программу и официальный порядок оформления.</p>
+        <p>Поездка для команды, клиентов или партнёров: подберём направление, перелёты, размещение, программу и оформим всё официально — с договором и закрывающими документами для компании.</p>
         <div className="mini-list"><span>Красная Поляна</span><span>Турция</span><span>Куба</span><span>Индонезия</span><span>Марокко</span><span>Таиланд</span></div>
-        <button className="btn light" onClick={() => setPage('contacts')}>Обсудить выезд</button>
+        <div className="corporate-actions">
+          <a className="btn light" href={waText('Здравствуйте! Нужен корпоративный выезд. Группа: ___, даты: ___, задача: ___')}>Обсудить выезд</a>
+          <a className="btn ghost" href="#brief">Прислать бриф</a>
+        </div>
       </div>
 
-      <section className="travel-info-block" style={{ gridColumn: '1 / -1' }}>
+      <section className="travel-info-block">
         <h2>Форматы корпоративных поездок</h2>
         <div>
           <article><b>Тимбилдинг-ретрит</b><span>Выезд для сплочения команды: активности, неформальное общение и смена обстановки.</span></article>
@@ -23,22 +36,27 @@ export default function Corporate({ setPage }) {
         </div>
       </section>
 
-      <section className="travel-info-block" style={{ gridColumn: '1 / -1' }}>
+      <section className="travel-info-block">
         <h2>Что мы берём на себя</h2>
         <div>
           <article><b>Перелёты и трансферы</b><span>Групповые перелёты, встреча в аэропорту и вся логистика на месте.</span></article>
           <article><b>Отели и площадки</b><span>Размещение под размер группы и залы для деловой части выезда.</span></article>
           <article><b>Программа и активности</b><span>Экскурсии, гастрономия, спорт и события под цель и настроение поездки.</span></article>
-          <article><b>Документы и отчётность</b><span>Официальное оформление, договор и закрывающие документы для компании.</span></article>
+          <article><b>Документы и отчётность</b><span>Официальное оформление, договор и закрывающие документы для компании и бухгалтерии.</span></article>
         </div>
       </section>
 
-      <section className="page-cta" style={{ gridColumn: '1 / -1' }}>
-        <div className="page-cta-copy">
-          <h2>Расскажите о вашей команде</h2>
-          <p>Пришлите размер группы, город вылета, даты и цель выезда — подготовим варианты под задачу.</p>
+      <section className="corporate-brief" id="brief">
+        <div>
+          <h2>Пришлите бриф — подготовим варианты</h2>
+          <p>Достаточно размера группы, города вылета, дат, бюджета и цели выезда. Обычно присылаем 2–3 варианта с разной логикой: «экономично», «сбалансированно», «максимальный опыт».</p>
+          <ul className="check-list">
+            <li>Считаем бюджет на группу и на человека</li>
+            <li>Предлагаем площадки для деловой части</li>
+            <li>Готовим договор, счёт и закрывающие документы</li>
+          </ul>
         </div>
-        <button className="btn glass" onClick={() => setPage('contacts')}>Обсудить выезд</button>
+        <LeadForm compact preset={{ direction: 'Корпоративный выезд' }} />
       </section>
     </Page>
   )

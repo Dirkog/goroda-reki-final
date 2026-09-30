@@ -1,28 +1,32 @@
 import React from 'react'
-import { motion } from 'framer-motion'
 
+// Страницы больше не прячутся за JS-анимацией: контент виден сразу,
+// появление — лёгкая CSS-анимация (и она отключается при prefers-reduced-motion).
 export function Page({ children, className = '' }) {
-  return (
-    <motion.section
-      className={`page ${className}`}
-      initial={{ opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -14 }}
-      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-    >
-      {children}
-    </motion.section>
-  )
+  return <section className={`page ${className}`}>{children}</section>
 }
 
 export function SplitTitle({ eyebrow, title, text }) {
   return (
     <div className="split-title">
       <div>
-        <p className="eyebrow">{eyebrow}</p>
+        {eyebrow && <p className="eyebrow">{eyebrow}</p>}
         <h1>{title}</h1>
       </div>
-      {text && <p>{text}</p>}
+      {text && <p className="split-title-text">{text}</p>}
     </div>
+  )
+}
+
+export function Breadcrumbs({ items }) {
+  return (
+    <nav className="breadcrumbs" aria-label="Хлебные крошки">
+      {items.map((it, i) => (
+        <span key={it.label}>
+          {it.path ? <a href={it.path}>{it.label}</a> : <b>{it.label}</b>}
+          {i < items.length - 1 && <i aria-hidden="true">/</i>}
+        </span>
+      ))}
+    </nav>
   )
 }

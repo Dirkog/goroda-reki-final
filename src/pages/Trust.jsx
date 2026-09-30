@@ -1,14 +1,20 @@
 import React from 'react'
-import { Page } from '../components/Page'
+import { Page, Breadcrumbs } from '../components/Page'
+import { site, legal } from '../data/site'
 
-export default function Trust({ setPage }) {
+export default function Trust() {
   return (
     <Page className="trust-page inner-page">
+      <Breadcrumbs items={[{ label: 'Главная', path: '/' }, { label: 'Надёжность' }]} />
       <div className="registry-hero">
         <p className="eyebrow">надёжность</p>
-        <h1>РТА 0005142</h1>
+        <h1>{site.registry.label}</h1>
         <p>Информацию о нас можно проверить в Едином федеральном реестре турагентов. Мы работаем полностью онлайн и полностью официально.</p>
+        <p className="registry-hero-actions">
+          <a className="btn light" href={site.registry.url} target="_blank" rel="noopener noreferrer">Проверить в реестре турагентов</a>
+        </p>
       </div>
+
       <div className="trust-list">
         <article><b>Договор до оплаты</b><span>Предоплата производится только на основании договора.</span></article>
         <article><b>Расчётный счёт</b><span>Оплата идёт на расчётный счёт агентства, не на личные карты.</span></article>
@@ -29,10 +35,10 @@ export default function Trust({ setPage }) {
       <section className="travel-info-block">
         <h2>Как проверить нас самостоятельно</h2>
         <div>
-          <article><b>Реестр турагентов</b><span>Найдите номер РТА 0005142 в Едином федеральном реестре турагентов.</span></article>
-          <article><b>Реквизиты в договоре</b><span>Все данные агентства указаны в договоре — их легко сверить.</span></article>
+          <article><b>Реестр турагентов</b><span>Найдите номер {site.registry.label} в Едином федеральном реестре турагентов по ИНН или названию.</span></article>
+          <article><b>Реквизиты в договоре</b><span>Все данные агентства указаны в договоре — их легко сверить: {legal.entity}, ИНН {legal.inn}.</span></article>
           <article><b>Оплата на счёт</b><span>Платёж проходит на расчётный счёт компании, а не на личные карты.</span></article>
-          <article><b>Отзывы и соцсети</b><span>Реальные отзывы туристов и наши направления открыты в соцсетях.</span></article>
+          <article><b>Отзывы и соцсети</b><span>Реальные отзывы туристов и наши направления открыты в соцсетях и на картах.</span></article>
         </div>
       </section>
 
@@ -41,8 +47,11 @@ export default function Trust({ setPage }) {
           <h2>Остались вопросы о безопасности сделки?</h2>
           <p>Расскажем, как проходит договор, оплата и оформление документов — без обязательств.</p>
         </div>
-        <button className="btn glass" onClick={() => setPage('contacts')}>Задать вопрос</button>
+        <a className="btn glass" href="/kontakty/">Задать вопрос</a>
       </section>
+      <p className="page-note">
+        Документы и условия: <a href="/oferta/">договор и публичная оферта</a>, <a href="/politika-konfidencialnosti/">политика обработки персональных данных</a>.
+      </p>
     </Page>
   )
 }

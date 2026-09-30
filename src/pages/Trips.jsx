@@ -1,59 +1,123 @@
-import React, { useMemo, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
-import { tripCards } from '../data/site'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Page, SplitTitle } from '../components/Page'
+import { tripCards, waText, contacts } from '../data/site'
+import { track } from '../lib/analytics'
+import { TripImage } from '../components/Media'
 
-const filters = ['Все', 'Море', 'Сезоны', 'События', 'Круизы', 'Корпоративным', 'Природа']
+const FILTERS = ['Все', 'Море', 'Сезоны', 'События', 'Круизы', 'Корпоративным', 'Природа']
 
-function TripCard({ card }) {
-  const videoRef = useRef(null)
-  const play = () => { const v = videoRef.current; if (v) { v.currentTime = 0; v.play().catch(() => {}) } }
-  const stop = () => { const v = videoRef.current; if (v) v.pause() }
+function TripCard({ card, index }) {
+  const request = () => track('click_request_tour', { tour: card.title })
+  const msg = `Здравствуйте! Интересует «${card.title}» (${card.region}). Даты: ___, состав: ___. Пришлите варианты и цены.`
   return (
-    <motion.article className="trip-card rich" layout onMouseEnter={play} onMouseLeave={stop}>
-      <img src={card.image} alt={card.title} loading="lazy" />
-      <video ref={videoRef} muted playsInline loop preload="none"><source src={card.video} type="video/mp4" /></video>
+    <article className="trip-card rich" id={card.slug}>
+      <TripImage card={card} />
       <div className="trip-top"><span>{card.category}</span><b>{card.duration}</b></div>
       <div className="trip-body">
         <h2>{card.title}</h2>
         <p>{card.text}</p>
-        <dl><div><dt>Регион</dt><dd>{card.region}</dd></div><div><dt>Сезон</dt><dd>{card.season}</dd></div><div><dt>Бюджет</dt><dd>{card.budget}</dd></div></dl>
+        <dl>
+          <div><dt>Регион</dt><dd>{card.region}</dd></div>
+          <div><dt>Сезон</dt><dd>{card.season}</dd></div>
+          <div><dt>Бюджет</dt><dd>{card.budget}<small>{card.budgetNote}</small></dd></div>
+        </dl>
         <div className="tag-row">{card.tags.map(tag => <em key={tag}>{tag}</em>)}</div>
+        <div className="trip-actions">
+          <a className="btn light" href={waText(msg)} target="_blank" rel="noopener noreferrer" onClick={request}>Запросить этот тур</a>
+          <a className="trip-actions-alt" href={contacts.telegram}>или в Telegram</a>
+        </div>
       </div>
-    </motion.article>
+    </article>
   )
 }
 
-export default function Trips({ setPage }) {
+export default function Trips() {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('Все')
   const [sort, setSort] = useState('popular')
 
+  // Фильтр можно задать ссылкой: /napravleniya/?cat=Море
+  useEffect(() => {
+    try {
+      const cat = new URLSearchParams(window.location.search).get('cat')
+      if (cat && FILTERS.includes(cat)) setFilter(cat)
+    } catch {}
+  }, [])
+
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return tripCards.filter(card => {
-      const inFilter = filter === 'Все' || card.category === filter
-      const hay = `${card.title} ${card.category} ${card.region} ${card.text} ${card.tags.join(' ')}`.toLowerCase()
-      return inFilter && (!q || hay.includes(q))
-    }).sort((a,b) => sort === 'az' ? a.title.localeCompare(b.title, 'ru') : 0)
+    const list = tripCards
+      .map((card, i) => ({ card, i }))
+      .filter(({ card }) => {
+        const inFilter = filter === 'Все' || card.category === filter
+        const hay = `${card.title} ${card.category} ${card.region} ${card.text} ${card.tags.join(' ')}`.toLowerCase()
+        return inFilter && (!q || hay.includes(q))
+      })
+    // «Рекомендуемые» = авторский порядок; «по алфавиту» — реальная сортировка
+    if (sort === 'az') list.sort((a, b) => a.card.title.localeCompare(b.card.title, 'ru'))
+    else if (sort === 'budget') list.sort((a, b) => (parseInt(a.card.budget.replace(/\D/g, ''), 10) || 9e9) - (parseInt(b.card.budget.replace(/\D/g, ''), 10) || 9e9))
+    else list.sort((a, b) => a.i - b.i)
+    return list.map(x => x.card)
   }, [query, filter, sort])
 
   return (
     <Page className="trips-page inner-page">
-      <SplitTitle eyebrow="каталог идей" title="Поиск тура начинается с настроения" text="Это не полный прайс, а витрина направлений. Фильтруйте по формату, смотрите сценарии и отправляйте запрос — менеджер соберёт конкретные варианты под даты и бюджет." />
+      <SplitTitle
+        eyebrow="каталог идей"
+        title="Поиск тура начинается с настроения"
+        text="Это не полный прайс, а витрина направлений: фильтруйте по формату, смотрите сезон и бюджет. По каждой идее можно сразу запросить варианты — подберём конкретные отели и даты."
+      />
+
       <div className="tour-search-panel">
-        <label><span>Поиск</span><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Япония, море, круиз, команда…" /></label>
-        <label><span>Сортировка</span><select value={sort} onChange={e => setSort(e.target.value)}><option value="popular">Рекомендуемые</option><option value="az">По алфавиту</option></select></label>
-        <button onClick={() => setPage('contacts')}>Оставить запрос</button>
+        <label>
+          <span>Поиск по направлениям</span>
+          <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Япония, море, круиз, команда…" type="search" />
+        </label>
+        <label>
+          <span>Сортировка</span>
+          <select value={sort} onChange={e => setSort(e.target.value)}>
+            <option value="popular">Рекомендуемые</option>
+            <option value="az">По алфавиту</option>
+            <option value="budget">Сначала дешевле</option>
+          </select>
+        </label>
+        <a className="tour-search-cta" href="/kontakty/">Оставить заявку</a>
       </div>
-      <div className="filter-row">{filters.map(item => <button key={item} className={filter === item ? 'active' : ''} onClick={() => setFilter(item)}>{item}</button>)}</div>
-      <motion.div className="trip-grid catalog" layout>
-        {visible.map(card => <TripCard card={card} key={card.title} />)}
-      </motion.div>
-      {visible.length === 0 && <div className="empty-state"><h2>Ничего не найдено</h2><p>Попробуйте другой запрос или напишите команде — часто направление можно собрать индивидуально.</p></div>}
+
+      <div className="filter-row" role="tablist" aria-label="Фильтр по формату">
+        {FILTERS.map(item => (
+          <button key={item} role="tab" aria-selected={filter === item} className={filter === item ? 'active' : ''} onClick={() => { setFilter(item); track('filter_trips', { filter: item }) }}>{item}</button>
+        ))}
+      </div>
+
+      <div className="trip-grid catalog">
+        {visible.map((card, i) => <TripCard card={card} key={card.slug} index={i} />)}
+      </div>
+
+      {visible.length === 0 && (
+        <div className="empty-state">
+          <h2>Ничего не найдено</h2>
+          <p>Попробуйте другой запрос или напишите команде — часто направление можно собрать индивидуально.</p>
+          <a className="btn light" href={waText('Здравствуйте! Не нашёл(ла) подходящее направление на сайте. Ищу: ___')}>Написать в WhatsApp</a>
+        </div>
+      )}
+
       <section className="travel-info-block">
         <h2>Что можно запросить дополнительно</h2>
-        <div><article><b>Комбинация стран</b><span>Маршрут с несколькими городами, пересадками и разным ритмом поездки.</span></article><article><b>Семейные нюансы</b><span>Возраст детей, питание, пляж, трансферы, детская инфраструктура.</span></article><article><b>Событие под дату</b><span>Концерт, фестиваль, спорт, праздник или сезон цветения.</span></article><article><b>Регулярные рейсы</b><span>Если вы находитесь не в России, можно собрать маршрут в любую точку мира.</span></article></div>
+        <div>
+          <article><b>Комбинация стран</b><span>Маршрут с несколькими городами, пересадками и разным ритмом поездки.</span></article>
+          <article><b>Семейные нюансы</b><span>Возраст детей, питание, пляж, трансферы, детская инфраструктура.</span></article>
+          <article><b>Событие под дату</b><span>Концерт, фестиваль, спорт, праздник или сезон цветения.</span></article>
+          <article><b>Регулярные рейсы</b><span>Если вы находитесь не в России, можно собрать маршрут в любую точку мира.</span></article>
+        </div>
+      </section>
+
+      <section className="page-cta">
+        <div className="page-cta-copy">
+          <h2>Не нашли своё направление?</h2>
+          <p>Опишите поездку в двух словах: месяц, состав, бюджет и настроение — предложим 2–3 варианта.</p>
+        </div>
+        <a className="btn glass" href={waText('Здравствуйте! Хочу тур. Направление: ___, даты: ___, бюджет: ___')}>Написать в WhatsApp</a>
       </section>
     </Page>
   )
