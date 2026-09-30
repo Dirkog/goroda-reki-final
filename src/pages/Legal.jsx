@@ -19,13 +19,13 @@ export default function Legal({ route }) {
       <div className="legal-body">
         <p className="legal-warning">
           <b>Черновик для проверки.</b> Шаблон подготовлен для сайта и требует заполнения реквизитов
-          ({legal.entity}, ИНН {legal.inn}, ОГРН {legal.ogrn}) и финальной юридической вычитки владельцем агентства.
+          {legal.contractNote}
         </p>
 
         {isPrivacy ? (
           <>
             <h2>1. Оператор персональных данных</h2>
-            <p>Оператор: {legal.entity}, ИНН {legal.inn}, ОГРН {legal.ogrn}, адрес: {legal.address}. Контакт для обращений: <a href={`mailto:${site.email}`}>{site.email}</a>, {site.phone}.</p>
+            <p>{legal.agentNote} Контакт для обращений по персональным данным: <a href={`mailto:${site.email}`}>{site.email}</a>, {site.phone}. Запрос направляется на этот адрес: ответим в течение 10 рабочих дней.</p>
 
             <h2>2. Какие данные мы обрабатываем</h2>
             <ul>
@@ -60,7 +60,7 @@ export default function Legal({ route }) {
         ) : (
           <>
             <h2>1. Общие положения</h2>
-            <p>Настоящий документ является публичной офертой {legal.entity} (далее — «Агентство») о подборе, бронировании и оформлении туристского продукта и описывает порядок работы с заявками через сайт {site.registry.label}.</p>
+            <p>Настоящий документ описывает порядок работы по подбору, бронированию и оформлению туристского продукта через сайт {site.registry.label}. {legal.agentNote}</p>
 
             <h2>2. Порядок работы</h2>
             <ol>
@@ -84,7 +84,7 @@ export default function Legal({ route }) {
             <p>Порядок обработки персональных данных описан в <a href="/politika-konfidencialnosti/">политике обработки персональных данных</a>.</p>
 
             <h2>7. Реквизиты и связь</h2>
-            <p>{legal.entity} · ИНН {legal.inn} · ОГРН {legal.ogrn} · {legal.address}<br />Телефон: {site.phone} · E-mail: <a href={`mailto:${site.email}`}>{site.email}</a> · Telegram: <a href={contacts.telegram}>@Olgagorodareki</a></p>
+            <p>Телефон: {site.phone} · E-mail: <a href={`mailto:${site.email}`}>{site.email}</a> · Telegram: <a href={contacts.telegram}>@Olgagorodareki</a><br />{legal.contractNote}</p>
           </>
         )}
 

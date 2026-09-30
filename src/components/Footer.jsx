@@ -14,9 +14,8 @@ export default function Footer() {
       <div className="footer-cols">
         <div>
           <b>Официально</b>
-          <span>{legal.entity}</span>
-          <span>ИНН {legal.inn} · ОГРН {legal.ogrn}</span>
-          <span>Адрес: {legal.address}</span>
+          <span>Реквизиты — в договоре, который вы получаете до оплаты</span>
+          <span>Реквизиты — в договоре до оплаты</span>
         </div>
         <div>
           <b>Связаться</b>
