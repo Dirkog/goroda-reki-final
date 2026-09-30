@@ -41,7 +41,9 @@ export async function onRequestPost({ request, env }) {
 
   const token = env.TELEGRAM_BOT_TOKEN
   const chatId = env.TELEGRAM_CHAT_ID
-  if (!token || !chatId) {
+  // Можно указать несколько чатов через запятую: группу и канал — заявка уйдёт во все.
+  const chatIds = String(chatId || '').split(/[,\s]+/).filter(Boolean)
+  if (!token || !chatIds.length) {
     // Telegram ещё не настроен — фронтенд сам уйдёт на резервный канал
     return json({ ok: false, error: 'not_configured' }, 501)
   }
@@ -52,15 +54,23 @@ export async function onRequestPost({ request, env }) {
   }
   lines.push(`Время: ${new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' })} МСК`)
 
-  const tg = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: chatId, text: lines.join('\n'), parse_mode: 'HTML', disable_web_page_preview: true }),
-  })
-  const tgBody = await tg.text()
-  if (!tg.ok) return json({ ok: false, error: 'telegram_error', detail: tgBody.slice(0, 300) }, 502)
+  const sent = []
+  for (const id of chatIds) {
+    try {
+      const tg = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: id, text: lines.join('\n'), parse_mode: 'HTML', disable_web_page_preview: true }),
+      })
+      const body = await tg.text()
+      sent.push({ chat_id: id, ok: tg.ok, detail: tg.ok ? undefined : body.slice(0, 200) })
+    } catch (e) {
+      sent.push({ chat_id: id, ok: false, detail: String(e).slice(0, 120) })
+    }
+  }
+  if (!sent.some(r => r.ok)) return json({ ok: false, error: 'telegram_error', sent }, 502)
 
-  return json({ ok: true })
+  return json({ ok: true, sent })
 }
 
 export async function onRequestGet() {
