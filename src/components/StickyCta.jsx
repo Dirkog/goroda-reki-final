@@ -20,11 +20,11 @@ export default function StickyCta() {
 
   return (
     <div className={`sticky-cta ${visible ? 'is-visible' : ''}`} role="region" aria-label="Быстрая связь">
-      <a className="sticky-cta-main" href={waText('Здравствуйте! Хочу подобрать тур: направление ___, даты ___, взрослых ___, детей ___.')} onClick={() => track('click_whatsapp', { place: 'sticky' })}>
+      <a className="sticky-cta-main" href={contacts.telegram} target="_blank" rel="noopener noreferrer" onClick={() => track('click_telegram', { place: 'sticky' })}>
         <span className="sticky-cta-icon" aria-hidden="true">✆</span>
-        <span><b>Подобрать тур</b><small>ответим за 15 минут</small></span>
+        <span><b>Написать</b><small>отвечу в рабочее время</small></span>
       </a>
-      <a className="sticky-cta-alt" href={contacts.telegram} onClick={() => track('click_telegram', { place: 'sticky' })} aria-label="Написать в Telegram">TG</a>
+      <a className="sticky-cta-alt" href={waText('Здравствуйте! Хочу подобрать тур: направление ___, даты ___.')} onClick={() => track('click_whatsapp', { place: 'sticky' })} aria-label="Написать в WhatsApp">WA</a>
       <a className="sticky-cta-alt" href={site.phoneHref} onClick={() => track('click_phone', { place: 'sticky' })} aria-label={`Позвонить ${site.phone}`}>☎</a>
       <button className="sticky-cta-close" aria-label="Скрыть панель" onClick={() => { setClosed(true); try { sessionStorage.setItem('gr_cta_closed', '1') } catch {} }}>×</button>
     </div>

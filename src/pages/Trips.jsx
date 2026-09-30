@@ -11,7 +11,8 @@ function TripCard({ card, index }) {
   const msg = `Здравствуйте! Интересует «${card.title}» (${card.region}). Даты: ___, состав: ___. Пришлите варианты и цены.`
   return (
     <article className="trip-card rich" id={card.slug}>
-      <TripImage card={card} />
+      <span className="trip-media"><TripImage card={card} /></span>
+      <span className="trip-scrim" aria-hidden="true" />
       <div className="trip-top"><span>{card.category}</span><b>{card.duration}</b></div>
       <div className="trip-body">
         <h2>{card.title}</h2>

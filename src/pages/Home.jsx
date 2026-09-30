@@ -38,9 +38,9 @@ function HeroMedia() {
 
 // Каждая секция страницы — «сцена»: номер слева, заголовок на одной линии во всех сценах,
 // одинаковая ширина колонки и один и тот же вертикальный ритм.
-function Scene({ num, kicker, title, note, children, id }) {
+function Scene({ num, kicker, title, note, children, id, kind }) {
   return (
-    <section className="scene" id={id}>
+    <section className={`scene reveal ${kind || ''}`} id={id}>
       <div className="scene-head">
         <span className="scene-num">{num}</span>
         <div>
@@ -65,6 +65,7 @@ export default function Home() {
       <section className="home-frame">
         <HeroMedia />
         <div className="cinema-grade" aria-hidden="true" />
+        <span className="frame-spill" aria-hidden="true" />
         <div className="cinema-inner">
           <div className="cinema-copy">
             <h1 className="cinema-title">Подберу поездку{' '}<br />и останусь на связи</h1>
@@ -110,7 +111,8 @@ export default function Home() {
         <div className="trip-grid home-grid">
           {tripCards.slice(0, 6).map((card, i) => (
             <a className="trip-teaser" key={card.slug} href="/napravleniya/">
-              <TripImage card={card} eager={false} />
+              <span className="trip-media"><TripImage card={card} eager={false} /></span>
+              <span className="trip-scrim" aria-hidden="true" />
               <span className="trip-teaser-body">
                 <em>{card.category}</em>
                 <b>{card.title}</b>

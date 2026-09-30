@@ -3,6 +3,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import StickyCta from './components/StickyCta'
 import CookieNotice from './components/CookieNotice'
+import ScrollMotion from './components/ScrollMotion'
 import Home from './pages/Home'
 import Olga from './pages/Olga'
 import Trips from './pages/Trips'
@@ -68,6 +69,7 @@ export default function App({ url }) {
       </main>
       <Footer />
       <StickyCta />
+      <ScrollMotion />
       <CookieNotice />
     </div>
   )
