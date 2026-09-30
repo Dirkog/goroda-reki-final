@@ -6,6 +6,25 @@ import { pathToFileURL } from 'node:url'
 import path from 'node:path'
 
 const MIRROR = !!process.env.PRERENDER_MIRROR   // зеркало (GitHub Pages) не выпускает robots/sitemap/llms
+
+// Счётчик Яндекс.Метрики: вставляем прямо в <head> каждой страницы —
+// так данные собираются сразу, ещё до загрузки приложения.
+function metrikaTags() {
+  const id = site.metrikaId
+  if (!id || MIRROR) return ''   // на зеркале счётчик не дублируем: данные идут с основного домена
+  return `<script type="text/javascript">
+      (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+      m[i].l=1*new Date();
+      for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+      k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+      (window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=${id}', 'ym');
+      window.__ymId = ${JSON.stringify(id)};
+      window.__ymInlined = true;
+      ym(${id}, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/${id}" style="position:absolute; left:-9999px;" alt="" /></div></noscript>`
+}
+
 const dist = path.resolve('dist')
 const ssr = await import(pathToFileURL(path.resolve('dist-ssr/entry-server.js')).href)
 const { render, routes, site, contacts, headFor, basePath } = ssr
@@ -50,6 +69,7 @@ function fullHead(route) {
     ${cssTags}
     ${preloadTags}
     <meta name="format-detection" content="telephone=no" />
+    ${metrikaTags()}
   </head>`
 }
 

@@ -15,6 +15,7 @@ import NotFound from './pages/NotFound'
 import { normalize, routeByPath } from './lib/router'
 import { applyMeta } from './lib/seo'
 import { track } from './lib/analytics'
+import { metrikaHit } from './lib/metrika'
 
 const PAGES = { home: Home, olga: Olga, trips: Trips, process: Process, trust: Trust, corporate: Corporate, contacts: Contacts, oferta: Legal, privacy: Legal }
 
@@ -48,7 +49,13 @@ export default function App({ url }) {
   useEffect(() => {
     if (url || typeof document === 'undefined') return
     applyMeta(active)
-    if (first.current) { first.current = false } else { window.scrollTo({ top: 0, behavior: 'auto' }); track('page_view', { path: current }) }
+    if (first.current) {
+      first.current = false
+    } else {
+      window.scrollTo({ top: 0, behavior: 'auto' })
+      // каждый переход внутри сайта — отдельный просмотр для Метрики
+      metrikaHit(window.location.href, active.title || document.title)
+    }
   }, [current, url])
 
   return (
