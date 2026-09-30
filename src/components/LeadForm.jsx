@@ -52,18 +52,26 @@ export default function LeadForm({ preset = {}, compact = false }) {
       return fd
     }
 
-    let delivered = false
-    for (const url of ['/api/lead', endpoint].filter(Boolean)) {
+    // Отправляем сразу во все доступные каналы: свой приём (Telegram) и почта.
+    // Так заявка не потеряется, даже если один из сервисов недоступен.
+    const channels = [
+      { url: '/api/lead', name: 'telegram' },
+      { url: endpoint, name: 'email' }
+    ].filter(c => c.url)
+
+    const results = await Promise.all(channels.map(async (c) => {
       try {
-        const r = await fetch(url, { method: 'POST', body: payload() })
-        if (r.ok) { delivered = true; track('lead_delivered', { channel: url === '/api/lead' ? 'site' : 'email' }); break }
-      } catch (e) { /* пробуем следующий канал */ }
-    }
-    if (!delivered) {
+        const r = await fetch(c.url, { method: 'POST', body: payload() })
+        if (r.ok) { track('lead_delivered', { channel: c.name }); return true }
+        return false
+      } catch (e) { return false }
+    }))
+
+    if (!results.some(Boolean)) {
+      // ни один канал не ответил — заявку не теряем, уводим в WhatsApp
       track('lead_fallback_whatsapp', {})
       window.open(waText(message()), '_blank', 'noopener')
     }
-
     setSent(true)
   }
 
