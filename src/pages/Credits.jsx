@@ -12,9 +12,10 @@ const PHOTOS = [
   {"role": "Направление «Фестивали тюльпанов»", "title": "Close-Red-Tulips Bollenstreek Hillegom.jpg", "author": "acediscovery", "license": "CC BY 4.0", "page": "https://commons.wikimedia.org/wiki/File:Close-Red-Tulips_Bollenstreek_Hillegom.jpg"},
   {"role": "Направление «Европейские события»", "title": "Venice Carnival - Masked Lovers (2010).jpg", "author": "Frank Kovalchek from Anchorage, Alaska, USA", "license": "CC BY 2.0", "page": "https://commons.wikimedia.org/wiki/File:Venice_Carnival_-_Masked_Lovers_(2010).jpg"},
   {"role": "Страница «Корпоративным»", "title": "DZ6 0468 Spacious elegantly lit banquet hall set up with rows of white-covered chairs facing a stage ready for a large conference or formal event.jpg", "author": "PattayaPatrol", "license": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:DZ6_0468_Spacious_elegantly_lit_banquet_hall_set_up_with_rows_of_white-covered_chairs_facing_a_stage_ready_for_a_large_conference_or_formal_event.jpg"},
-  {"role": "Направление «Корпоративный выезд»", "title": "High ropes course at Lost Valley (49714383806).jpg", "author": "Ron Schoenmehl from San Jose", "license": "Public domain", "page": "https://commons.wikimedia.org/wiki/File:High_ropes_course_at_Lost_Valley_(49714383806).jpg"},
+  {"role": "Направление «Корпоративный выезд»", "title": "Chairs in a meeting room (Unsplash).jpg", "author": "Breather breather", "license": "CC0", "page": "https://commons.wikimedia.org/wiki/File:Chairs_in_a_meeting_room_(Unsplash).jpg"},
   {"role": "Полоса на главной — фьорды", "title": "Sognefjord at dusk 01.jpg", "author": "Cbliu", "license": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Sognefjord_at_dusk_01.jpg"},
-  {"role": "Полоса на главной — тюльпаны", "title": "Tulip field in Holland.jpg", "author": "rboed*", "license": "CC BY 2.0", "page": "https://commons.wikimedia.org/wiki/File:Tulip_field_in_Holland.jpg"}
+  {"role": "Полоса на главной — тюльпаны", "title": "Tulip field in Holland.jpg", "author": "rboed*", "license": "CC BY 2.0", "page": "https://commons.wikimedia.org/wiki/File:Tulip_field_in_Holland.jpg"},
+  {"role": "Полоса на главной — европейские города", "title": "Street and canal at dusk, Oudezijds Voorburgwal 'blue hour', 7 januari 2011 (5821465439).jpg", "author": "Jorge Láscar from Australia", "license": "CC BY 2.0", "page": "https://commons.wikimedia.org/wiki/File:Street_and_canal_at_dusk,_Oudezijds_Voorburgwal_%27blue_hour%27,_7_januari_2011_(5821465439).jpg"}
 ]
 
 export default function Credits() {

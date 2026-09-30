@@ -1,9 +1,0 @@
-node_modules/
-dist/
-.vite/
-*.log
-.env
-.env.*
-
-dist/
-dist-ssr/
