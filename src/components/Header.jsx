@@ -44,11 +44,12 @@ export default function Header({ page }) {
       <a className="brand" href="/" aria-label="Личный турагент Ольга Дударева — на главную">
         <span className="brand-mark" aria-hidden="true">
           <svg viewBox="0 0 64 64" width="26" height="26" fill="none">
-            <path d="M5 40c6-8 13-8 19 0s13 8 19 0 9-6 16 0" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-            <path d="M5 51c6-8 13-8 19 0s13 8 19 0 9-6 16 0" stroke="currentColor" strokeWidth="4" strokeLinecap="round" opacity=".6" />
-            <path d="M21 12h12l6 11h8v11H21z" fill="currentColor" />
-            <rect x="26" y="29" width="6" height="6" fill="var(--paper)" />
-            <rect x="36" y="29" width="6" height="6" fill="var(--paper)" />
+            <path d="M32 6 L50.5 26 H13.5 Z" fill="currentColor" />
+            <rect x="19.5" y="26" width="25" height="24" fill="currentColor" />
+            <rect x="24" y="30.5" width="5.2" height="6.4" fill="var(--paper)" />
+            <rect x="34.8" y="30.5" width="5.2" height="6.4" fill="var(--paper)" />
+            <path d="M2.00 45.50 C7.10 42.50 11.90 42.50 17.00 45.50 C22.10 48.50 26.90 48.50 32.00 45.50 C37.10 42.50 41.90 42.50 47.00 45.50 C52.10 48.50 56.90 48.50 62.00 45.50 L62.00 50.50 C56.90 53.50 52.10 53.50 47.00 50.50 C41.90 47.50 37.10 47.50 32.00 50.50 C26.90 53.50 22.10 53.50 17.00 50.50 C11.90 47.50 7.10 47.50 2.00 50.50 Z" fill="currentColor" opacity=".5" />
+            <path d="M2.00 53.50 C7.10 50.50 11.90 50.50 17.00 53.50 C22.10 56.50 26.90 56.50 32.00 53.50 C37.10 50.50 41.90 50.50 47.00 53.50 C52.10 56.50 56.90 56.50 62.00 53.50 L62.00 62.00 C56.90 65.00 52.10 65.00 47.00 62.00 C41.90 59.00 37.10 59.00 32.00 62.00 C26.90 65.00 22.10 65.00 17.00 62.00 C11.90 59.00 7.10 59.00 2.00 62.00 Z" fill="currentColor" />
           </svg>
         </span>
         <span><b>Личный турагент</b></span>
