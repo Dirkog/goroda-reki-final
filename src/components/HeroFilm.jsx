@@ -163,7 +163,7 @@ export default function HeroFilm({ children }) {
       sticky.style.setProperty('--pan', (easeOut * -1.6).toFixed(3))
       sticky.style.setProperty('--fade', smoothstep(0, 0.24, p).toFixed(4))
       sticky.style.setProperty('--spill', smoothstep(0.40, 0.80, p).toFixed(4))
-      sticky.dataset.frame = String(Math.round(p * (COUNT - 1)))
+      sticky.dataset.frame = String(Math.round(p * (count - 1)))
 
       if (reduce || !v.duration) return
       const t = p * (v.duration - 0.03)
@@ -190,7 +190,7 @@ export default function HeroFilm({ children }) {
       v.removeEventListener('seeked', onSeeked)
       v.removeEventListener('error', onErr)
     }
-  }, [mode])
+  }, [mode, count])
 
   // --- режим «кадры»: запасной путь ---
   useEffect(() => {
