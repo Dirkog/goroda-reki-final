@@ -13,7 +13,7 @@ import { heroVideo } from '../data/site'
 const BASE = (import.meta.env && import.meta.env.BASE_URL) || '/'
 // метка версии: файлы кадров и фильма кэшируются браузером надолго,
 // при замене фильма достаточно поменять r2 → r3
-const VER = 'v=r2'
+const VER = 'v=r3'
 const SET_BIG = `${BASE}frames/1600`
 const SET_SMALL = `${BASE}frames/1024`
 const COUNT_FALLBACK = 288   // если манифест не прочитался: /frames/manifest.json
