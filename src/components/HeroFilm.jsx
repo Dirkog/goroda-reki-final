@@ -11,6 +11,9 @@ import { heroVideo } from '../data/site'
    Выбор режима: ?anim=video | ?anim=frames (запоминается в браузере). */
 
 const BASE = (import.meta.env && import.meta.env.BASE_URL) || '/'
+// метка версии: файлы кадров и фильма кэшируются браузером надолго,
+// при замене фильма достаточно поменять r2 → r3
+const VER = 'v=r2'
 const SET_BIG = `${BASE}frames/1600`
 const SET_SMALL = `${BASE}frames/1024`
 const COUNT_FALLBACK = 288   // если манифест не прочитался: /frames/manifest.json
@@ -65,7 +68,7 @@ export default function HeroFilm({ children }) {
   // пересобрать без правки кода
   useEffect(() => {
     let alive = true
-    fetch(`${BASE}frames/manifest.json`, { cache: 'force-cache' })
+    fetch(`${BASE}frames/manifest.json?${VER}`, { cache: 'force-cache' })
       .then(r => (r.ok ? r.json() : null))
       .then(m => { if (alive && m && m.count > 1) setCount(m.count) })
       .catch(() => {})
@@ -203,7 +206,7 @@ export default function HeroFilm({ children }) {
     const ahead = tight ? 8 : AHEAD
     const poolMax = tight ? 14 : POOL_MAX
     const dir = window.innerWidth < 820 ? SET_SMALL : SET_BIG
-    const url = i => `${dir}/f${String(i).padStart(3, '0')}.webp`
+    const url = i => `${dir}/f${String(i).padStart(3, '0')}.webp?${VER}`
 
     const pool = new Map()
     let shown = -1
@@ -309,7 +312,7 @@ export default function HeroFilm({ children }) {
       <div className="home-frame" ref={stickyRef}>
         <div className="cinema-media">
           {/* постер виден мгновенно и работает без JS */}
-          <img className="hero-frame-img" src={`${BASE}videos/hero-frame0.jpg`} alt="Пляж с бирюзовой водой и песком с высоты" width="1600" height="900" fetchpriority="high" decoding="async" />
+          <img className="hero-frame-img" src={`${BASE}videos/hero-frame0.jpg?${VER}`} alt="Пляж с бирюзовой водой и песком с высоты" width="1600" height="900" fetchpriority="high" decoding="async" />
           {mode === 'video' ? (
             <>
               <canvas className="hero-layer hero-canvas is-front" ref={canvasRef} aria-hidden="true" />

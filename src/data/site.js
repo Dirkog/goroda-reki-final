@@ -52,8 +52,8 @@ export const footerOnly = routes.filter(r => r.id === 'privacy' || r.id === 'cre
 
 export const heroVideo = {
   // Пляж с высоты: 1152p, CRF 31, без звука — ~2 МБ вместо 118 МБ исходника.
-  mp4: `${BASE}videos/hero-flight.mp4`,
-  poster: `${BASE}videos/hero-poster.jpg`
+  mp4: `${BASE}videos/hero-flight.mp4?v=r2`,
+  poster: `${BASE}videos/hero-poster.jpg?v=r2`
 }
 
 // Картинки направлений лежат в public/images/trips/<slug>.jpg|webp

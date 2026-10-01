@@ -47,7 +47,7 @@ const COMPRESSIBLE = /^(text\/|application\/(json|xml|manifest\+json|javascript)
 
 const cacheFor = (rel) => {
   if (rel.startsWith('assets/')) return 'public, max-age=31536000, immutable'
-  if (/^(frames|images|videos|fonts)\//.test(rel)) return 'public, max-age=604800'
+  if (/^(frames|images|videos|fonts)\//.test(rel)) return 'public, max-age=86400'
   if (rel.endsWith('.html') || !path.extname(rel)) return 'no-cache'
   return 'public, max-age=86400'
 }
