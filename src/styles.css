@@ -1257,7 +1257,7 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
   left: 0;
   right: 0;
   bottom: -1px;
-  height: 130px;
+  height: 190px;
   z-index: 4;
   pointer-events: none;
   will-change: transform, opacity;
@@ -1364,7 +1364,7 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
   .event-when b { font-size: 18px; }
   .event-side { grid-auto-flow: row; }
   .calendar-sort { display: none; }
-  .frame-tear { height: 78px; }
+  .frame-tear { height: 150px; }
 }
 
 /* =========================================================
@@ -1492,7 +1492,7 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
 .cinema-inner { opacity: calc(1 - var(--fade, 0)); transform: translateY(calc(var(--fade, 0) * -36px)); will-change: opacity, transform; }
 .cinema-grade { opacity: calc(1 - var(--fade, 0) * 0.25); }
 .frame-spill { opacity: var(--spill, 0); transform: translateY(calc((1 - var(--spill, 0)) * 62%)); }
-.frame-tear { opacity: var(--tear, 0); transform: translateY(calc((1 - var(--tear, 0)) * 82%)); }
+.frame-tear { opacity: var(--tear, 0); transform: translateY(calc((1 - var(--tear, 0)) * 46%)); }
 .film-progress, .hero-film::after { opacity: calc(1 - var(--bridge, 0) * 1.35); }
 
 /* зерно плёнки: убирает «плоскость» градиентов и придаёт кадру плёночную фактуру */

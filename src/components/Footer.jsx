@@ -1,5 +1,5 @@
 import React from 'react'
-import { contacts, site, legal, nav, waText } from '../data/site'
+import { contacts, site, legal, nav, tgText } from '../data/site'
 
 export default function Footer() {
   return (
@@ -30,7 +30,7 @@ export default function Footer() {
         </div>
         <div>
           <b>Связаться</b>
-          <a href={waText('Здравствуйте! Хочу подобрать тур.')}>WhatsApp</a>
+          <a href={tgText('Здравствуйте! Хочу подобрать тур.')}>Telegram</a>
           <a href={contacts.telegram}>Telegram</a>
           <a href={contacts.max}>MAX</a>
           <a href={contacts.vk}>ВКонтакте</a>

@@ -33,6 +33,10 @@ export default function HeroFilm({ children }) {
     if (!wrap || !sticky || !front || !back) return
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    // на слабых устройствах окно кадров сужаем — память дороже плавности
+    const tight = (navigator.deviceMemory || 8) < 4
+    const ahead = tight ? 8 : AHEAD
+    const poolMax = tight ? 14 : POOL_MAX
     const dir = window.innerWidth < 820 ? SET_SMALL : SET_BIG
     const url = i => `${dir}/f${String(i).padStart(3, '0')}.webp`
 
@@ -52,11 +56,11 @@ export default function HeroFilm({ children }) {
     const trim = (center) => {
       // отпускаем кадры, которые далеко от текущего положения
       for (const i of [...pool.keys()]) {
-        if (i < center - BEHIND - 6 || i > center + AHEAD + 8) release(i)
+        if (i < center - BEHIND - 6 || i > center + ahead + 8) release(i)
       }
-      if (pool.size > POOL_MAX) {
+      if (pool.size > poolMax) {
         const far = [...pool.keys()].sort((a, b) => Math.abs(b - center) - Math.abs(a - center))
-        for (const i of far.slice(0, pool.size - POOL_MAX)) release(i)
+        for (const i of far.slice(0, pool.size - poolMax)) release(i)
       }
     }
 
@@ -97,14 +101,14 @@ export default function HeroFilm({ children }) {
       sticky.style.setProperty('--zoom', (1 + easeOut * 0.07).toFixed(4))
       sticky.style.setProperty('--pan', (easeOut * -1.6).toFixed(3))
       sticky.style.setProperty('--fade', smoothstep(0, 0.24, p).toFixed(4))
-      sticky.style.setProperty('--spill', smoothstep(0.42, 0.86, p).toFixed(4))
-      sticky.style.setProperty('--tear', smoothstep(0.6, 1, p).toFixed(4))
+      sticky.style.setProperty('--spill', smoothstep(0.40, 0.80, p).toFixed(4))
+      sticky.style.setProperty('--tear', smoothstep(0.52, 0.88, p).toFixed(4))
 
       if (reduce) return
       wanted = Math.round(p * (COUNT - 1))
       // не создаём десятки запросов разом: по три новых кадра за кадр прокрутки
       let started = 0
-      for (let d = 1; d <= AHEAD && started < 3; d++) {
+      for (let d = 1; d <= ahead && started < 3; d++) {
         if (!pool.has(wanted + d)) { want(wanted + d); started += 1 }
       }
       for (let d = 0; d <= BEHIND && started < 4; d++) {
@@ -152,8 +156,8 @@ export default function HeroFilm({ children }) {
         <div className="cinema-grade" aria-hidden="true" />
         <div className="cinema-grain" aria-hidden="true" />
         <span className="frame-spill" aria-hidden="true" />
-        <svg className="frame-tear" viewBox="0 0 1440 130" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0 76.00 C61.20 97.00 118.80 97.00 180.00 76.00 C241.20 55.00 298.80 55.00 360.00 76.00 C421.20 97.00 478.80 97.00 540.00 76.00 C601.20 55.00 658.80 55.00 720.00 76.00 C781.20 97.00 838.80 97.00 900.00 76.00 C961.20 55.00 1018.80 55.00 1080.00 76.00 C1141.20 97.00 1198.80 97.00 1260.00 76.00 C1321.20 55.00 1378.80 55.00 1440.00 76.00 L1440.00 130 L0 130 Z" fill="#f4f1ea" />
+        <svg className="frame-tear" viewBox="0 0 1440 190" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 74.00 C61.20 98.00 118.80 98.00 180.00 74.00 C241.20 50.00 298.80 50.00 360.00 74.00 C421.20 98.00 478.80 98.00 540.00 74.00 C601.20 50.00 658.80 50.00 720.00 74.00 C781.20 98.00 838.80 98.00 900.00 74.00 C961.20 50.00 1018.80 50.00 1080.00 74.00 C1141.20 98.00 1198.80 98.00 1260.00 74.00 C1321.20 50.00 1378.80 50.00 1440.00 74.00 L1440.00 190 L0 190 Z" fill="#f4f1ea" />
         </svg>
         <div className="cinema-inner">{children}</div>
         <span className="film-progress" aria-hidden="true" />

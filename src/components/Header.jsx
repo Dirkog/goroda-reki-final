@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { nav, contacts, site, waText } from '../data/site'
+import { nav, contacts, site, tgText } from '../data/site'
 import { track } from '../lib/analytics'
 
 export default function Header({ page }) {
@@ -87,7 +87,7 @@ export default function Header({ page }) {
           </nav>
           <div className="mobile-menu-contacts">
             <a className="btn light mobile-menu-cta" href={contacts.telegram} target="_blank" rel="noopener noreferrer" onClick={() => track('click_telegram', { place: 'menu' })}>Написать в Telegram</a>
-            <a className="btn ghost mobile-menu-cta" href={waText('Здравствуйте! Хочу подобрать тур.')} onClick={() => track('click_whatsapp', { place: 'menu' })}>WhatsApp</a>
+            <a className="btn ghost mobile-menu-cta" href={tgText('Здравствуйте! Хочу подобрать тур.')} onClick={() => track('click_telegram', { place: 'menu' })}>Telegram</a>
             <a className="mobile-menu-phone" href={site.phoneHref}>{site.phone}</a>
             <p className="mobile-menu-hours">{site.workHours}</p>
           </div>

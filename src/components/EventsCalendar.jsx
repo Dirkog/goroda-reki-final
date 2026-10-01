@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { events, eventsUpdated, site, waText } from '../data/site'
+import { events, eventsUpdated, site, tgText } from '../data/site'
 import { track } from '../lib/analytics'
 
 /* Календарь событий — своя полезная штука вместо «калькулятора тура».
@@ -94,7 +94,7 @@ export default function EventsCalendar({ limit, bare = false }) {
                 <em className={hot ? 'hot' : ''}>{ev.status}</em>
                 <a
                   className="event-cta"
-                  href={waText(`Здравствуйте! Интересует событие: ${ev.title} (${ev.dates}, ${ev.place}). Хочу поездку под эти даты. Состав: ___, бюджет: ___.`)}
+                  href={tgText(`Здравствуйте! Интересует событие: ${ev.title} (${ev.dates}, ${ev.place}). Хочу поездку под эти даты. Состав: ___, бюджет: ___.`)}
                   onClick={() => track('click_request_tour', { place: 'calendar', event: ev.title })}
                 >
                   Подобрать к дате →
@@ -109,8 +109,8 @@ export default function EventsCalendar({ limit, bare = false }) {
         <span>
           Даты сверяю с официальными источниками и обновляю календарь вручную — если событие перенесут, вы узнаете об этом до оплаты.
         </span>
-        <a href={waText('Здравствуйте! Хочу поездку под событие. Событие: ___, даты: ___')} onClick={() => track('click_whatsapp', { place: 'calendar' })}>
-          Подобрать под событие в WhatsApp
+        <a href={tgText('Здравствуйте! Хочу поездку под событие. Событие: ___, даты: ___')} onClick={() => track('click_telegram', { place: 'calendar' })}>
+          Подобрать под событие в Telegram
         </a>
       </div>
     </div>

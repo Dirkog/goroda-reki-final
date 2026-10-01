@@ -1,6 +1,6 @@
 import React from 'react'
 import { Page, SplitTitle, Breadcrumbs } from '../components/Page'
-import { steps, waText } from '../data/site'
+import { steps, tgText } from '../data/site'
 
 export default function Process() {
   return (
@@ -42,7 +42,7 @@ export default function Process() {
           <h2>Готовы начать подбор?</h2>
           <p>Оставьте заявку — соберём варианты под ваши даты, состав и бюджет, а дальше пройдём все шаги вместе.</p>
         </div>
-        <a className="btn glass" href={waText('Здравствуйте! Готов(а) начать подбор тура. Направление: ___, даты: ___')}>Оставить заявку</a>
+        <a className="btn glass" href={tgText('Здравствуйте! Готов(а) начать подбор тура. Направление: ___, даты: ___')}>Оставить заявку</a>
       </section>
     </Page>
   )

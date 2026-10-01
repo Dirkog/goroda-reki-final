@@ -1,7 +1,7 @@
 import React from 'react'
 import { Page, Breadcrumbs } from '../components/Page'
 import LeadForm from '../components/LeadForm'
-import { waText } from '../data/site'
+import { tgText } from '../data/site'
 import { Img } from '../components/Media'
 
 export default function Corporate() {
@@ -21,7 +21,7 @@ export default function Corporate() {
         <p>Поездка для команды, клиентов или партнёров: подберём направление, перелёты, размещение, программу и оформим всё официально — с договором и закрывающими документами для компании.</p>
         <div className="mini-list"><span>Красная Поляна</span><span>Подмосковье</span><span>Турция</span><span>Куба</span><span>Индонезия</span><span>Марокко</span><span>Таиланд</span></div>
         <div className="corporate-actions">
-          <a className="btn light" href={waText('Здравствуйте! Нужен корпоративный выезд. Группа: ___, даты: ___, задача: ___')}>Обсудить выезд</a>
+          <a className="btn light" href={tgText('Здравствуйте! Нужен корпоративный выезд. Группа: ___, даты: ___, задача: ___')}>Обсудить выезд</a>
           <a className="btn ghost" href="#brief">Прислать бриф</a>
         </div>
       </div>

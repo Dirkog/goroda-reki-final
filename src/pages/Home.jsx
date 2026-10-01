@@ -4,7 +4,7 @@ import LeadForm from '../components/LeadForm'
 import EventsCalendar from '../components/EventsCalendar'
 import { TripImage } from '../components/Media'
 import HeroFilm from '../components/HeroFilm'
-import { contacts, site, steps, tripCards, faq, pastTrips, team, waText } from '../data/site'
+import { contacts, site, steps, tripCards, faq, pastTrips, team, tgText } from '../data/site'
 import { track } from '../lib/analytics'
 
 // Каждая секция страницы — «сцена»: номер слева, заголовок на одной линии во всех сценах,
@@ -42,7 +42,7 @@ export default function Home() {
               события, круизы. Один человек от первого сообщения до возвращения домой — без «передаю ваш вопрос менеджеру».
             </p>
             <div className="cinema-actions">
-              <a className="btn light" href={waText('Здравствуйте, Ольга! Хочу подобрать тур: направление ___, даты ___, состав ___.')} onClick={() => track('click_whatsapp', { place: 'hero' })}>Написать в WhatsApp</a>
+              <a className="btn light" href={tgText('Здравствуйте, Ольга! Хочу подобрать тур: направление ___, даты ___, состав ___.')} onClick={() => track('click_telegram', { place: 'hero' })}>Написать в Telegram</a>
               <a className="btn glass" href="#scene-01">Календарь событий</a>
             </div>
             <div className="cinema-sign">

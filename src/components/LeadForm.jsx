@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { site, waText } from '../data/site'
+import { site, tgText } from '../data/site'
 import { track, leadSource } from '../lib/analytics'
 
 // Форма заявки. Если задан formEndpoint — отправляем POST,
-// иначе открываем WhatsApp с готовым текстом (без бэкенда это надёжный путь).
+// иначе открываем Telegram с готовым текстом (без бэкенда это надёжный путь).
 const DIRECTIONS = ['Море / пляж', 'Город и экскурсии', 'Круиз', 'Событие (концерт, фестиваль)', 'Природа / маршрут', 'Корпоративный выезд', 'Пока не решил(а)']
 
 export default function LeadForm({ preset = {}, compact = false }) {
@@ -33,8 +33,8 @@ export default function LeadForm({ preset = {}, compact = false }) {
     if (!form.consent) { setError('Нужно согласие на обработку персональных данных.'); return }
     setError('')
     track('lead_submit', { direction: form.direction })
-    // Порядок каналов: свой приём заявок на сайте → Web3Forms → WhatsApp.
-    // Заявка уходит в первый, который ответил; если все молчат — открываем WhatsApp.
+    // Порядок каналов: свой приём заявок на сайте → Web3Forms → Telegram.
+    // Заявка уходит в первый, который ответил; если все молчат — открываем Telegram.
     const payload = () => {
       const fd = new FormData()
       if (site.web3formsKey && !site.formEndpoint) fd.append('access_key', site.web3formsKey)
@@ -68,9 +68,9 @@ export default function LeadForm({ preset = {}, compact = false }) {
     }))
 
     if (!results.some(Boolean)) {
-      // ни один канал не ответил — заявку не теряем, уводим в WhatsApp
-      track('lead_fallback_whatsapp', {})
-      window.open(waText(message()), '_blank', 'noopener')
+      // ни один канал не ответил — заявку не теряем, уводим в Telegram
+      track('lead_fallback_telegram', {})
+      window.open(tgText(message()), '_blank', 'noopener')
     }
     setSent(true)
   }
@@ -80,7 +80,7 @@ export default function LeadForm({ preset = {}, compact = false }) {
       <div className="lead-form lead-form-done">
         <h3>Заявка отправлена</h3>
         <p>Ответим в течение 15 минут в рабочее время. Если удобнее письмом — напишите на <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
-        <a className="btn light" href={waText(message())} target="_blank" rel="noopener noreferrer">Продолжить в WhatsApp</a>
+        <a className="btn light" href={tgText(message())} target="_blank" rel="noopener noreferrer">Продолжить в Telegram</a>
       </div>
     )
   }
@@ -89,7 +89,7 @@ export default function LeadForm({ preset = {}, compact = false }) {
     <form className={`lead-form ${compact ? 'compact' : ''}`} onSubmit={submit} noValidate>
       <div className="lead-form-row">
         <label><span>Как вас зовут *</span><input value={form.name} onChange={set('name')} autoComplete="name" placeholder="Имя" required /></label>
-        <label><span>Телефон, WhatsApp или Telegram *</span><input value={form.contact} onChange={set('contact')} autoComplete="tel" placeholder="+7 ... или @ник" required /></label>
+        <label><span>Телефон или Telegram *</span><input value={form.contact} onChange={set('contact')} autoComplete="tel" placeholder="+7 ... или @ник" required /></label>
       </div>
       <div className="lead-form-row">
         <label><span>Что интересует</span>
@@ -104,7 +104,7 @@ export default function LeadForm({ preset = {}, compact = false }) {
         <span>Согласен(на) с <a href="/politika-konfidencialnosti/" target="_blank" rel="noopener noreferrer">политикой обработки персональных данных</a></span>
       </label>
       {error && <p className="lead-form-error" role="alert">{error}</p>}
-      <button className="btn light" type="submit">{endpoint ? 'Отправить заявку' : 'Отправить в WhatsApp'}</button>
+      <button className="btn light" type="submit">{endpoint ? 'Отправить заявку' : 'Отправить в Telegram'}</button>
       <p className="lead-form-note">Паспортные данные не нужны до выбора тура и оформления договора.</p>
     </form>
   )

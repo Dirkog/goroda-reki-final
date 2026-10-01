@@ -1,6 +1,6 @@
 import React from 'react'
 import { Page, SplitTitle, Breadcrumbs } from '../components/Page'
-import { site, team, pastTrips, waText } from '../data/site'
+import { site, team, pastTrips, tgText } from '../data/site'
 
 export default function Olga() {
   return (
@@ -90,7 +90,7 @@ export default function Olga() {
           <h2>Или сразу к делу</h2>
           <p>Напишите, куда и когда хотите поехать — вернёмся с вариантами.</p>
         </div>
-        <a className="btn light" href={waText('Здравствуйте! Хочу подобрать тур. Направление: ___, даты: ___.')}>Написать в WhatsApp</a>
+        <a className="btn light" href={tgText('Здравствуйте! Хочу подобрать тур. Направление: ___, даты: ___.')}>Написать в Telegram</a>
       </section>
     </Page>
   )

@@ -54,7 +54,6 @@ collections:
             label: Мессенджеры и соцсети
             widget: object
             fields:
-              - { name: whatsapp, label: WhatsApp (ссылка), widget: string }
               - { name: telegram, label: Telegram (ссылка), widget: string }
               - { name: max, label: MAX (ссылка), widget: string }
               - { name: vk, label: ВКонтакте (ссылка), widget: string }

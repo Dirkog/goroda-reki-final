@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Page, SplitTitle } from '../components/Page'
-import { tripCards, waText, contacts } from '../data/site'
+import { tripCards, tgText, contacts } from '../data/site'
 import { track } from '../lib/analytics'
 import { TripImage } from '../components/Media'
 
@@ -24,7 +24,7 @@ function TripCard({ card, index }) {
         </dl>
         <div className="tag-row">{card.tags.map(tag => <em key={tag}>{tag}</em>)}</div>
         <div className="trip-actions">
-          <a className="btn light" href={waText(msg)} target="_blank" rel="noopener noreferrer" onClick={request}>Запросить этот тур</a>
+          <a className="btn light" href={tgText(msg)} target="_blank" rel="noopener noreferrer" onClick={request}>Запросить этот тур</a>
           <a className="trip-actions-alt" href={contacts.telegram}>или в Telegram</a>
         </div>
       </div>
@@ -101,7 +101,7 @@ export default function Trips() {
         <div className="empty-state">
           <h2>Ничего не найдено</h2>
           <p>Попробуйте другой запрос или напишите команде — часто направление можно собрать индивидуально.</p>
-          <a className="btn light" href={waText('Здравствуйте! Не нашёл(ла) подходящее направление на сайте. Ищу: ___')}>Написать в WhatsApp</a>
+          <a className="btn light" href={tgText('Здравствуйте! Не нашёл(ла) подходящее направление на сайте. Ищу: ___')}>Написать в Telegram</a>
         </div>
       )}
 
@@ -120,7 +120,7 @@ export default function Trips() {
           <h2>Не нашли своё направление?</h2>
           <p>Опишите поездку в двух словах: месяц, состав, бюджет и настроение — предложим 2–3 варианта.</p>
         </div>
-        <a className="btn glass" href={waText('Здравствуйте! Хочу тур. Направление: ___, даты: ___, бюджет: ___')}>Написать в WhatsApp</a>
+        <a className="btn glass" href={tgText('Здравствуйте! Хочу тур. Направление: ___, даты: ___, бюджет: ___')}>Написать в Telegram</a>
       </section>
     </Page>
   )

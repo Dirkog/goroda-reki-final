@@ -1,6 +1,6 @@
 import React from 'react'
 import { Page } from '../components/Page'
-import { nav, waText } from '../data/site'
+import { nav, tgText } from '../data/site'
 
 export default function NotFound() {
   return (
@@ -12,7 +12,7 @@ export default function NotFound() {
         <div className="notfound-links">
           {nav.map(n => <a key={n.id} href={n.path}>{n.label}</a>)}
         </div>
-        <a className="btn light" href={waText('Здравствуйте! Не нашёл(ла) нужную информацию на сайте: ___')}>Написать в WhatsApp</a>
+        <a className="btn light" href={tgText('Здравствуйте! Не нашёл(ла) нужную информацию на сайте: ___')}>Написать в Telegram</a>
       </div>
     </Page>
   )

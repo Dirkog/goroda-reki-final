@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { contacts, site, waText } from '../data/site'
+import { contacts, site, tgText } from '../data/site'
 import { track } from '../lib/analytics'
 
 // Липкая панель связи: главный источник заявок на мобильных.
@@ -24,7 +24,7 @@ export default function StickyCta() {
         <span className="sticky-cta-icon" aria-hidden="true">✆</span>
         <span><b>Написать</b><small>отвечу в рабочее время</small></span>
       </a>
-      <a className="sticky-cta-alt" href={waText('Здравствуйте! Хочу подобрать тур: направление ___, даты ___.')} onClick={() => track('click_whatsapp', { place: 'sticky' })} aria-label="Написать в WhatsApp">WA</a>
+      <a className="sticky-cta-alt" href={tgText('Здравствуйте! Хочу подобрать тур: направление ___, даты ___.')} onClick={() => track('click_telegram', { place: 'sticky' })} aria-label="Написать в Telegram">TG</a>
       <a className="sticky-cta-alt" href={site.phoneHref} onClick={() => track('click_phone', { place: 'sticky' })} aria-label={`Позвонить ${site.phone}`}>☎</a>
       <button className="sticky-cta-close" aria-label="Скрыть панель" onClick={() => { setClosed(true); try { sessionStorage.setItem('gr_cta_closed', '1') } catch {} }}>×</button>
     </div>
