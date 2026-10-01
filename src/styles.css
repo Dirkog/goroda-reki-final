@@ -1249,20 +1249,6 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
 .footer-logo { display: inline-flex; align-items: center; gap: 12px; }
 .footer-logo svg { color: var(--accent-soft); flex-shrink: 0; }
 
-/* =========================================================
-   РВАНЫЙ КРАЙ: фото переходит в бумагу, как на референсе
-   ========================================================= */
-.frame-tear {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 190px;
-  z-index: 4;
-  pointer-events: none;
-  will-change: transform, opacity;
-  filter: drop-shadow(0 -6px 18px rgba(10, 12, 14, 0.18));
-}
 
 /* =========================================================
    КАЛЕНДАРЬ: одна строка — одно событие, читается спокойно
@@ -1364,7 +1350,6 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
   .event-when b { font-size: 18px; }
   .event-side { grid-auto-flow: row; }
   .calendar-sort { display: none; }
-  .frame-tear { height: 150px; }
 }
 
 /* =========================================================
@@ -1460,10 +1445,6 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
   opacity: clamp(0, calc((var(--bridge) - 0.5) * 3), 1);
   transform: translateY(calc(58% - clamp(0, calc((var(--bridge) - 0.5) * 3), 1) * 58%));
 }
-.frame-tear {
-  opacity: clamp(0, calc((var(--bridge) - 0.68) * 3.4), 1);
-  transform: translateY(calc(80% - clamp(0, calc((var(--bridge) - 0.68) * 3.4), 1) * 80%));
-}
 /* тонкая линия прогресса фильма — один элемент .film-progress */
 .film-progress {
   position: absolute;
@@ -1484,7 +1465,7 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
   .hero-film { height: 100svh; }
   .hero-layer { display: none; }
   .home-frame .cinema-inner, .home-frame .cinema-media { opacity: 1 !important; transform: none !important; }
-  .frame-spill, .frame-tear, .film-progress { display: none; }
+  .frame-spill, .film-progress { display: none; }
 }
 
 /* --- плавные рампы фильма: значения считает HeroFilm (smoothstep), здесь только применение --- */
@@ -1492,7 +1473,6 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
 .cinema-inner { opacity: calc(1 - var(--fade, 0)); transform: translateY(calc(var(--fade, 0) * -36px)); will-change: opacity, transform; }
 .cinema-grade { opacity: calc(1 - var(--fade, 0) * 0.25); }
 .frame-spill { opacity: var(--spill, 0); transform: translateY(calc((1 - var(--spill, 0)) * 62%)); }
-.frame-tear { opacity: var(--tear, 0); transform: translateY(calc((1 - var(--tear, 0)) * 46%)); }
 .film-progress, .hero-film::after { opacity: calc(1 - var(--bridge, 0) * 1.35); }
 
 /* зерно плёнки: убирает «плоскость» градиентов и придаёт кадру плёночную фактуру */
@@ -1508,3 +1488,29 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
     linear-gradient(180deg, rgba(6, 12, 14, 0.5) 0%, rgba(6, 12, 14, 0.08) 34%, rgba(6, 12, 14, 0.2) 62%, rgba(6, 12, 14, 0.72) 100%);
 }
 @media (prefers-reduced-motion: reduce) { .cinema-grain { display: none; } }
+
+/* =========================================================
+   КАРТОЧКИ ОТДЕЛЕНЫ ОТ ФОТОПАНЕЛИ
+   Фото заканчивается чётко (низ больше не растворяется), между
+   панелью и сеткой — воздух, у каждой карточки своя рамка и тень,
+   поэтому карточки читаются как отдельные листы, а не как часть фото.
+   ========================================================= */
+.interlude::after { display: none; }
+.interlude + .trip-grid,
+.interlude + .experience-grid,
+.interlude + .trip-grid.home-grid { margin-top: 58px; }
+.trip-teaser,
+.trip-card.rich,
+.experience-grid article {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: 0 24px 46px -38px rgba(12, 22, 26, 0.55);
+}
+.trip-teaser:hover,
+.trip-card.rich:hover { box-shadow: 0 30px 54px -36px rgba(12, 22, 26, 0.6); }
+.experience-grid { gap: 18px; background: none; border: 0; }
+@media (max-width: 680px) {
+  .interlude + .trip-grid,
+  .interlude + .experience-grid { margin-top: 34px; }
+  .interlude { min-height: 46vh; }
+}

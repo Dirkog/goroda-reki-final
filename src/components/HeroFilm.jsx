@@ -102,7 +102,6 @@ export default function HeroFilm({ children }) {
       sticky.style.setProperty('--pan', (easeOut * -1.6).toFixed(3))
       sticky.style.setProperty('--fade', smoothstep(0, 0.24, p).toFixed(4))
       sticky.style.setProperty('--spill', smoothstep(0.40, 0.80, p).toFixed(4))
-      sticky.style.setProperty('--tear', smoothstep(0.52, 0.88, p).toFixed(4))
 
       if (reduce) return
       wanted = Math.round(p * (COUNT - 1))
@@ -156,9 +155,6 @@ export default function HeroFilm({ children }) {
         <div className="cinema-grade" aria-hidden="true" />
         <div className="cinema-grain" aria-hidden="true" />
         <span className="frame-spill" aria-hidden="true" />
-        <svg className="frame-tear" viewBox="0 0 1440 190" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0 74.00 C61.20 98.00 118.80 98.00 180.00 74.00 C241.20 50.00 298.80 50.00 360.00 74.00 C421.20 98.00 478.80 98.00 540.00 74.00 C601.20 50.00 658.80 50.00 720.00 74.00 C781.20 98.00 838.80 98.00 900.00 74.00 C961.20 50.00 1018.80 50.00 1080.00 74.00 C1141.20 98.00 1198.80 98.00 1260.00 74.00 C1321.20 50.00 1378.80 50.00 1440.00 74.00 L1440.00 190 L0 190 Z" fill="#f4f1ea" />
-        </svg>
         <div className="cinema-inner">{children}</div>
         <span className="film-progress" aria-hidden="true" />
       </div>
