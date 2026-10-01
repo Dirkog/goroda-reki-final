@@ -2,16 +2,18 @@ import React, { useEffect, useRef, useState } from 'react'
 import { heroVideo } from '../data/site'
 
 /* «Фильм по прокрутке»: картинка фильма меняется по мере прокрутки, без автоплея.
+   Фильм — пляж с высоты: бирюзовая вода, песок.
    Два источника одного и того же фильма:
-     • video  — один файл (530 КБ), кадр берётся перемоткой и рисуется на canvas;
-     • frames — 212 отдельных кадров (23 МБ), загружаются окном вокруг текущего.
+     • video  — один файл (2 МБ), кадр берётся перемоткой и рисуется на canvas;
+     • frames — 288 отдельных кадров (36 МБ), загружаются окном вокруг текущего.
    Видео в десятки раз легче, поэтому на медленной сети оно и должно быть основным;
    кадры остаются запасным путём — если видео не открылось, режим переключается сам.
    Выбор режима: ?anim=video | ?anim=frames (запоминается в браузере). */
 
-const COUNT = 212            // кадров в наборе (/frames/manifest.json)
-const SET_BIG = '/frames/1600'
-const SET_SMALL = '/frames/1024'
+const BASE = (import.meta.env && import.meta.env.BASE_URL) || '/'
+const SET_BIG = `${BASE}frames/1600`
+const SET_SMALL = `${BASE}frames/1024`
+const COUNT_FALLBACK = 288   // если манифест не прочитался: /frames/manifest.json
 const AHEAD = 12             // держим готовыми вперёд
 const BEHIND = 3             // и чуть назад — на случай прокрутки вверх
 const POOL_MAX = 22          // предел изображений в памяти одновременно
@@ -57,6 +59,18 @@ export default function HeroFilm({ children }) {
   const canvasRef = useRef(null)
   const [ready, setReady] = useState(false)
   const [mode, setMode] = useState('pending')
+  const [count, setCount] = useState(COUNT_FALLBACK)
+
+  // сколько кадров в наборе — берём из манифеста, чтобы набор можно было
+  // пересобрать без правки кода
+  useEffect(() => {
+    let alive = true
+    fetch(`${BASE}frames/manifest.json`, { cache: 'force-cache' })
+      .then(r => (r.ok ? r.json() : null))
+      .then(m => { if (alive && m && m.count > 1) setCount(m.count) })
+      .catch(() => {})
+    return () => { alive = false }
+  }, [])
 
   // сначала выясняем, какой источник фильма уместен на этом сервере
   useEffect(() => {
@@ -215,7 +229,7 @@ export default function HeroFilm({ children }) {
     }
 
     const want = (i) => {
-      if (i < 0 || i >= COUNT || pool.has(i)) return
+      if (i < 0 || i >= count || pool.has(i)) return
       const img = new Image()
       img.decoding = 'async'
       const entry = { img, ready: false }
@@ -253,7 +267,7 @@ export default function HeroFilm({ children }) {
       sticky.style.setProperty('--spill', smoothstep(0.40, 0.80, p).toFixed(4))
 
       if (reduce) return
-      wanted = Math.round(p * (COUNT - 1))
+      wanted = Math.round(p * (count - 1))
       let started = 0
       for (let d = 1; d <= ahead && started < 3; d++) {
         if (!pool.has(wanted + d)) { want(wanted + d); started += 1 }
@@ -274,7 +288,7 @@ export default function HeroFilm({ children }) {
 
     if (reduce) {
       front.src = url(0)
-      front.alt = 'Зелёная река и лес с высоты'
+      front.alt = 'Пляж с бирюзовой водой и песком с высоты'
       front.classList.add('is-front')
     } else {
       want(0)
@@ -288,18 +302,18 @@ export default function HeroFilm({ children }) {
       window.removeEventListener('resize', onResize)
       for (const i of [...pool.keys()]) release(i)
     }
-  }, [mode])
+  }, [mode, count])
 
   return (
     <div className={`hero-film ${ready ? 'is-ready' : ''} mode-${mode}`} ref={wrapRef}>
       <div className="home-frame" ref={stickyRef}>
         <div className="cinema-media">
           {/* постер виден мгновенно и работает без JS */}
-          <img className="hero-frame-img" src="/videos/hero-frame0.jpg" alt="Зелёная река и лес с высоты" width="1600" height="900" fetchpriority="high" decoding="async" />
+          <img className="hero-frame-img" src={`${BASE}videos/hero-frame0.jpg`} alt="Пляж с бирюзовой водой и песком с высоты" width="1600" height="900" fetchpriority="high" decoding="async" />
           {mode === 'video' ? (
             <>
               <canvas className="hero-layer hero-canvas is-front" ref={canvasRef} aria-hidden="true" />
-              {/* сам файл фильма: 720p, без звука, начало файла готово к перемотке (faststart) */}
+              {/* сам файл фильма: 1152p, без звука, начало файла готово к перемотке (faststart) */}
               <video className="hero-video-src" ref={videoRef} src={heroVideo.mp4} poster={heroVideo.poster}
                 muted playsInline preload="auto" tabIndex={-1} aria-hidden="true" />
             </>

@@ -1,15 +1,15 @@
 {
- "count": 212,
- "fps": 16,
- "source": "43605-2160.mp4",
+ "count": 288,
+ "fps": 12,
+ "source": "beach-aerial-4k.mp4",
  "sets": {
   "1600": {
-   "count": 212,
-   "bytes": 16082832
+   "count": 288,
+   "bytes": 24503960
   },
   "1024": {
-   "count": 214,
-   "bytes": 5418956
+   "count": 288,
+   "bytes": 11690042
   }
  }
 }

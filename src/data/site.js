@@ -51,7 +51,7 @@ export const nav = routes.filter(r => !NAV_HIDDEN.has(r.id))
 export const footerOnly = routes.filter(r => r.id === 'privacy' || r.id === 'credits')
 
 export const heroVideo = {
-  // Облегчённая версия: 1280×720, CRF 26, без звука — ~0,5 МБ вместо 18,6 МБ.
+  // Пляж с высоты: 1152p, CRF 31, без звука — ~2 МБ вместо 118 МБ исходника.
   mp4: `${BASE}videos/hero-flight.mp4`,
   poster: `${BASE}videos/hero-poster.jpg`
 }
