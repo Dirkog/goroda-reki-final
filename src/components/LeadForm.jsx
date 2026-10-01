@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { site, tgText } from '../data/site'
 import { track, leadSource } from '../lib/analytics'
+import { withBase } from '../lib/router'
 
 // Форма заявки. Если задан formEndpoint — отправляем POST,
 // иначе открываем Telegram с готовым текстом (без бэкенда это надёжный путь).
@@ -35,33 +36,44 @@ export default function LeadForm({ preset = {}, compact = false }) {
     track('lead_submit', { direction: form.direction })
     // Порядок каналов: свой приём заявок на сайте → Web3Forms → Telegram.
     // Заявка уходит в первый, который ответил; если все молчат — открываем Telegram.
-    const payload = () => {
+    const page = typeof window !== 'undefined' ? window.location.pathname : ''
+    const fields = {
+      subject: `Заявка с сайта «${site.name}»`,
+      from_name: `Сайт «${site.name}»`,
+      name: form.name,
+      contact: form.contact,
+      direction: form.direction,
+      dates: form.dates,
+      people: form.people,
+      comment: form.comment,
+      source: leadSource(),
+      page,
+      botcheck: ''
+    }
+    // Почтовый сервис принимает форму с файловым полем access_key.
+    const payloadForm = () => {
       const fd = new FormData()
       if (site.web3formsKey && !site.formEndpoint) fd.append('access_key', site.web3formsKey)
-      fd.append('subject', `Заявка с сайта «${site.name}»`)
-      fd.append('from_name', `Сайт «${site.name}»`)
-      fd.append('name', form.name)
-      fd.append('contact', form.contact)
-      fd.append('direction', form.direction)
-      fd.append('dates', form.dates)
-      fd.append('people', form.people)
-      fd.append('comment', form.comment)
-      fd.append('source', leadSource())
-      fd.append('page', typeof window !== 'undefined' ? window.location.pathname : '')
-      fd.append('botcheck', '')
+      for (const [k, v] of Object.entries(fields)) fd.append(k, v == null ? '' : v)
       return fd
+    }
+    // Свой приём заявок на сервере принимает обычную форму (urlencoded).
+    const payloadUrl = () => {
+      const body = new URLSearchParams()
+      for (const [k, v] of Object.entries(fields)) body.append(k, v == null ? '' : v)
+      return body
     }
 
     // Отправляем сразу во все доступные каналы: свой приём (Telegram) и почта.
     // Так заявка не потеряется, даже если один из сервисов недоступен.
     const channels = [
-      { url: '/api/lead', name: 'telegram' },
-      { url: endpoint, name: 'email' }
+      { url: '/api/lead', name: 'telegram', body: payloadUrl },
+      { url: endpoint, name: 'email', body: payloadForm }
     ].filter(c => c.url)
 
     const results = await Promise.all(channels.map(async (c) => {
       try {
-        const r = await fetch(c.url, { method: 'POST', body: payload() })
+        const r = await fetch(c.url, { method: 'POST', body: c.body() })
         if (r.ok) { track('lead_delivered', { channel: c.name }); return true }
         return false
       } catch (e) { return false }
@@ -101,7 +113,7 @@ export default function LeadForm({ preset = {}, compact = false }) {
       <label><span>Комментарий</span><textarea value={form.comment} onChange={set('comment')} rows={compact ? 3 : 4} placeholder="Бюджет, важные пожелания, что нельзя не учесть" /></label>
       <label className="lead-form-consent">
         <input type="checkbox" checked={form.consent} onChange={set('consent')} />
-        <span>Согласен(на) с <a href="/politika-konfidencialnosti/" target="_blank" rel="noopener noreferrer">политикой обработки персональных данных</a></span>
+        <span>Согласен(на) с <a href={withBase('/politika-konfidencialnosti/')} target="_blank" rel="noopener noreferrer">политикой обработки персональных данных</a></span>
       </label>
       {error && <p className="lead-form-error" role="alert">{error}</p>}
       <button className="btn light" type="submit">{endpoint ? 'Отправить заявку' : 'Отправить в Telegram'}</button>

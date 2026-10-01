@@ -1,6 +1,7 @@
 import React from 'react'
 import { Page, SplitTitle, Breadcrumbs } from '../components/Page'
 import { site, legal, contacts } from '../data/site'
+import { withBase } from '../lib/router'
 
 // Две страницы на одном компоненте: договор-оферта и политика обработки ПД.
 export default function Legal({ route }) {
@@ -81,14 +82,14 @@ export default function Legal({ route }) {
             <p>Агентство отвечает за подбор, бронирование и документальное оформление в рамках договора. Исполнение услуг, входящих в туристский продукт, обеспечивается туроператором. Агентство оказывает клиенту содействие в спорных ситуациях, включая связь с туроператором, отелем, страховой компанией.</p>
 
             <h2>6. Обработка данных</h2>
-            <p>Порядок обработки персональных данных описан в <a href="/politika-konfidencialnosti/">политике обработки персональных данных</a>.</p>
+            <p>Порядок обработки персональных данных описан в <a href={withBase('/politika-konfidencialnosti/')}>политике обработки персональных данных</a>.</p>
 
             <h2>7. Реквизиты и связь</h2>
             <p>Телефон: {site.phone} · E-mail: <a href={`mailto:${site.email}`}>{site.email}</a> · Telegram: <a href={contacts.telegram}>@Olgagorodareki</a><br />{legal.contractNote}</p>
           </>
         )}
 
-        <p className="legal-contact">Вопросы по документам — <a href="/kontakty/">через форму на странице контактов</a> или письмом на {site.email}.</p>
+        <p className="legal-contact">Вопросы по документам — <a href={withBase('/kontakty/')}>через форму на странице контактов</a> или письмом на {site.email}.</p>
       </div>
     </Page>
   )

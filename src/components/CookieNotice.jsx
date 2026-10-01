@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { site } from '../data/site'
+import { withBase } from '../lib/router'
 
 export default function CookieNotice() {
   const [show, setShow] = useState(false)
@@ -21,7 +22,7 @@ export default function CookieNotice() {
     <div className="cookie-notice" role="dialog" aria-label="Использование cookie">
       <p>
         Использую cookie и обезличенную статистику, чтобы сайт работал корректно и был удобнее.
-        Подробнее — в <a href="/politika-konfidencialnosti/">политике обработки персональных данных</a>.
+        Подробнее — в <a href={withBase('/politika-konfidencialnosti/')}>политике обработки персональных данных</a>.
       </p>
       <button className="btn light" onClick={accept}>Понятно</button>
     </div>

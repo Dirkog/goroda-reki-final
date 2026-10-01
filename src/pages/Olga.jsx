@@ -1,6 +1,7 @@
 import React from 'react'
 import { Page, SplitTitle, Breadcrumbs } from '../components/Page'
 import { site, team, pastTrips, tgText } from '../data/site'
+import { withBase } from '../lib/router'
 
 export default function Olga() {
   return (
@@ -82,7 +83,7 @@ export default function Olga() {
           <h2>Хотите узнать, как оформляется тур?</h2>
           <p>Покажем весь путь — от первой заявки до документов перед вылетом и связи в поездке.</p>
         </div>
-        <a className="btn glass" href="/kak-rabotaem/">Как оформляется тур</a>
+        <a className="btn glass" href={withBase('/kak-rabotaem/')}>Как оформляется тур</a>
       </section>
 
       <section className="page-cta light-cta">

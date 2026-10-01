@@ -1,6 +1,7 @@
 import React from 'react'
 import { Page, Breadcrumbs } from '../components/Page'
 import { site, legal } from '../data/site'
+import { withBase } from '../lib/router'
 
 export default function Trust() {
   return (
@@ -47,10 +48,10 @@ export default function Trust() {
           <h2>Остались вопросы о безопасности сделки?</h2>
           <p>Расскажем, как проходит договор, оплата и оформление документов — без обязательств.</p>
         </div>
-        <a className="btn glass" href="/kontakty/">Задать вопрос</a>
+        <a className="btn glass" href={withBase('/kontakty/')}>Задать вопрос</a>
       </section>
       <p className="page-note">
-        Документы и условия: <a href="/oferta/">договор и публичная оферта</a>, <a href="/politika-konfidencialnosti/">политика обработки персональных данных</a>.
+        Документы и условия: <a href={withBase('/oferta/')}>договор и публичная оферта</a>, <a href={withBase('/politika-konfidencialnosti/')}>политика обработки персональных данных</a>.
       </p>
     </Page>
   )

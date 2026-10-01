@@ -3,6 +3,7 @@ import { Page, SplitTitle } from '../components/Page'
 import { tripCards, tgText, contacts } from '../data/site'
 import { track } from '../lib/analytics'
 import { TripImage } from '../components/Media'
+import { withBase } from '../lib/router'
 
 const FILTERS = ['Все', 'Море', 'Сезоны', 'События', 'Круизы', 'Корпоративным', 'Природа']
 
@@ -82,7 +83,7 @@ export default function Trips() {
             <option value="budget">Сначала дешевле</option>
           </select>
         </label>
-        <a className="trips-calendar-link" href="/#scene-01">
+        <a className="trips-calendar-link" href={withBase('/#scene-01')}>
           Сначала посмотреть календарь событий →
         </a>
       </div>

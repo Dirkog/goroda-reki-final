@@ -7,6 +7,7 @@ import ScrollMotion from './components/ScrollMotion'
 import Home from './pages/Home'
 import Olga from './pages/Olga'
 import Trips from './pages/Trips'
+import Calendar from './pages/Calendar'
 import Process from './pages/Process'
 import Trust from './pages/Trust'
 import Corporate from './pages/Corporate'
@@ -19,7 +20,7 @@ import { applyMeta } from './lib/seo'
 import { track } from './lib/analytics'
 import { metrikaHit } from './lib/metrika'
 
-const PAGES = { home: Home, olga: Olga, trips: Trips, process: Process, trust: Trust, corporate: Corporate, contacts: Contacts, oferta: Legal, privacy: Legal, credits: Credits }
+const PAGES = { home: Home, olga: Olga, trips: Trips, calendar: Calendar, process: Process, trust: Trust, corporate: Corporate, contacts: Contacts, oferta: Legal, privacy: Legal, credits: Credits }
 
 const NOT_FOUND = {
   id: 'notfound', path: '/404', label: 'Страница не найдена',

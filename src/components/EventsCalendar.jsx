@@ -102,7 +102,7 @@ export default function EventsCalendar({ limit, bare = false }) {
               </div>
             </article>
           )
-        })        })}
+        })}
       </div>
 
       <div className="calendar-foot">

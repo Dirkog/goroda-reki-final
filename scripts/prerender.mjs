@@ -42,6 +42,14 @@ function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 }
 
+function feedLinks(route) {
+  // на странице календаря сообщаем браузерам и поисковикам о подписке
+  if (route.id !== 'calendar') return ''
+  return `
+    <link rel="alternate" type="text/calendar" href="${base}events.ics" title="Календарь событий (.ics)" />
+    <link rel="alternate" type="application/rss+xml" href="${base}events.xml" title="Лента событий (RSS)" />`
+}
+
 function buildHead(route) {
   const head = headFor(route, site.origin)
   const metas = head.metas.map(([a, k, v]) => `<meta ${a}="${k}" content="${esc(v)}" />`).join('\n    ')
@@ -58,7 +66,7 @@ function fullHead(route) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f4f7f8" />
-    ${buildHead(route)}
+    ${buildHead(route)}${feedLinks(route)}
     <link rel="icon" href="${b}favicon.ico" sizes="any" />
     <link rel="icon" type="image/svg+xml" href="${b}icon.svg" />
     <link rel="apple-touch-icon" href="${b}apple-touch-icon.png" />
@@ -89,6 +97,19 @@ for (const route of routes) {
   fs.writeFileSync(path.join(outDir, 'index.html'), html)
   count++
   console.log('  prerender', route.path)
+}
+
+// Файлы подписки на календарь: .ics (календарь) и .xml (лента).
+// Выпускаем и на копиях: ссылки на странице календаря должны работать везде.
+if (true) {
+  const { buildIcs, buildRss, parseDates } = await import(pathToFileURL(path.resolve('src/lib/ics.js')).href)
+  const list = ssr.events || []
+  const origin = site.origin.replace(/\/$/, '')
+  const { ics, count: icsCount } = buildIcs(list, { origin: origin + base, updated: ssr.eventsUpdated })
+  fs.writeFileSync(path.join(dist, 'events.ics'), ics)
+  fs.writeFileSync(path.join(dist, 'events.xml'),
+    buildRss(list, { origin: origin + base + 'kalendar/', updated: ssr.eventsUpdated, feedUrl: `${origin}${base}events.xml` }))
+  console.log(`  подписка: events.ics (${icsCount} событий с точными датами из ${list.length}), events.xml`)
 }
 
 // 404 для GitHub Pages и любого статического хостинга

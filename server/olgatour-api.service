@@ -1,0 +1,20 @@
+[Unit]
+Description=Приём заявок сайта «Личный турагент Ольга Дударева»
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/olgatour
+EnvironmentFile=/etc/olgatour.env
+ExecStart=/usr/bin/node /opt/olgatour/server/server.mjs
+Restart=always
+RestartSec=3
+User=www-data
+Group=www-data
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadOnlyPaths=/opt/olgatour
+
+[Install]
+WantedBy=multi-user.target

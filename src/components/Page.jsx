@@ -1,4 +1,5 @@
 import React from 'react'
+import { withBase } from '../lib/router'
 
 // Страницы больше не прячутся за JS-анимацией: контент виден сразу,
 // появление — лёгкая CSS-анимация (и она отключается при prefers-reduced-motion).
@@ -23,7 +24,7 @@ export function Breadcrumbs({ items }) {
     <nav className="breadcrumbs" aria-label="Хлебные крошки">
       {items.map((it, i) => (
         <span key={it.label}>
-          {it.path ? <a href={it.path}>{it.label}</a> : <b>{it.label}</b>}
+          {it.path ? <a href={withBase(it.path)}>{it.label}</a> : <b>{it.label}</b>}
           {i < items.length - 1 && <i aria-hidden="true">/</i>}
         </span>
       ))}

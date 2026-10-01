@@ -1,11 +1,12 @@
 import React from 'react'
 import { contacts, site, legal, nav, tgText } from '../data/site'
+import { withBase } from '../lib/router'
 
 export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-main">
-        <a className="footer-logo" href="/">
+        <a className="footer-logo" href={withBase('/')}>
           <svg viewBox="0 0 64 64" width="30" height="30" fill="none">
             <path d="M32 6 L50.5 26 H13.5 Z" fill="currentColor" />
             <rect x="19.5" y="26" width="25" height="24" fill="currentColor" />
@@ -38,10 +39,10 @@ export default function Footer() {
         </div>
         <div>
           <b>Разделы</b>
-          {nav.filter(n => n.id !== 'home').map(n => <a key={n.id} href={n.path}>{n.label}</a>)}
-          <a href="/oferta/">Договор и оферта</a>
-          <a href="/politika-konfidencialnosti/">Политика конфиденциальности</a>
-          <a href="/istochniki-foto/">Источники фотографий</a>
+          {nav.filter(n => n.id !== 'home').map(n => <a key={n.id} href={withBase(n.path)}>{n.label}</a>)}
+          <a href={withBase('/oferta/')}>Договор и оферта</a>
+          <a href={withBase('/politika-konfidencialnosti/')}>Политика конфиденциальности</a>
+          <a href={withBase('/istochniki-foto/')}>Источники фотографий</a>
         </div>
       </div>
       <div className="footer-bottom">

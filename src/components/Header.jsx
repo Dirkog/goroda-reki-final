@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { nav, contacts, site, tgText } from '../data/site'
 import { track } from '../lib/analytics'
+import { withBase } from '../lib/router'
 
 export default function Header({ page }) {
   const [open, setOpen] = useState(false)
@@ -41,7 +42,7 @@ export default function Header({ page }) {
 
   return (
     <header className={`header ${solid ? 'is-solid' : 'is-transparent'}`}>
-      <a className="brand" href="/" aria-label="Личный турагент Ольга Дударева — на главную">
+      <a className="brand" href={withBase('/')} aria-label="Личный турагент Ольга Дударева — на главную">
         <span className="brand-mark" aria-hidden="true">
           <svg viewBox="0 0 64 64" width="26" height="26" fill="none">
             <path d="M32 6 L50.5 26 H13.5 Z" fill="currentColor" />
@@ -57,7 +58,7 @@ export default function Header({ page }) {
 
       <nav className="nav" aria-label="Основная навигация">
         {nav.map(item => (
-          <a key={item.id} href={item.path} className={page === item.id ? 'active' : ''} aria-current={page === item.id ? 'page' : undefined}>
+          <a key={item.id} href={withBase(item.path)} className={page === item.id ? 'active' : ''} aria-current={page === item.id ? 'page' : undefined}>
             <span>{item.label}</span>
           </a>
         ))}
@@ -82,7 +83,7 @@ export default function Header({ page }) {
           <p className="mobile-menu-label">Навигация</p>
           <nav className="mobile-nav">
             {nav.map(item => (
-              <a key={item.id} href={item.path} className={page === item.id ? 'active' : ''} onClick={() => setOpen(false)}>{item.label}</a>
+              <a key={item.id} href={withBase(item.path)} className={page === item.id ? 'active' : ''} onClick={() => setOpen(false)}>{item.label}</a>
             ))}
           </nav>
           <div className="mobile-menu-contacts">

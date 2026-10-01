@@ -1435,6 +1435,11 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
 .hero-layer { opacity: 0; transition: opacity .22s linear; z-index: 1; }
 .hero-layer.is-front { opacity: 1; }
 .hero-frame-img { opacity: 1; transition: opacity .5s ease; z-index: 0; }
+.hero-canvas { background: #0b0f12; }
+.hero-video-src {
+  position: absolute; left: 0; top: 0; width: 2px; height: 2px;
+  opacity: 0.01; pointer-events: none; z-index: 0;
+}
 .hero-film.is-ready .hero-frame-img { opacity: 0; }
 
 /* рампы: текст уходит в начале, «подъём бумаги» — в середине, рваный край — к концу прокрутки */
@@ -1513,4 +1518,66 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
   .interlude + .trip-grid,
   .interlude + .experience-grid { margin-top: 34px; }
   .interlude { min-height: 46vh; }
+}
+
+/* ---------- раздел «Календарь»: заголовок и подписка ---------- */
+.calendar-hero { margin: 26px 0 8px; }
+.calendar-hero h1 { font-size: clamp(30px, 4vw, 50px); line-height: 1.08; margin: 10px 0 14px; }
+.calendar-hero-text { color: var(--muted); font-size: 17px; max-width: 780px; }
+.page-calendar .calendar-updated { margin-top: 14px; }
+.page-calendar .calendar-updated b { color: var(--ink); }
+
+.subscribe {
+  display: grid;
+  grid-template-columns: 1.35fr .9fr;
+  gap: 30px;
+  align-items: start;
+  margin-top: 40px;
+  padding: 30px 32px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--primary);
+}
+.subscribe-copy h2 { font-family: var(--serif); font-size: clamp(22px, 2.4vw, 30px); margin-bottom: 12px; }
+.subscribe-copy > p { color: var(--muted); font-size: 16px; max-width: 620px; }
+.subscribe-list { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 9px; }
+.subscribe-list li { position: relative; padding-left: 20px; font-size: 15px; color: var(--muted); }
+.subscribe-list li::before { content: ''; position: absolute; left: 0; top: 8px; width: 8px; height: 8px; background: var(--primary); }
+.subscribe-list b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.subscribe-actions { display: grid; gap: 12px; }
+.subscribe-actions .btn { width: 100%; justify-content: center; }
+.subscribe-link { font-size: 15px; font-weight: 600; border-bottom: 1px solid var(--line-strong); justify-self: start; }
+.subscribe-link:hover { border-color: var(--primary); }
+
+.subscribe-mail { margin-top: 18px; padding: 24px 32px; border: 1px solid var(--line); background: #fff; }
+.subscribe-mail form { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: end; }
+.subscribe-mail label { display: grid; gap: 8px; }
+.subscribe-mail label span { font-size: 15px; font-weight: 600; }
+.subscribe-mail input {
+  font: inherit; padding: 13px 15px; border: 1px solid var(--line-strong); background: #fff; width: 100%;
+}
+.subscribe-mail input:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
+.subscribe-note { grid-column: 1 / -1; color: var(--muted); font-size: 13.5px; }
+.subscribe-note a { border-bottom: 1px solid var(--line-strong); }
+.subscribe-error { grid-column: 1 / -1; color: #b3261e; font-size: 14.5px; margin: 0; }
+.subscribe-done { display: grid; gap: 6px; }
+.subscribe-done b { font-family: var(--serif); font-size: 19px; }
+.subscribe-done span { color: var(--muted); font-size: 15px; }
+
+.calendar-explain { margin-top: 64px; background: var(--surface); border: 1px solid var(--line); padding: 34px; }
+.calendar-explain h2 { font-size: clamp(23px, 2.6vw, 32px); margin-bottom: 24px; }
+.calendar-explain > div { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+.calendar-explain article b { display: block; margin-bottom: 8px; font-family: var(--serif); font-size: 17px; font-weight: 600; }
+.calendar-explain article span { color: var(--muted); font-size: 14.5px; }
+
+@media (max-width: 980px) {
+  .subscribe { grid-template-columns: 1fr; padding: 26px 22px; }
+  .calendar-explain { padding: 26px 22px; }
+  .calendar-explain > div { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 680px) {
+  .subscribe-mail { padding: 22px 20px; }
+  .subscribe-mail form { grid-template-columns: 1fr; }
+  .subscribe-mail .btn { width: 100%; justify-content: center; }
+  .calendar-explain > div { grid-template-columns: 1fr; }
 }

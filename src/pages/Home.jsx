@@ -6,6 +6,7 @@ import { TripImage } from '../components/Media'
 import HeroFilm from '../components/HeroFilm'
 import { contacts, site, steps, tripCards, faq, pastTrips, team, tgText } from '../data/site'
 import { track } from '../lib/analytics'
+import { withBase } from '../lib/router'
 
 // Каждая секция страницы — «сцена»: номер слева, заголовок на одной линии во всех сценах,
 // одинаковая ширина колонки и один и тот же вертикальный ритм.
@@ -63,7 +64,8 @@ export default function Home() {
 
       <Scene num="01" id="scene-01" kicker="календарь событий" title="Куда ехать за впечатлениями"
         note="Фестивали, парады, цветение и сезонные события с точными датами. Выберите месяц — покажу, что происходит в это время, и подберу поездку под эти даты.">
-        <EventsCalendar bare />
+        <EventsCalendar bare limit={4} />
+        <a className="section-link" href={withBase('/kalendar/')}>Весь календарь и подписка →</a>
       </Scene>
 
       <Scene num="02" kicker="направления" title="Что подбираю чаще всего"
@@ -84,7 +86,7 @@ export default function Home() {
         </figure>
         <div className="trip-grid home-grid">
           {tripCards.slice(0, 6).map((card, i) => (
-            <a className="trip-teaser" key={card.slug} href="/napravleniya/">
+            <a className="trip-teaser" key={card.slug} href={withBase('/napravleniya/')}>
               <span className="trip-media"><TripImage card={card} eager={false} /></span>
               <span className="trip-scrim" aria-hidden="true" />
               <span className="trip-teaser-body">
@@ -97,7 +99,7 @@ export default function Home() {
           ))}
         </div>
         <p className="scene-note" style={{ marginTop: '24px' }}>
-          <a className="section-link" href="/napravleniya/">Все направления и цены →</a>
+          <a className="section-link" href={withBase('/napravleniya/')}>Все направления и цены →</a>
         </p>
       </Scene>
 
@@ -156,7 +158,7 @@ export default function Home() {
           {team.ownTravels.toLowerCase()}.
         </p>
         <p className="scene-note" style={{ marginTop: '20px' }}>
-          <a className="section-link" href="/komanda/">О команде →</a>
+          <a className="section-link" href={withBase('/komanda/')}>О команде →</a>
         </p>
       </Scene>
 
@@ -169,7 +171,7 @@ export default function Home() {
             </details>
           ))}
         </div>
-        <p className="faq-more">Не нашли ответ? <a href="/kontakty/">Задайте вопрос — отвечу без обязательств</a>.</p>
+        <p className="faq-more">Не нашли ответ? <a href={withBase('/kontakty/')}>Задайте вопрос — отвечу без обязательств</a>.</p>
       </Scene>
     </Page>
   )
