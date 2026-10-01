@@ -31,7 +31,6 @@ export default function Footer() {
         <div>
           <b>Связаться</b>
           <a href={tgText('Здравствуйте! Хочу подобрать тур.')}>Telegram</a>
-          <a href={contacts.telegram}>Telegram</a>
           <a href={contacts.max}>MAX</a>
           <a href={contacts.vk}>ВКонтакте</a>
           <a href={site.phoneHref}>{site.phone}</a>

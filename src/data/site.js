@@ -43,7 +43,11 @@ export const routes = [
   { id: 'privacy', path: '/politika-konfidencialnosti/', label: 'Политика', title: 'Политика обработки персональных данных', description: 'Как мы обрабатываем и защищаем персональные данные, полученные через формы и мессенджеры, в соответствии с Федеральным законом № 152-ФЗ.', noindex: false }
 ]
 
-export const nav = routes.filter(r => r.id !== 'oferta')
+// В верхнем меню — только основные разделы. Политика конфиденциальности
+// и Источники фотографий остаются в подвале (по просьбе пользователя).
+const NAV_HIDDEN = new Set(['oferta', 'privacy', 'credits'])
+export const nav = routes.filter(r => !NAV_HIDDEN.has(r.id))
+export const footerOnly = routes.filter(r => r.id === 'privacy' || r.id === 'credits')
 
 export const heroVideo = {
   // Облегчённая версия: 1280×720, CRF 26, без звука — ~0,5 МБ вместо 18,6 МБ.
