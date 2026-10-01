@@ -27,8 +27,9 @@ function Scene({ num, kicker, title, note, children, id, kind }) {
 }
 
 // Широкие полосы между сценами: отдельные снимки 21:9, чтобы не повторять карточки
-const stripKruiz = { image: '/images/strips/fjord.jpg', imageWebp: '/images/strips/fjord.webp', title: 'Норвежские фьорды', region: 'Согнефьорд, Норвегия' }
-const stripSakura = { image: '/images/strips/amsterdam.jpg', imageWebp: '/images/strips/amsterdam.webp', title: 'Европейские события', region: 'Амстердам, Нидерланды' }
+const B = import.meta.env.BASE_URL
+const stripKruiz = { image: `${B}images/strips/fjord.jpg`, imageWebp: `${B}images/strips/fjord.webp`, title: 'Норвежские фьорды', region: 'Согнефьорд, Норвегия' }
+const stripSakura = { image: `${B}images/strips/tulips.jpg`, imageWebp: `${B}images/strips/tulips.webp`, title: 'Фестиваль тюльпанов', region: 'Болленстрек, Нидерланды' }
 
 export default function Home() {
   return (

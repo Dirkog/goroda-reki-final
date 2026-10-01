@@ -1,37 +1,62 @@
 import React from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
+import './fonts.css'
 import './styles.css'
 import App from './App'
 import { migrateLegacyHash, navigate } from './lib/router'
 import { contacts, site } from './data/site'
 
 // --- самовосстановление: если страница не поднялась, пробуем один раз перезагрузить ---
-// Чаще всего это не поломка сайта, а оборванный запрос к скрипту или обновление
-// версии во время загрузки — повторная загрузка снимает проблему.
+// Правила, чтобы перезагрузка не превратилась в бесконечный цикл (так уже случалось):
+//   1) повтор разрешён ровно один раз за сеанс и не чаще, чем раз в минуту;
+//   2) метка попытки НЕ стирается в начале загрузки, а снимается только тогда,
+//      когда страница прожила 12 секунд без единой ошибки — то есть действительно работает;
+//   3) перезагружаемся только из-за сбоя скриптов (наш сайт), но никогда из-за
+//      посторонних запросов: шрифты, метрика, чужой файл по ссылке.
 const RELOAD_FLAG = 'gr_selfheal'
+const RELOAD_COOLDOWN = 60 * 1000
+
 function selfHeal(reason) {
+  let tried = 0
   try {
-    if (sessionStorage.getItem(RELOAD_FLAG)) return false
-    sessionStorage.setItem(RELOAD_FLAG, String(Date.now()))
+    tried = Number(sessionStorage.getItem(RELOAD_FLAG) || 0)
   } catch { return false }
+  if (tried && Date.now() - tried < RELOAD_COOLDOWN) return false
+  try { sessionStorage.setItem(RELOAD_FLAG, String(Date.now())) } catch { return false }
   console.warn('[Города и реки] самовосстановление:', reason)
   window.location.reload()
   return true
 }
-try { sessionStorage.removeItem(RELOAD_FLAG) } catch {}
+
+// Страница работает: снимаем метку попытки, чтобы следующая неудача снова
+// получила право на один повтор. Проверяем не сразу, а после спокойного времени.
+function markHealthy() {
+  window.setTimeout(() => {
+    if (errorSeen) return
+    try { sessionStorage.removeItem(RELOAD_FLAG) } catch {}
+  }, 12000)
+}
+let errorSeen = false
 
 window.addEventListener('error', (e) => {
   const t = e && e.target
-  const byTag = t && (t.tagName === 'SCRIPT' || t.tagName === 'LINK')
   const msg = String((e && e.message) || '')
-  if (byTag || /Importing a module script failed|dynamically imported module|ChunkLoadError|Loading chunk/i.test(msg)) {
-    selfHeal('не загрузился скрипт или стиль')
+  // ошибка чужого файла по ссылке (картинка, шрифт, счётчик) — не повод перезагружаться
+  if (t && t.tagName && t.tagName !== 'SCRIPT') return
+  if (t && t.tagName === 'SCRIPT') { errorSeen = true; selfHeal('не загрузился скрипт'); return }
+  if (/Importing a module script failed|dynamically imported module|ChunkLoadError|Loading chunk/i.test(msg)) {
+    errorSeen = true
+    selfHeal('не загрузился модуль страницы')
   }
 }, true)
-window.addEventListener('vite:preloadError', () => selfHeal('не догрузился модуль'))
+window.addEventListener('load', markHealthy)
+window.addEventListener('vite:preloadError', () => { errorSeen = true; selfHeal('не догрузился модуль') })
 window.addEventListener('unhandledrejection', (e) => {
   const msg = String((e && e.reason && (e.reason.message || e.reason)) || '')
-  if (/Importing a module script failed|dynamically imported module|Loading chunk|network/i.test(msg)) selfHeal('оборвался запрос')
+  if (/Importing a module script failed|dynamically imported module|Loading chunk|ChunkLoadError/i.test(msg)) {
+    errorSeen = true
+    selfHeal('оборвался запрос к скрипту')
+  }
 })
 
 class ErrorBoundary extends React.Component {

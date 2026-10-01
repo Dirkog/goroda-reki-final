@@ -71,9 +71,6 @@ function fullHead(route) {
     <link rel="icon" type="image/svg+xml" href="${b}icon.svg" />
     <link rel="apple-touch-icon" href="${b}apple-touch-icon.png" />
     <link rel="manifest" href="${b}manifest.webmanifest" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
     ${cssTags}
     ${preloadTags}
     <meta name="format-detection" content="telephone=no" />
