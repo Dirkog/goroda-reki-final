@@ -24,7 +24,12 @@ Set-Content -Path $logPath -Value "запуск $(Get-Date -Format s)" -Encoding
 Say "каталог проекта: $root"
 if (-not (Test-Path (Join-Path $root 'node_modules\vite'))) {
   Say 'ставлю зависимости (npm ci)'
-  npm ci --no-audit --no-fund 2>&1 | ForEach-Object { Add-Content -Path $logPath -Value $_ -Encoding UTF8 }
+  $soft = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  npm ci --no-audit --no-fund --silent 2>&1 | ForEach-Object { Add-Content -Path $logPath -Value $_ -Encoding UTF8 }
+  $code = $LASTEXITCODE
+  $ErrorActionPreference = $soft
+  if ($code -ne 0) { throw "npm ci завершился с кодом $code" }
 }
 
 Say 'сборка сайта'
@@ -32,19 +37,30 @@ $env:BASE_PATH = '/'
 $env:VITE_SITE_ORIGIN = 'https://ivanmonaenkov3.sourcecraft.site'
 $env:VITE_CANONICAL_BASE = '/olgatour/'
 $env:PRERENDER_MIRROR = '1'
-npm run build 2>&1 | ForEach-Object { Add-Content -Path $logPath -Value $_ -Encoding UTF8 }
+# npm пишет служебные строки в поток ошибок — это не сбой, поэтому на время сборки
+# обычный режим, а о неудаче судим по коду возврата
+$soft = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'
+npm run build --silent 2>&1 | ForEach-Object { Add-Content -Path $logPath -Value $_ -Encoding UTF8 }
+$code = $LASTEXITCODE
+$ErrorActionPreference = $soft
+if ($code -ne 0) { throw "сборка завершилась с кодом $code" }
 if (-not (Test-Path (Join-Path $root 'dist\index.html'))) { throw 'сборка не дала dist\index.html' }
 Say "сборка готова: $(Get-Item (Join-Path $root 'dist\index.html') | Select-Object -ExpandProperty LastWriteTime)"
 
-# файл запуска: в нём прописаны пути и порт
+# файл запуска: в нём прописаны пути и порт.
+# Путь к папке проекта берём из %USERPROFILE%: в имени пользователя есть русские
+# буквы, а командный файл пишется в ASCII — иначе путь превратится в «????».
 $cmdFile = Join-Path $PSScriptRoot 'run-server.cmd'
+$folder = Split-Path -Leaf $root
 $cmdLines = @(
   '@echo off',
-  "set `"SITE_ROOT=$root\dist`"",
+  "set `"ROOTDIR=%USERPROFILE%\$folder`"",
+  "set `"SITE_ROOT=%USERPROFILE%\$folder\dist`"",
   "set `"PORT=$port`"",
   "set `"HOST=0.0.0.0`"",
-  "cd /d `"$root`"",
-  "node `"server\server.mjs`" >> `"$PSScriptRoot\server.log`" 2>&1"
+  "cd /d `"%ROOTDIR%`"",
+  "node `"server\server.mjs`" >> `"%ROOTDIR%\server\server.log`" 2>&1"
 )
 $cmdLines | Set-Content -Path $cmdFile -Encoding ASCII
 
