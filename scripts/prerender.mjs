@@ -69,9 +69,9 @@ function fullHead(route) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f4f1ea" />
     ${buildHead(route)}${feedLinks(route)}
-    <link rel="icon" href="${b}favicon.ico?v=3" sizes="any" />
-    <link rel="icon" type="image/png" sizes="32x32" href="${b}favicon-32.png?v=3" />
-    <link rel="apple-touch-icon" href="${b}apple-touch-icon.png?v=3" />
+    <link rel="icon" href="${b}favicon.ico?v=4" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="${b}favicon-32.png?v=4" />
+    <link rel="apple-touch-icon" href="${b}apple-touch-icon.png?v=4" />
     <link rel="manifest" href="${b}manifest.webmanifest" />
     ${cssTags}
     ${preloadTags}
