@@ -26,7 +26,17 @@ export function routeById(id) {
 export function routeByPath(pathname) {
   const p = normalize(pathname)
   const exact = routes.find(r => normalize(r.path) === p)
-  if (exact) return { route: exact, found: true }
+  if (exact) {
+    if (exact.redirect) {
+      // Редирект разрешается одинаково на сервере (пререндер) и в браузере,
+      // иначе HTML старого адреса не совпадёт с клиентом и React упадёт в гидратации.
+      if (typeof window !== 'undefined') {
+        window.history.replaceState(null, '', withBase(exact.redirect))
+      }
+      return routeByPath(exact.redirect.split('#')[0] || '/')
+    }
+    return { route: exact, found: true }
+  }
   return { route: routeById('home'), found: false }
 }
 

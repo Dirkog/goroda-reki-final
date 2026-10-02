@@ -59,26 +59,6 @@ window.addEventListener('unhandledrejection', (e) => {
   }
 })
 
-// --- Страховка: готовая страница уже лежит в разметке -------------------------
-// Страницы собираются заранее (пререндер), поэтому даже если скрипт споткнётся,
-// читателю должна остаться доступна вся страница — без «экрана ошибки».
-// Перед запуском приложения запоминаем готовую разметку и возвращаем её при сбое.
-let STATIC_HTML = ''
-let restored = false
-function keepStaticSnapshot(el) { STATIC_HTML = el ? el.innerHTML : '' }
-function restoreStatic(why) {
-  if (restored || !STATIC_HTML) return false
-  const el = document.getElementById('root')
-  if (!el) return false
-  console.warn('[Города и реки] показываю статичную версию страницы:', why)
-  try {
-    el.innerHTML = STATIC_HTML
-    restored = true
-    document.documentElement.dataset.staticFallback = '1'
-    return true
-  } catch { return false }
-}
-
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props)
@@ -87,8 +67,7 @@ class ErrorBoundary extends React.Component {
   static getDerivedStateFromError(error) { return { error } }
   componentDidCatch(error) {
     console.error('[Города и реки] ошибка рендера:', error)
-    // сначала пробуем показать готовую статичную страницу — она всегда на месте
-    if (restoreStatic('ошибка рендера')) { this.setState({ error: null, tried: true }); return }
+    // один автоматический повтор: часто причина — нехватка памяти или обрыв загрузки
     if (!this.state.tried) {
       this.setState({ tried: true })
       setTimeout(() => { if (!selfHeal('ошибка рендера')) this.setState({ error }) }, 600)
@@ -164,16 +143,15 @@ try {
 
 const el = document.getElementById('root')
 if (!el) {
-  console.warn('[Города и реки] нет корневого узла — страница остаётся статичной')
+  selfHeal('нет корневого узла')
 } else {
   const app = <ErrorBoundary><App /></ErrorBoundary>
-  keepStaticSnapshot(el)
   try {
     if (el.hasChildNodes()) hydrateRoot(el, app)
     else createRoot(el).render(app)
   } catch (error) {
-    console.warn('[Города и реки] гидратация не удалась:', error)
-    if (!restoreStatic('гидратация не удалась')) createRoot(el).render(app)
+    console.warn('[Города и реки] гидратация не удалась, собираем заново:', error)
+    createRoot(el).render(app)
   }
   // Аналитика подключается лениво и только если задан счётчик
   if (site.metrikaId) import('./lib/metrika.js').then(m => m.initMetrika(site.metrikaId)).catch(() => {})

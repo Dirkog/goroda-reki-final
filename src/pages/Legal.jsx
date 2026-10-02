@@ -10,7 +10,6 @@ export default function Legal({ route }) {
     <Page className={`legal-page inner-page ${isPrivacy ? 'privacy-page' : 'oferta-page'}`}>
       <Breadcrumbs items={[{ label: 'Главная', path: '/' }, { label: route.label }]} />
       <SplitTitle
-        eyebrow="документы"
         title={isPrivacy ? 'Политика обработки персональных данных' : 'Договор и публичная оферта'}
         text={isPrivacy
           ? `Как мы собираем, храним и используем данные, которые вы оставляете на сайте и в мессенджерах. Действует в соответствии с Федеральным законом № 152-ФЗ «О персональных данных». Обновлено ${legal.privacyUpdated}.`

@@ -9,7 +9,7 @@ const FILTERS = ['Все', 'Море', 'Сезоны', 'События', 'Кру
 
 function TripCard({ card, index }) {
   const request = () => track('click_request_tour', { tour: card.title })
-  const msg = `Здравствуйте! Интересует «${card.title}» (${card.region}). Даты: ___, состав: ___. Пришлите варианты и цены.`
+  const msg = `Здравствуйте, Ольга! Интересует «${card.title}» (${card.region}). Даты: ___, состав: ___. Пришлите варианты и расчет.`
   return (
     <article className="trip-card rich" id={card.slug}>
       <span className="trip-media"><TripImage card={card} /></span>
@@ -38,7 +38,6 @@ export default function Trips() {
   const [filter, setFilter] = useState('Все')
   const [sort, setSort] = useState('popular')
 
-  // Фильтр можно задать ссылкой: /napravleniya/?cat=Море
   useEffect(() => {
     try {
       const cat = new URLSearchParams(window.location.search).get('cat')
@@ -55,7 +54,6 @@ export default function Trips() {
         const hay = `${card.title} ${card.category} ${card.region} ${card.text} ${card.tags.join(' ')}`.toLowerCase()
         return inFilter && (!q || hay.includes(q))
       })
-    // «Рекомендуемые» = авторский порядок; «по алфавиту» — реальная сортировка
     if (sort === 'az') list.sort((a, b) => a.card.title.localeCompare(b.card.title, 'ru'))
     else if (sort === 'budget') list.sort((a, b) => (parseInt(a.card.budget.replace(/\D/g, ''), 10) || 9e9) - (parseInt(b.card.budget.replace(/\D/g, ''), 10) || 9e9))
     else list.sort((a, b) => a.i - b.i)
@@ -65,14 +63,13 @@ export default function Trips() {
   return (
     <Page className="trips-page inner-page">
       <SplitTitle
-        eyebrow="каталог идей"
-        title="Направления: откуда начать"
-        text="Это не прайс, а витрина: по каждому направлению видно сезон, бюджет и длительность. Выберите формат или напишите мне — соберу конкретные отели, даты и цены под вашу поездку."
+        title="Куда поехать: проверенные направления"
+        text="Витрина идей с понятным бюджетом, сезоном и длительностью. Подберу конкретные отели, перелеты и подготовлю расчет под ваши даты."
       />
 
       <div className="trips-tools">
         <label className="trips-search">
-          <span>Поиск по витрине</span>
+          <span>Поиск по направлениям</span>
           <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Япония, море, круиз, команда…" type="search" />
         </label>
         <label className="trips-sort">
@@ -80,11 +77,11 @@ export default function Trips() {
           <select value={sort} onChange={e => setSort(e.target.value)}>
             <option value="popular">Рекомендуемые</option>
             <option value="az">По алфавиту</option>
-            <option value="budget">Сначала дешевле</option>
+            <option value="budget">Сначала доступные</option>
           </select>
         </label>
-        <a className="trips-calendar-link" href={withBase('/#scene-01')}>
-          Сначала посмотреть календарь событий →
+        <a className="trips-calendar-link" href={withBase('/kalendar/')}>
+          Посмотреть события и фестивали →
         </a>
       </div>
 
@@ -100,28 +97,41 @@ export default function Trips() {
 
       {visible.length === 0 && (
         <div className="empty-state">
-          <h2>Ничего не найдено</h2>
-          <p>Попробуйте другой запрос или напишите команде — часто направление можно собрать индивидуально.</p>
-          <a className="btn light" href={tgText('Здравствуйте! Не нашёл(ла) подходящее направление на сайте. Ищу: ___')}>Написать в Telegram</a>
+          <h2>Ничего не нашлось</h2>
+          <p>Напишите мне в Telegram — соберу индивидуальный маршрут под ваш запрос.</p>
+          <a className="btn light" href={tgText('Здравствуйте, Ольга! Не нашёл(ла) нужное направление на сайте. Ищу: ___')}>Написать в Telegram</a>
         </div>
       )}
 
-      <section className="travel-info-block">
-        <h2>Что можно запросить дополнительно</h2>
+      {/* Объединенный блок корпоративных поездок (бывшая страница /korporativnym/) */}
+      <section className="travel-info-block" id="corporate-section" style={{ marginTop: '56px' }}>
+        <h2>Организация выездов для компаний и команд</h2>
         <div>
-          <article><b>Комбинация стран</b><span>Маршрут с несколькими городами, пересадками и разным ритмом поездки.</span></article>
-          <article><b>Семейные нюансы</b><span>Возраст детей, питание, пляж, трансферы, детская инфраструктура.</span></article>
-          <article><b>Событие под дату</b><span>Концерт, фестиваль, спорт, праздник или сезон цветения.</span></article>
-          <article><b>Регулярные рейсы</b><span>Если вы находитесь не в России, можно собрать маршрут в любую точку мира.</span></article>
+          <article>
+            <b>Инсентив и тимбилдинг</b>
+            <span>Выезды для сотрудников и партнёров: подбор комфортного отеля с инфраструктурой, закрывающие документы для бухгалтерии.</span>
+          </article>
+          <article>
+            <b>Стратегические сессии и конференции</b>
+            <span>Оборудованные площадки, логистика перелётов для участников из разных городов, единый координатор на всем маршруте.</span>
+          </article>
+          <article>
+            <b>Полный пакет закрывающих документов</b>
+            <span>Работа по безналичному расчёту с юридическими лицами (договор, счёт, акты, отчётность по перелётам и проживанию).</span>
+          </article>
+          <article>
+            <b>Индивидуальный сценарий</b>
+            <span>Сочетание деловой программы с экскурсиями, активным отдыхом или гастрономическими ужинами.</span>
+          </article>
         </div>
       </section>
 
       <section className="page-cta">
         <div className="page-cta-copy">
-          <h2>Не нашли своё направление?</h2>
-          <p>Опишите поездку в двух словах: месяц, состав, бюджет и настроение — предложим 2–3 варианта.</p>
+          <h2>Нужен нестандартный или сложный тур?</h2>
+          <p>Скомбинирую несколько городов, подберу удобные стыковки и учту все пожелания семьи или компании.</p>
         </div>
-        <a className="btn glass" href={tgText('Здравствуйте! Хочу тур. Направление: ___, даты: ___, бюджет: ___')}>Написать в Telegram</a>
+        <a className="btn glass" href={tgText('Здравствуйте, Ольга! Хочу подобрать индивидуальный маршрут: направление ___, даты ___, пожелания ___')}>Написать в Telegram</a>
       </section>
     </Page>
   )

@@ -19,6 +19,12 @@ const fmtDate = (iso) => {
   return `${Number(d)}.${Number(m)}.${y}`
 }
 
+const plural = (n) => {
+  const t = n % 10, h = n % 100
+  const w = t === 1 && h !== 11 ? 'событие' : (t >= 2 && t <= 4 && (h < 12 || h > 14) ? 'события' : 'событий')
+  return `${n} ${w}`
+}
+
 export default function Calendar() {
   const base = basePath()
   const icsUrl = base + 'events.ics'
@@ -26,7 +32,6 @@ export default function Calendar() {
   const webcal = (typeof site !== 'undefined' && site.origin ? site.origin : '') + icsUrl
 
   const confirmed = events.filter(ev => parseDates(ev.dates))
-  const pending = events.filter(ev => !parseDates(ev.dates))
   const [sent, setSent] = useState(false)
   const [mail, setMail] = useState('')
   const [error, setError] = useState('')
@@ -61,96 +66,61 @@ export default function Calendar() {
   }
 
   return (
-    <Page className="page-calendar">
-      <Breadcrumbs items={[{ label: 'Главная', path: '/' }, { label: 'Календарь событий' }]} />
+    <Page className="page-calendar inner-page">
+      <Breadcrumbs items={[{ label: 'Главная', path: '/' }, { label: 'События' }]} />
 
-      <section className="calendar-hero">
-        <p className="eyebrow">календарь событий</p>
-        <h1>Куда ехать за впечатлениями</h1>
+      <header className="calendar-hero">
+        <h1>События, ради которых стоит поехать</h1>
         <p className="calendar-hero-text">
-          Фестивали, парады, цветение и сезонные события с точными датами и ссылками на первоисточники.
-          Выберите месяц, чтобы увидеть, что происходит в это время, — и подпишитесь, чтобы не пропустить
-          новое: даты сверяю вручную и обновляю календарь.
+          Цветение, парады и праздники ближайшего сезона. У каждого — даты, место и ссылка на организаторов.
+          Понравилось что-то — я соберу поездку под эти числа.
         </p>
-        <p className="calendar-updated">
-          <b>Данные обновлены</b> {fmtDate(eventsUpdated)} · в календарь подписки попало {confirmed.length} из {events.length} событий
-        </p>
-      </section>
+        <p className="calendar-updated"><b>Данные обновлены</b> {fmtDate(eventsUpdated)}</p>
+      </header>
 
-      {/* --- подписка --- */}
+      <EventsCalendar head={false} />
+
+      {/* --- подписка: один компактный блок --- */}
       <section className="subscribe" aria-labelledby="subscribe-title">
         <div className="subscribe-copy">
-          <h2 id="subscribe-title">Подписка на календарь</h2>
+          <h2 id="subscribe-title">Чтобы не пропустить даты</h2>
           <p>
-            Добавьте события в свой календарь — напоминание придёт заранее, когда ещё есть выбор отелей и билетов.
-            Или подпишитесь на ленту: она обновляется, когда я подтверждаю новые даты.
+            Добавьте события в календарь телефона — напомню заранее, пока есть выбор отелей и билетов.
+            В файле {plural(confirmed.length)} с подтверждёнными датами; остальные добавлю после сверки с организаторами.
           </p>
-          <ul className="subscribe-list">
-            <li><b>{confirmed.length}</b> события с подтверждёнными датами уже в файле подписки</li>
-            <li><b>{pending.length}</b> с пометкой «уточняется» — добавлю после сверки с организаторами</li>
-            <li>Источники указаны у каждого события — даты всегда можно проверить</li>
-          </ul>
-        </div>
-        <div className="subscribe-actions">
-          <a className="btn light" href={icsUrl} download onClick={() => track('calendar_ics', {})}>Скачать файл календаря (.ics)</a>
-          <a className="btn ghost" href={webcal.replace(/^https?:/, 'webcal:')} onClick={() => track('calendar_subscribe_webcal', {})}>
-            Подписаться по ссылке (webcal)
-          </a>
-          <a className="subscribe-link" href={rssUrl} onClick={() => track('calendar_rss', {})}>Лента событий (RSS)</a>
-        </div>
-      </section>
-
-      <section className="subscribe-mail">
-        {sent ? (
-          <div className="subscribe-done">
-            <b>Подписка оформлена</b>
-            <span>Пришлю письмо, когда в календаре появятся новые подтверждённые даты. Отписаться можно в один клик — ответом на письмо.</span>
+          <div className="subscribe-actions">
+            <a className="btn light" href={icsUrl} download onClick={() => track('calendar_ics', {})}>Скачать календарь (.ics)</a>
+            <a className="btn ghost" href={webcal.replace(/^https?:/, 'webcal:')} onClick={() => track('calendar_subscribe_webcal', {})}>Подписаться (webcal)</a>
+            <a className="subscribe-link" href={rssUrl} onClick={() => track('calendar_rss', {})}>RSS-лента</a>
           </div>
-        ) : (
-          <form onSubmit={subscribeByMail} noValidate>
-            <label>
-              <span>Напомнить о событиях по почте</span>
-              <input type="email" value={mail} onChange={e => setMail(e.target.value)} placeholder="ваша@почта.ru" autoComplete="email" />
-            </label>
-            <button className="btn light" type="submit">Подписаться</button>
-            {error && <p className="subscribe-error" role="alert">{error}</p>}
-            <p className="subscribe-note">
-              Почту использую только для напоминаний о событиях. Персональные данные — по{' '}
-              <a href={withBase('/politika-konfidencialnosti/')}>политике конфиденциальности</a>.
-            </p>
-          </form>
-        )}
-      </section>
-
-      {/* --- сам календарь --- */}
-      <EventsCalendar />
-
-      <section className="calendar-explain">
-        <h2>Как я работаю с датами</h2>
-        <div>
-          <article>
-            <b>Сверяю по первоисточникам</b>
-            <span>Даты фестивалей и сезонов беру с официальных сайтов организаторов — ссылка стоит у каждого события.</span>
-          </article>
-          <article>
-            <b>Проверяю перед оплатой</b>
-            <span>Перед бронированием ещё раз подтверждаю даты: если событие перенесли, вы узнаете об этом заранее.</span>
-          </article>
-          <article>
-            <b>Обновляю календарь</b>
-            <span>Новые события добавляю по мере анонсов; подписчикам приходит уведомление, ничего не теряется.</span>
-          </article>
-          <article>
-            <b>Собираю поездку под дату</b>
-            <span>Билеты, отель, трансфер и программа вокруг события: пришлите состав и бюджет — соберу 2–3 варианта.</span>
-          </article>
+        </div>
+        <div className="subscribe-mail">
+          {sent ? (
+            <div className="subscribe-done">
+              <b>Подписка оформлена</b>
+              <span>Пришлю письмо, когда появятся новые подтверждённые даты. Отписаться можно ответом на письмо.</span>
+            </div>
+          ) : (
+            <form onSubmit={subscribeByMail} noValidate>
+              <label>
+                <span>Или напомнить по почте</span>
+                <input type="email" value={mail} onChange={e => setMail(e.target.value)} placeholder="ваша@почта.ru" autoComplete="email" />
+              </label>
+              <button className="btn light" type="submit">Подписаться</button>
+              {error && <p className="subscribe-error" role="alert">{error}</p>}
+              <p className="subscribe-note">
+                Почту использую только для напоминаний. Данные — по{' '}
+                <a href={withBase('/politika-konfidencialnosti/')}>политике конфиденциальности</a>.
+              </p>
+            </form>
+          )}
         </div>
       </section>
 
       <section className="page-cta">
         <div className="page-cta-copy">
-          <h2>Хотите поездку под конкретное событие?</h2>
-          <p>Напишите, какое событие и какие даты интересны, — подберу перелёт, отель и программу вокруг него.</p>
+          <h2>Нужна поездка под конкретное событие?</h2>
+          <p>Напишите, какое событие и какие даты — подберу перелёт, отель и программу вокруг него.</p>
         </div>
         <a className="btn glass" href={tgText('Здравствуйте! Хочу поездку под событие. Событие: ___, даты: ___, состав: ___.')}>
           Написать в Telegram

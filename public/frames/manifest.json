@@ -1,15 +1,16 @@
 {
- "count": 288,
- "fps": 12,
+ "count": 1,
+ "fps": 24,
+ "format": "avif",
  "source": "beach-aerial-4k.mp4",
  "sets": {
   "1600": {
-   "count": 288,
-   "bytes": 24503960
+   "count": 1,
+   "bytes": 11364943
   },
   "1024": {
-   "count": 288,
-   "bytes": 11690042
+   "count": 1,
+   "bytes": 4627099
   }
  }
 }

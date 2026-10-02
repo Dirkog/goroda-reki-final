@@ -33,7 +33,7 @@
   --maxw: 1180px;
   --header-h: 66px;
   --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
-  --sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --sans: "Inter", "Inter Fallback", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   font-family: var(--sans);
   color: var(--ink);
@@ -1285,7 +1285,7 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
   color: var(--ink);
 }
 .event-when span { display: block; margin-top: 8px; color: var(--muted); font-size: 13.5px; }
-.event-when small { display: block; margin-top: 8px; color: var(--muted); font-size: 12px; opacity: 0.75; }
+.event-when small { display: block; margin-top: 8px; color: var(--muted); font-size: 12px; }
 .event-next {
   display: inline-block;
   margin-bottom: 10px;
@@ -1422,7 +1422,21 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
 /* =========================================================
    ФИЛЬМ ПО ПРОКРУТКЕ: кадр «прилипает», кадры сменяются от прокрутки
    ========================================================= */
-.hero-film { position: relative; height: 260vh; }
+.hero-film { position: relative; height: 180vh; }
+.hero-ambient-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hero-film.is-ready .hero-ambient-video {
+  opacity: 1;
+}
 .home-frame {
   position: sticky;
   top: 0;
@@ -1581,3 +1595,154 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
   .subscribe-mail .btn { width: 100%; justify-content: center; }
   .calendar-explain > div { grid-template-columns: 1fr; }
 }
+
+
+/* === Анимации и живая динамика (60fps-animation & accessible-animation) === */
+.trip-teaser, .trip-card {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: transform;
+}
+.trip-teaser:hover, .trip-card:hover {
+  transform: translateY(-6px) scale(1.015);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+}
+.trip-teaser:hover .trip-media img, .trip-card:hover .trip-media img {
+  transform: scale(1.06);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.step {
+  transition: transform 0.35s ease, background 0.35s ease;
+}
+.step:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.05);
+}
+.btn {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.25s ease, box-shadow 0.25s ease !important;
+}
+.btn:hover {
+  transform: translateY(-2px);
+}
+.btn:active {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trip-teaser, .trip-card, .step, .btn, .trip-media img {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 4px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.brand-title {
+  font-weight: 700 !important;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- v4: «События» и «Контакты» — карточки с фото, один ритм полей ---------- */
+.calendar { border: 0; background: transparent; }
+.calendar-head { padding: 0 0 20px; border: 0; }
+.calendar-months { padding: 0 0 24px; border: 0; background: transparent; }
+.calendar-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+.calendar .event-row {
+  display: flex; flex-direction: column; gap: 0; padding: 0;
+  border: 1px solid var(--line); background: var(--surface);
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+.calendar .event-row:last-child { border-bottom: 1px solid var(--line); }
+.calendar .event-row:hover { background: var(--surface); box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+.event-photo { position: relative; width: 100%; flex: none; aspect-ratio: 16 / 10; overflow: hidden; background: var(--paper); }
+.event-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.calendar .event-row:hover .event-photo img { transform: scale(1.045); }
+.event-badge {
+  position: absolute; left: 14px; top: 14px; padding: 5px 10px; border-radius: 2px;
+  background: rgba(255, 254, 251, 0.94); color: var(--ink);
+  font-style: normal; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.event-badge.is-soft { background: rgba(25, 23, 19, 0.74); color: #fff; }
+.calendar .event-body { padding: 22px 24px 22px; display: flex; flex-direction: column; flex: 1; }
+.calendar .event-when { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 0 0 10px; }
+.calendar .event-when b { font-size: 16px; display: inline; line-height: 1.3; }
+.calendar .event-when span { display: inline; margin: 0; font-size: 13.5px; }
+.calendar .event-body :is(h2, h3) { font-size: 22px; line-height: 1.2; margin-bottom: 8px; }
+.calendar .event-note { flex: 1; }
+.event-actions { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px 16px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.event-cta { color: var(--primary); font-weight: 600; font-size: 14.5px; border-bottom: 1px solid var(--line-strong); }
+.event-cta:hover { border-color: var(--primary); }
+.calendar .event-src { margin: 0; font-size: 12.5px; color: var(--muted); border-bottom: 1px solid transparent; }
+.calendar .event-src:hover { color: var(--primary); border-color: var(--primary); }
+
+.page-calendar .calendar-hero { margin: 8px 0 36px; padding-bottom: 26px; border-bottom: 1px solid var(--line); }
+.page-calendar .calendar-hero h1 { font-size: clamp(32px, 4.4vw, 52px); margin: 0 0 14px; }
+.page-calendar .calendar-hero-text { max-width: 660px; }
+.page-calendar .calendar { margin-bottom: 56px; }
+
+.page-calendar .subscribe { grid-template-columns: 1.35fr 1fr; gap: 40px; margin: 0 0 40px; padding: 32px 36px; align-items: stretch; }
+.page-calendar .subscribe-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; margin-top: 22px; }
+.page-calendar .subscribe-actions .btn { width: auto; }
+.page-calendar .subscribe-mail { margin: 0; padding: 0 0 0 36px; border: 0; border-left: 1px solid var(--line); background: transparent; align-self: center; }
+.page-calendar .subscribe-mail form { grid-template-columns: 1fr; }
+.page-calendar .subscribe-mail .btn { width: 100%; justify-content: center; }
+
+.contact-side-title { font-size: 22px; margin: 34px 0 16px; }
+.contact-promises { list-style: none; counter-reset: p; margin: 0; padding: 0; display: grid; gap: 16px; }
+.contact-promises li { counter-increment: p; position: relative; padding-left: 40px; color: var(--muted); font-size: 15px; line-height: 1.5; }
+.contact-promises li::before {
+  content: counter(p); position: absolute; left: 0; top: -1px; width: 26px; height: 26px; display: grid; place-items: center;
+  border: 1px solid var(--line-strong); border-radius: 50%; font-size: 12.5px; font-weight: 600; color: var(--primary);
+}
+.contact-promises b { color: var(--ink); }
+.contact-form-hint { color: var(--muted); font-size: 14.5px; margin: -4px 0 16px; max-width: 56ch; }
+.inner-page { padding-bottom: 40px; }
+.footer { margin-top: 72px; }
+
+@media (max-width: 900px) {
+  .calendar-list { grid-template-columns: 1fr; gap: 22px; }
+  .page-calendar .subscribe { grid-template-columns: 1fr; padding: 26px 22px; gap: 26px; }
+  .page-calendar .subscribe-mail { padding: 24px 0 0; border-left: 0; border-top: 1px solid var(--line); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .calendar .event-row, .event-photo img { transition: none; }
+  .calendar .event-row:hover { transform: none; }
+  .calendar .event-row:hover .event-photo img { transform: none; }
+}
+
+.calendar .event-src.is-text { flex-basis: 100%; font-size: 12.5px; line-height: 1.45; }
+.page-calendar .calendar-months { padding-top: 0; }
+
+.contact-layout > * { min-width: 0; }
+.contact-grid a { overflow-wrap: anywhere; }
+@media (max-width: 560px) { .contact-grid { grid-template-columns: 1fr; } }
+
+/* ---------- логотип = значок вкладки (src/components/Logo.jsx, public/logo-mark.png) ---------- */
+.logo-mark {
+  display: inline-block; flex: none; line-height: 0; overflow: hidden; border-radius: 22%;
+  box-shadow: 0 0 0 1px rgba(15, 42, 51, 0.16), 0 2px 10px rgba(15, 42, 51, 0.18);
+}
+.logo-mark img { display: block; width: 100%; height: 100%; }
+.brand-mark, .header.is-transparent .brand-mark {
+  width: auto; height: auto; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; color: inherit;
+  display: inline-flex;
+}
+.footer-logo .logo-mark { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.28); }
+@media (max-width: 560px) { .brand-mark .logo-mark { width: 44px !important; height: 44px !important; } }
+.header.is-transparent .logo-mark { box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.62), 0 2px 14px rgba(0, 0, 0, 0.35); }
+.footer-logo .logo-mark { box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.42); }
+
+/* ---------- цели касания ≥ 24 px (WCAG 2.2, 2.5.8) ---------- */
+.footer a, .mobile-menu-phone, .event-cta, .event-src, .section-link, .trip-actions-alt, .subscribe-link, .contact-grid a, .breadcrumbs a {
+  display: inline-flex; align-items: center; min-height: 28px;
+}
+.footer a { max-width: 100%; }
+.sticky-cta-close { min-width: 32px; min-height: 32px; }
+input[type="checkbox"] { min-width: 24px; min-height: 24px; }
+.cinema-sign a { display: inline-flex; align-items: center; min-height: 28px; }

@@ -11,7 +11,7 @@ public_folder: /images/uploads
 
 site_url: https://olgatour.pages.dev
 display_url: https://olgatour.pages.dev
-logo_url: https://olgatour.pages.dev/icon.svg
+logo_url: https://olgatour.gitverse.site/icon-192.png
 
 locale: ru
 
@@ -132,7 +132,9 @@ collections:
               - { name: title, label: Название, widget: string }
               - { name: place, label: Где, widget: string }
               - { name: dates, label: Даты, widget: string, hint: "Если даты ещё не объявлены — напишите «уточняется»" }
-              - { name: month, label: Месяц (для подбора), widget: string }
+              - { name: start, label: Начало (ГГГГ-ММ-ДД) — по нему сортировка и подбор по месяцам, widget: string }
+              - { name: end, label: Конец (ГГГГ-ММ-ДД), widget: string }
+              - { name: image, label: Фото (имя файла из public/images/events без .webp), widget: string, required: false }
               - { name: status, label: Статус, widget: select, options: [анонс, идёт, прошло, уточняется] }
               - { name: source, label: Источник (ссылка или пояснение), widget: string, hint: "Обязательно: событие без источника не публикуем" }
               - { name: note, label: Что важно знать клиенту, widget: text, required: false }

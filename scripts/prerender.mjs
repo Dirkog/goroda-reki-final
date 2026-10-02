@@ -36,6 +36,8 @@ const base = basePath()
 // иначе пререндер сотрёт подключение CSS и JS.
 const cssTags = (template.match(/<link[^>]*rel="stylesheet"[^>]*>/g) || []).join('\n    ')
 const preloadTags = (template.match(/<link[^>]*rel="modulepreload"[^>]*>/g) || []).join('\n    ')
+// Предзагрузка двух основных файлов Inter (кириллица и латиница): убирает сдвиг вёрстки при подмене шрифта.
+const fontFiles = fs.readdirSync(path.join(dist, 'assets')).filter(f => /^inter-(cyrillic|latin)-[A-Za-z0-9_-]{8}\.woff2$/.test(f))
 const scriptTags = (template.match(/<script[^>]*type="module"[^>]*>\s*<\/script>/g) || []).join('\n    ')
 
 function esc(s) {
@@ -65,14 +67,15 @@ function fullHead(route) {
   return `<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f4f7f8" />
+    <meta name="theme-color" content="#f4f1ea" />
     ${buildHead(route)}${feedLinks(route)}
-    <link rel="icon" href="${b}favicon.ico" sizes="any" />
-    <link rel="icon" type="image/svg+xml" href="${b}icon.svg" />
-    <link rel="apple-touch-icon" href="${b}apple-touch-icon.png" />
+    <link rel="icon" href="${b}favicon.ico?v=3" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="${b}favicon-32.png?v=3" />
+    <link rel="apple-touch-icon" href="${b}apple-touch-icon.png?v=3" />
     <link rel="manifest" href="${b}manifest.webmanifest" />
     ${cssTags}
     ${preloadTags}
+    ${fontFiles.map(f => `<link rel="preload" as="font" type="font/woff2" crossorigin href="${b}assets/${f}" />`).join('\n    ')}
     <meta name="format-detection" content="telephone=no" />
     ${metrikaTags()}
   </head>`

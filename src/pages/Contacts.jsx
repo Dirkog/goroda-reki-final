@@ -1,7 +1,7 @@
 import React from 'react'
 import { Page, SplitTitle, Breadcrumbs } from '../components/Page'
 import LeadForm from '../components/LeadForm'
-import { contacts, site, tgText } from '../data/site'
+import { contacts, site, tgText, legal } from '../data/site'
 import { track } from '../lib/analytics'
 
 export default function Contacts() {
@@ -9,48 +9,34 @@ export default function Contacts() {
     <Page className="contacts-page inner-page">
       <Breadcrumbs items={[{ label: 'Главная', path: '/' }, { label: 'Контакты' }]} />
       <SplitTitle
-        eyebrow="контакты"
-        title="Оставьте заявку удобным способом"
-        text="Заполните форму — ответим в течение 15 минут в рабочее время. Или напишите в мессенджер: в первом сообщении достаточно направления, дат, состава поездки, города вылета и бюджета."
+        title="Напишите мне напрямую"
+        text="Быстрее всего — в Telegram. Можно позвонить или оставить заявку: отвечу сама, без передачи стажёрам и ожидания на линии."
       />
 
       <div className="contact-layout">
-        <div>
+        <div className="contact-side">
           <div className="contact-grid">
-            <a href={tgText('Здравствуйте! Хочу подобрать тур: направление ___, даты ___, состав ___.')} onClick={() => track('click_telegram', { place: 'contacts' })}>Telegram <span>@Olgagorodareki</span></a>
-            <a href={contacts.max}>MAX <span>написать в мессенджере</span></a>
-            <a href={contacts.vk}>ВКонтакте <span>vk.com/gorodareki</span></a>
+            <a href={tgText('Здравствуйте, Ольга! Хочу подобрать тур: направление ___, даты ___, состав ___.')} onClick={() => track('click_telegram', { place: 'contacts' })}>Telegram <span>@Olgagorodareki</span></a>
             <a href={site.phoneHref} onClick={() => track('click_phone', { place: 'contacts' })}>Телефон <span>{site.phone}</span></a>
             <a href={`mailto:${site.email}`}>Почта <span>{site.email}</span></a>
+            <a href={contacts.vk} target="_blank" rel="noopener noreferrer">ВКонтакте <span>vk.com/gorodareki</span></a>
           </div>
-          <p className="contact-hours"><b>Режим работы:</b> {site.workHours}</p>
-          <p className="contact-manager">Заявку ведёт {site.manager} — {site.managerRole}.</p>
+          <p className="contact-hours"><b>Когда отвечаю:</b> {site.workHours} В поездке на связи круглосуточно.</p>
+
+          <h2 className="contact-side-title">Как всё устроено</h2>
+          <ol className="contact-promises">
+            <li><b>Договор до оплаты.</b> Даты, отель, перелёт и условия — на бумаге, прежде чем вы внесёте деньги.</li>
+            <li><b>Оплата на расчётный счёт</b> с чеком. Никаких переводов на карты физических лиц.</li>
+            <li><b>Я в вашем чате до возвращения домой:</b> помогу с регистрацией, багажом и вопросами на месте.</li>
+            <li><b>Я в реестре турагентов</b> — РТА 0005142, проверить можно на сайте Минэкономразвития.</li>
+          </ol>
         </div>
         <div>
           <h2 className="contact-form-title">Заявка на подбор тура</h2>
+          <p className="contact-form-hint">Чем точнее детали, тем быстрее будет расчёт: куда и когда, сколько человек (и сколько лет детям), из какого города вылет, какой бюджет.</p>
           <LeadForm />
         </div>
       </div>
-
-      <section className="travel-info-block">
-        <h2>Что указать в первом сообщении</h2>
-        <div>
-          <article><b>Направление и даты</b><span>Страна или город и примерные даты — либо длительность и месяц поездки.</span></article>
-          <article><b>Состав поездки</b><span>Сколько взрослых и детей, возраст детей, едете семьёй, парой или командой.</span></article>
-          <article><b>Город вылета и бюджет</b><span>Откуда удобно лететь и ориентир по бюджету на человека или на всю поездку.</span></article>
-          <article><b>Настроение отдыха</b><span>Что важно: пляж, экскурсии, спокойствие, активность, гастрономия или события.</span></article>
-        </div>
-      </section>
-
-      <section className="travel-info-block">
-        <h2>Как я отвечаю</h2>
-        <div>
-          <article><b>Быстрый ответ</b><span>В рабочее время — как правило, в течение 15–60 минут; вне часов работы отвечаем утром.</span></article>
-          <article><b>Полностью онлайн</b><span>Всё общение, подбор и оформление проходят в мессенджере — приезжать в офис не нужно.</span></article>
-          <article><b>Без спешки</b><span>Не давим на решение: спокойно сравниваем варианты и объясняем условия.</span></article>
-          <article><b>Личный менеджер</b><span>За вашим запросом закрепляется менеджер по нужному направлению.</span></article>
-        </div>
-      </section>
     </Page>
   )
 }
