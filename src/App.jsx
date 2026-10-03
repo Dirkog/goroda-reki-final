@@ -21,7 +21,7 @@ import { applyMeta } from './lib/seo'
 import { track } from './lib/analytics'
 import { metrikaHit } from './lib/metrika'
 
-const PAGES = { home: Home, olga: Olga, trips: Trips, calendar: Calendar, process: Process, trust: Trust, corporate: Corporate, contacts: Contacts, oferta: Legal, privacy: Legal, credits: Credits, agent: Landing, fast: Landing, cities: Landing }
+const PAGES = { home: Home, olga: Olga, trips: Trips, calendar: Calendar, process: Process, trust: Trust, corporate: Corporate, contacts: Contacts, oferta: Legal, privacy: Legal, credits: Credits, agent: Landing, fast: Landing, cities: Landing, online: Landing, moscow: Landing, spb: Landing }
 
 const NOT_FOUND = {
   id: 'notfound', path: '/404', label: 'Страница не найдена',

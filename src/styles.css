@@ -1829,3 +1829,11 @@ input[type="checkbox"] { min-width: 24px; min-height: 24px; }
   .cookie-notice p { font-size: 12.5px; line-height: 1.4; }
   .cookie-notice .btn { padding: 10px 16px; min-height: 40px; }
 }
+
+/* Карточки направлений: длинный текст растягивает карточку, а не наезжает на подпись */
+.trip-card.rich .trip-top, .trip-card.rich .trip-body { flex: none; }
+.trip-card.rich { min-height: 540px; }
+.trip-card.rich > .trip-scrim {
+  background: linear-gradient(180deg, rgba(10, 12, 14, 0.5) 0%, rgba(10, 12, 14, 0.68) 35%, rgba(10, 12, 14, 0.93) 100%);
+}
+.trip-card.rich .trip-top span { color: #e6cf9f; }
