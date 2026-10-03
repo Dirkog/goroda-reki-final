@@ -8,7 +8,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer-main">
         <a className="footer-logo" href={withBase('/')}>
-          <Logo size={46} />
+          <Logo size={42} />
           Ольга Дударева
         </a>
         <p className="footer-role">Личный турагент · города и реки, море и круизы, события</p>

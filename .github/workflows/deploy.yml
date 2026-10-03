@@ -26,9 +26,10 @@ jobs:
       - name: Сборка сайта (Cloudflare Pages, корень домена)
         env:
           # Главный адрес сайта — российский (доступен в РФ без VPN).
-          SITE_ORIGIN: https://ivanmonaenkov3.sourcecraft.site
-          VITE_CANONICAL_BASE: /olgatour/
-          PRERENDER_MIRROR: '1'
+          SITE_ORIGIN: https://olgatour.gitverse.site
+          VITE_CANONICAL_BASE: /
+          PRERENDER_MIRROR: "1"
+          VITE_INDEX_HTML: "1"
         run: npm run build:cf
 
       - name: Публикация на Cloudflare Pages

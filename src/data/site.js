@@ -18,7 +18,7 @@ const BASE = import.meta.env.BASE_URL
 export const site = {
   ...settings.site,
   // Адрес сайта подставляется при сборке: Cloudflare Pages или GitHub Pages.
-  origin: (import.meta.env && import.meta.env.VITE_SITE_ORIGIN) || 'https://dirkog.github.io',
+  origin: (import.meta.env && import.meta.env.VITE_SITE_ORIGIN) || 'https://olgatour.gitverse.site',
   ogImage: 'images/og-image.jpg'
 }
 
@@ -36,10 +36,10 @@ export const routes = [
   { id: 'calendar', path: '/kalendar/', label: 'События', title: 'Календарь событий и фестивалей: даты, источники, подписка', description: 'Фестивали, парады, цветение и сезонные события с точными датами и ссылками на первоисточники. Подпишитесь на календарь (.ics).' },
   { id: 'contacts', path: '/kontakty/', label: 'Контакты', title: 'Контакты и гарантии: Telegram, телефон, РТА 0005142', description: 'Свяжитесь со мной напрямую: Telegram, телефон или форма на сайте. Номер в реестре турагентов РТА 0005142, договор до оплаты, чек.' },
   // Старые адреса сохраняем для пререндера и бесшовного редиректа (без 404)
-  { id: 'olga', path: '/komanda/', label: 'Ольга Дударева', title: 'Ольга Дударева — личный турагент', redirect: '/' },
-  { id: 'process', path: '/kak-rabotaem/', label: 'Как работаем', title: 'Порядок работы — Личный турагент', redirect: '/#scene-steps' },
-  { id: 'trust', path: '/nadezhnost/', label: 'Надёжность', title: 'Надёжность и гарантии — Личный турагент', redirect: '/kontakty/' },
-  { id: 'corporate', path: '/korporativnym/', label: 'Корпоративным', title: 'Корпоративные выезды — Личный турагент', redirect: '/napravleniya/' },
+  { id: 'olga', path: '/komanda/', label: 'Ольга Дударева', title: 'Ольга Дударева — личный турагент', redirect: '/', noindex: true },
+  { id: 'process', path: '/kak-rabotaem/', label: 'Как работаем', title: 'Порядок работы — Личный турагент', redirect: '/#scene-steps', noindex: true },
+  { id: 'trust', path: '/nadezhnost/', label: 'Надёжность', title: 'Надёжность и гарантии — Личный турагент', redirect: '/kontakty/', noindex: true },
+  { id: 'corporate', path: '/korporativnym/', label: 'Корпоративным', title: 'Корпоративные выезды — Личный турагент', redirect: '/napravleniya/', noindex: true },
   // Документы и служебные страницы — только в подвале
   { id: 'oferta', path: '/oferta/', label: 'Договор и оферта', title: 'Договор и публичная оферта', description: 'Договор и публичная оферта на подбор и бронирование туров: предмет договора, порядок оплаты, права и обязанности сторон.', footer: true },
   { id: 'credits', path: '/istochniki-foto/', label: 'Источники фотографий', title: 'Источники фотографий на сайте', description: 'Авторы и лицензии фотографий, использованных на сайте.', footer: true },

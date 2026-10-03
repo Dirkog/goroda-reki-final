@@ -44,7 +44,7 @@ export default function Header({ page }) {
   return (
     <header className={`header ${solid ? 'is-solid' : 'is-transparent'}`}>
       <a className="brand" href={withBase('/')} aria-label="Личный турагент Ольга Дударева — на главную">
-        <span className="brand-mark"><Logo size={50} /></span>
+        <span className="brand-mark"><Logo size={46} /></span>
         <span><b>Личный турагент</b></span>
       </a>
 

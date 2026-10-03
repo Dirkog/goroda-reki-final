@@ -69,9 +69,9 @@ function fullHead(route) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f4f1ea" />
     ${buildHead(route)}${feedLinks(route)}
-    <link rel="icon" href="${b}favicon.ico?v=4" sizes="any" />
-    <link rel="icon" type="image/png" sizes="32x32" href="${b}favicon-32.png?v=4" />
-    <link rel="apple-touch-icon" href="${b}apple-touch-icon.png?v=4" />
+    <link rel="icon" href="${b}favicon.ico?v=5" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="${b}favicon-32.png?v=5" />
+    <link rel="apple-touch-icon" href="${b}apple-touch-icon.png?v=5" />
     <link rel="manifest" href="${b}manifest.webmanifest" />
     ${cssTags}
     ${preloadTags}
@@ -123,7 +123,6 @@ if (!MIRROR) fs.writeFileSync(path.join(dist, 'robots.txt'), [
   'User-agent: *',
   'Allow: /',
   'Disallow: /admin/',
-  'Disallow: /assets/',
   'Disallow: /*?utm_',
   'Disallow: /*?yclid=',
   'Disallow: /*?gclid=',
@@ -139,8 +138,9 @@ if (!MIRROR) fs.writeFileSync(path.join(dist, 'robots.txt'), [
 
 // sitemap.xml
 const today = new Date().toISOString().slice(0, 10)
-const urls = routes.map(r => {
-  const loc = r.path === '/' ? `${origin}${base}` : `${origin}${base}${r.path.replace(/^\//, '')}`
+const urls = routes.filter(r => !r.redirect && !r.noindex).map(r => {
+  const idx = process.env.VITE_INDEX_HTML && r.path !== '/' && r.path.endsWith('/') ? 'index.html' : ''
+  const loc = r.path === '/' ? `${origin}${base}` : `${origin}${base}${r.path.replace(/^\//, '')}${idx}`
   const priority = r.id === 'home' ? '1.0' : ['trips', 'contacts'].includes(r.id) ? '0.9' : '0.7'
   return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>${priority}</priority>\n  </url>`
 }).join('\n')

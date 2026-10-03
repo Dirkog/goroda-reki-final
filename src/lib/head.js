@@ -16,7 +16,8 @@ function canonicalBase() {
 
 export function canonicalUrl(route, origin = site.origin) {
   const b = canonicalBase()
-  const p = route.path === '/' ? '' : route.path.replace(/^\//, '')
+  let p = route.path === '/' ? '' : route.path.replace(/^\//, '')
+  if (import.meta.env && import.meta.env.VITE_INDEX_HTML && p.endsWith('/')) p += 'index.html'
   return origin.replace(/\/$/, '') + '/' + (b === '/' ? '' : b.replace(/^\//, '')) + p
 }
 

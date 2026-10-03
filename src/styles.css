@@ -1734,7 +1734,7 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
   display: inline-flex;
 }
 .footer-logo .logo-mark { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.28); }
-@media (max-width: 560px) { .brand-mark .logo-mark { width: 44px !important; height: 44px !important; } }
+@media (max-width: 560px) { .brand-mark .logo-mark { width: 55px !important; height: 40px !important; } }
 .header.is-transparent .logo-mark { box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.62), 0 2px 14px rgba(0, 0, 0, 0.35); }
 .footer-logo .logo-mark { box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.42); }
 
@@ -1746,3 +1746,8 @@ html[data-anim="waterfall"] .calendar-list .wf-item { transform: translateY(-14p
 .sticky-cta-close { min-width: 32px; min-height: 32px; }
 input[type="checkbox"] { min-width: 24px; min-height: 24px; }
 .cinema-sign a { display: inline-flex; align-items: center; min-height: 28px; }
+
+/* ---------- логотип без плитки: просто знак, не кнопка ---------- */
+.logo-mark { border-radius: 0; overflow: visible; box-shadow: none !important; background: none; display: inline-block; }
+.logo-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.header.is-transparent .logo-mark img, .footer-logo .logo-mark img { filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 7px rgba(255, 255, 255, 0.28)); }

@@ -3,8 +3,14 @@ import { createRoot, hydrateRoot } from 'react-dom/client'
 import './fonts.css'
 import './styles.css'
 import App from './App'
-import { migrateLegacyHash, navigate } from './lib/router'
+import { migrateLegacyHash, navigate, stripIndex } from './lib/router'
 import { contacts, site } from './data/site'
+
+// GitVerse Pages открывает папки только как /папка/index.html (см. tools/gitverse_push.mjs):
+// после такого перехода возвращаем в адресную строку красивый адрес /папка/
+if (typeof window !== 'undefined' && /\/index\.html$/.test(window.location.pathname)) {
+  window.history.replaceState(null, '', window.location.pathname.replace(/index\.html$/, '') + window.location.search + window.location.hash)
+}
 
 // --- самовосстановление: если страница не поднялась, пробуем один раз перезагрузить ---
 // Правила, чтобы перезагрузка не превратилась в бесконечный цикл (так уже случалось):
@@ -126,8 +132,9 @@ document.addEventListener('click', (e) => {
   if (url.origin !== window.location.origin) return
 
   e.preventDefault()
-  if (url.pathname !== window.location.pathname || url.search !== window.location.search) {
-    window.history.pushState(null, '', url.pathname + url.search + url.hash)
+  const clean = stripIndex(url.pathname)
+  if (clean !== window.location.pathname || url.search !== window.location.search) {
+    window.history.pushState(null, '', clean + url.search + url.hash)
     window.dispatchEvent(new Event('gr:navigate'))
   }
 })

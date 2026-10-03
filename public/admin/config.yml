@@ -9,8 +9,8 @@ backend:
 media_folder: public/images/uploads
 public_folder: /images/uploads
 
-site_url: https://olgatour.pages.dev
-display_url: https://olgatour.pages.dev
+site_url: https://olgatour.gitverse.site
+display_url: https://olgatour.gitverse.site
 logo_url: https://olgatour.gitverse.site/icon-192.png
 
 locale: ru
