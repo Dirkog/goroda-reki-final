@@ -10,7 +10,7 @@ export default function Contacts() {
       <Breadcrumbs items={[{ label: 'Главная', path: '/' }, { label: 'Контакты' }]} />
       <SplitTitle
         title="Напишите мне напрямую"
-        text="Быстрее всего — в Telegram. Можно позвонить или оставить заявку: отвечу сама, без передачи стажёрам и ожидания на линии."
+        text="Быстрее всего в Telegram. Можно позвонить или оставить заявку. Отвечаю сама, без очереди на линии."
       />
 
       <div className="contact-layout">

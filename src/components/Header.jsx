@@ -42,50 +42,60 @@ export default function Header({ page }) {
   }, [open])
 
   return (
-    <header className={`header ${solid ? 'is-solid' : 'is-transparent'}`}>
-      <a className="brand" href={withBase('/')} aria-label="Личный турагент Ольга Дударева — на главную">
-        <span className="brand-mark"><Logo size={46} /></span>
-        <span><b>Личный турагент</b></span>
-      </a>
+    <>
+      <header className={`header ${solid ? 'is-solid' : 'is-transparent'}`}>
+        <a className="brand" href={withBase('/')} aria-label="Личный турагент Ольга — на главную">
+          <span className="brand-mark"><Logo size={46} /></span>
+          <span><b>Личный турагент</b></span>
+        </a>
 
-      <nav className="nav" aria-label="Основная навигация">
-        {nav.map(item => (
-          <a key={item.id} href={withBase(item.path)} className={page === item.id ? 'active' : ''} aria-current={page === item.id ? 'page' : undefined}>
-            <span>{item.label}</span>
-          </a>
-        ))}
-      </nav>
+        <nav className="nav" aria-label="Основная навигация">
+          {nav.map(item => (
+            <a key={item.id} href={withBase(item.path)} className={page === item.id ? 'active' : ''} aria-current={page === item.id ? 'page' : undefined}>
+              <span>{item.label}</span>
+            </a>
+          ))}
+        </nav>
 
-      <a className="header-cta" href={contacts.telegram} target="_blank" rel="noopener noreferrer" onClick={() => track('click_telegram', { place: 'header' })}>Написать</a>
+        <a className="header-cta" href={contacts.telegram} target="_blank" rel="noopener noreferrer" onClick={() => track('click_telegram', { place: 'header' })}>Написать</a>
 
-      <button
-        ref={toggleRef}
-        className="nav-toggle"
-        aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
-        aria-expanded={open}
-        aria-controls="mobile-menu"
-        onClick={() => setOpen(v => !v)}
-      >
-        <span className={open ? 'is-open' : ''} aria-hidden="true" />
-      </button>
+        <button
+          ref={toggleRef}
+          className="nav-toggle"
+          aria-label="Открыть меню"
+          aria-expanded={open}
+          aria-controls="mobile-menu"
+          onClick={() => setOpen(true)}
+        >
+          <span aria-hidden="true" />
+        </button>
+      </header>
 
-      <div className={`mobile-wrap ${open ? 'is-open' : ''}`} aria-hidden={!open}>
-        <div className="menu-scrim" onClick={() => setOpen(false)} />
+      {/* Меню вынесено из шапки: у шапки есть backdrop-filter, и фиксированная
+          панель внутри неё привязывалась бы к шапке, а не к экрану. */}
+      <div className={`mobile-wrap ${open ? 'is-open' : ''}`} aria-hidden={!open} inert={!open ? '' : undefined}>
         <div id="mobile-menu" className="mobile-menu" role="dialog" aria-modal="true" aria-label="Меню навигации" ref={panelRef}>
-          <p className="mobile-menu-label">Навигация</p>
-          <nav className="mobile-nav">
+          <div className="mobile-top">
+            <a className="mobile-brand" href={withBase('/')} onClick={() => setOpen(false)}>
+              <Logo size={40} />
+              <b>Личный турагент</b>
+            </a>
+            <button className="mobile-close" aria-label="Закрыть меню" onClick={() => { setOpen(false); toggleRef.current?.focus() }}>
+              <span aria-hidden="true" />
+            </button>
+          </div>
+          <nav className="mobile-nav" aria-label="Меню">
             {nav.map(item => (
-              <a key={item.id} href={withBase(item.path)} className={page === item.id ? 'active' : ''} onClick={() => setOpen(false)}>{item.label}</a>
+              <a key={item.id} href={withBase(item.path)} className={page === item.id ? 'active' : ''} aria-current={page === item.id ? 'page' : undefined} onClick={() => setOpen(false)}>{item.label}</a>
             ))}
           </nav>
           <div className="mobile-menu-contacts">
-            <a className="btn light mobile-menu-cta" href={contacts.telegram} target="_blank" rel="noopener noreferrer" onClick={() => track('click_telegram', { place: 'menu' })}>Написать в Telegram</a>
-            <a className="btn ghost mobile-menu-cta" href={tgText('Здравствуйте! Хочу подобрать тур.')} onClick={() => track('click_telegram', { place: 'menu' })}>Telegram</a>
+            <a className="btn light mobile-menu-cta" href={tgText('Здравствуйте! Хочу подобрать тур.')} target="_blank" rel="noopener noreferrer" onClick={() => track('click_telegram', { place: 'menu' })}>Написать в Telegram</a>
             <a className="mobile-menu-phone" href={site.phoneHref}>{site.phone}</a>
             <p className="mobile-menu-hours">{site.workHours}</p>
           </div>
         </div>
       </div>
-    </header>
+    </>
   )
 }

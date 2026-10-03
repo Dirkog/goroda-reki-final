@@ -1,6 +1,6 @@
 import Logo from './Logo'
 import React from 'react'
-import { contacts, site, legal, nav, tgText } from '../data/site'
+import { contacts, site, nav, tgText, extraPages } from '../data/site'
 import { withBase } from '../lib/router'
 
 export default function Footer() {
@@ -9,19 +9,19 @@ export default function Footer() {
       <div className="footer-main">
         <a className="footer-logo" href={withBase('/')}>
           <Logo size={42} />
-          Ольга Дударева
+          Ольга, личный турагент
         </a>
-        <p className="footer-role">Личный турагент · города и реки, море и круизы, события</p>
-        <p>Личный турагент: подбираю и бронирую поездки для семей, пар и компаний — море, города, события, круизы, корпоративные выезды. Работаю по договору, оплата на расчётный счёт, документы заранее.</p>
+        <p className="footer-role">Море, города, круизы, фестивали</p>
+        <p>Я Ольга, личный турагент. Подбираю и бронирую поездки для семей, пар и компаний: море, города, фестивали, круизы, корпоративные выезды. Работаю по договору, оплата на расчётный счёт, документы отправляю заранее.</p>
         <p className="footer-registry">
-          <b>{site.registry.label}</b> — <a href={site.registry.url} target="_blank" rel="noopener noreferrer">проверить в реестре турагентов</a>
+          <b>{site.registry.label}</b>, <a href={site.registry.url} target="_blank" rel="noopener noreferrer">проверить в реестре турагентов</a>
         </p>
       </div>
       <div className="footer-cols">
         <div>
           <b>Официально</b>
-          <span>{site.legalName} — реестр турагентов {site.registry.label}</span>
-          <span>Реквизиты — в договоре, который вы получаете до оплаты</span>
+          <span>{site.legalName}, реестр турагентов {site.registry.label}</span>
+          <span>Реквизиты указаны в договоре, который вы получаете до оплаты</span>
         </div>
         <div>
           <b>Связаться</b>
@@ -34,6 +34,7 @@ export default function Footer() {
         <div>
           <b>Разделы</b>
           {nav.filter(n => n.id !== 'home').map(n => <a key={n.id} href={withBase(n.path)}>{n.label}</a>)}
+          {extraPages.map(n => <a key={n.id} href={withBase(n.path)}>{n.label}</a>)}
           <a href={withBase('/oferta/')}>Договор и оферта</a>
           <a href={withBase('/politika-konfidencialnosti/')}>Политика конфиденциальности</a>
           <a href={withBase('/istochniki-foto/')}>Источники фотографий</a>

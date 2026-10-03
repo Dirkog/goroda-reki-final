@@ -15,17 +15,18 @@ import Contacts from './pages/Contacts'
 import Legal from './pages/Legal'
 import Credits from './pages/Credits'
 import NotFound from './pages/NotFound'
+import Landing from './pages/Landing'
 import { normalize, routeByPath } from './lib/router'
 import { applyMeta } from './lib/seo'
 import { track } from './lib/analytics'
 import { metrikaHit } from './lib/metrika'
 
-const PAGES = { home: Home, olga: Olga, trips: Trips, calendar: Calendar, process: Process, trust: Trust, corporate: Corporate, contacts: Contacts, oferta: Legal, privacy: Legal, credits: Credits }
+const PAGES = { home: Home, olga: Olga, trips: Trips, calendar: Calendar, process: Process, trust: Trust, corporate: Corporate, contacts: Contacts, oferta: Legal, privacy: Legal, credits: Credits, agent: Landing, fast: Landing, cities: Landing }
 
 const NOT_FOUND = {
   id: 'notfound', path: '/404', label: 'Страница не найдена',
-  title: 'Страница не найдена — Личный турагент',
-  description: 'Такой страницы нет. Вернитесь на главную или напишите нам — подберём тур.',
+  title: 'Страница не найдена — Личный турагент Ольга',
+  description: 'Такой страницы нет. Вернитесь на главную или напишите мне: подберу тур.',
   noindex: true
 }
 

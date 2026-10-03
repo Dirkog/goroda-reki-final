@@ -31,15 +31,19 @@ export const contacts = settings.contacts
 export const tgText = (text) => contacts.telegram + (text ? '?text=' + encodeURIComponent(text) : '')
 
 export const routes = [
-  { id: 'home', path: '/', label: 'Главная', title: 'Личный турагент Ольга Дударева — подбор путешествий', description: 'Подберу тур под ваши даты, состав и бюджет: море, города, круизы, события, корпоративные выезды. Договор до оплаты, поддержка до возвращения.' },
+  { id: 'home', path: '/', label: 'Главная', title: 'Личный турагент Ольга: подбор туров и быстрый тур', description: 'Личный турагент Ольга: подбор туров для семей, пар и компаний, быстрый тур на ближайшие даты, поездки из вашего города. Договор до оплаты, РТА 0005142.' },
   { id: 'trips', path: '/napravleniya/', label: 'Направления', title: 'Направления и туры: море, круизы, события, природа', description: 'Витрина направлений с бюджетом, сезоном и длительностью: Турция, ОАЭ, Таиланд, Япония, Норвегия, круизы и корпоративные выезды.' },
   { id: 'calendar', path: '/kalendar/', label: 'События', title: 'Календарь событий и фестивалей: даты, источники, подписка', description: 'Фестивали, парады, цветение и сезонные события с точными датами и ссылками на первоисточники. Подпишитесь на календарь (.ics).' },
   { id: 'contacts', path: '/kontakty/', label: 'Контакты', title: 'Контакты и гарантии: Telegram, телефон, РТА 0005142', description: 'Свяжитесь со мной напрямую: Telegram, телефон или форма на сайте. Номер в реестре турагентов РТА 0005142, договор до оплаты, чек.' },
   // Старые адреса сохраняем для пререндера и бесшовного редиректа (без 404)
-  { id: 'olga', path: '/komanda/', label: 'Ольга Дударева', title: 'Ольга Дударева — личный турагент', redirect: '/', noindex: true },
+  { id: 'olga', path: '/komanda/', label: 'Ольга', title: 'Ольга — личный турагент', redirect: '/', noindex: true },
   { id: 'process', path: '/kak-rabotaem/', label: 'Как работаем', title: 'Порядок работы — Личный турагент', redirect: '/#scene-steps', noindex: true },
   { id: 'trust', path: '/nadezhnost/', label: 'Надёжность', title: 'Надёжность и гарантии — Личный турагент', redirect: '/kontakty/', noindex: true },
   { id: 'corporate', path: '/korporativnym/', label: 'Корпоративным', title: 'Корпоративные выезды — Личный турагент', redirect: '/napravleniya/', noindex: true },
+  // Страницы под поисковые запросы: в меню их нет, ссылки с главной, из направлений и подвала
+  { id: 'agent', landing: 'agent', path: '/turagent/', label: 'Личный турагент', title: 'Личный турагент Ольга: подбор и бронирование туров', description: 'Личный турагент Ольга: один человек от первого сообщения до возвращения домой. Подбор тура под ваш запрос, договор до оплаты, РТА 0005142.', extra: true },
+  { id: 'fast', landing: 'fast', path: '/bystryy-tur/', label: 'Быстрый тур', title: 'Быстрый тур на ближайшие даты — турагент Ольга', description: 'Нужен быстрый тур? Напишите даты, город вылета и бюджет: в течение рабочего дня пришлю варианты, которые есть в наличии. Договор до оплаты.', extra: true },
+  { id: 'cities', landing: 'cities', path: '/tury-iz-vashego-goroda/', label: 'Туры из вашего города', title: 'Туры из вашего города: подбор маршрута — турагент Ольга', description: 'Скажите, откуда летите и куда хотите: соберу тур от вылета до отеля, подберу удобную пересадку, если прямого рейса нет. Москва, Петербург, Казань и другие города.', extra: true },
   // Документы и служебные страницы — только в подвале
   { id: 'oferta', path: '/oferta/', label: 'Договор и оферта', title: 'Договор и публичная оферта', description: 'Договор и публичная оферта на подбор и бронирование туров: предмет договора, порядок оплаты, права и обязанности сторон.', footer: true },
   { id: 'credits', path: '/istochniki-foto/', label: 'Источники фотографий', title: 'Источники фотографий на сайте', description: 'Авторы и лицензии фотографий, использованных на сайте.', footer: true },
@@ -52,6 +56,7 @@ export const routes = [
 const MAIN_NAV_IDS = ['home', 'trips', 'calendar', 'contacts']
 export const nav = MAIN_NAV_IDS.map(id => routes.find(r => r.id === id)).filter(Boolean)
 export const footerOnly = routes.filter(r => r.footer)
+export const extraPages = routes.filter(r => r.extra)
 
 export const heroVideo = {
   // Пляж с высоты: 1152p, CRF 31, без звука — ~2 МБ вместо 118 МБ исходника.

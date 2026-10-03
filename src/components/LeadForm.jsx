@@ -30,7 +30,7 @@ export default function LeadForm({ preset = {}, compact = false }) {
 
   const submit = async (e) => {
     e.preventDefault()
-    if (!form.name.trim() || !form.contact.trim()) { setError('Заполните имя и контакт — как с вами связаться.'); return }
+    if (!form.name.trim() || !form.contact.trim()) { setError('Укажите имя и контакт, чтобы я могла с вами связаться.'); return }
     if (!form.consent) { setError('Нужно согласие на обработку персональных данных.'); return }
     setError('')
     track('lead_submit', { direction: form.direction })
@@ -91,7 +91,7 @@ export default function LeadForm({ preset = {}, compact = false }) {
     return (
       <div className="lead-form lead-form-done">
         <h3>Заявка отправлена</h3>
-        <p>Ответим в течение 15 минут в рабочее время. Если удобнее письмом — напишите на <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+        <p>Отвечу в течение 15 минут в рабочее время. Если удобнее письмом, напишите на <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
         <a className="btn light" href={tgText(message())} target="_blank" rel="noopener noreferrer">Продолжить в Telegram</a>
       </div>
     )

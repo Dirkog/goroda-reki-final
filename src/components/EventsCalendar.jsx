@@ -50,7 +50,7 @@ export default function EventsCalendar({ limit, bare = false, head = true }) {
         <div className="calendar-head">
           <div>
             <h2>Календарь событий</h2>
-            <p>Выберите месяц — покажу, что происходит в это время. Источник указан у каждого события.</p>
+            <p>Выберите месяц, и я покажу, что происходит в это время. Источник указан у каждого события.</p>
           </div>
           <p className="calendar-updated"><b>Данные обновлены</b>{fmtDate(eventsUpdated)}</p>
         </div>

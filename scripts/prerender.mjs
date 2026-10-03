@@ -69,9 +69,13 @@ function fullHead(route) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f4f1ea" />
     ${buildHead(route)}${feedLinks(route)}
-    <link rel="icon" href="${b}favicon.ico?v=5" sizes="any" />
-    <link rel="icon" type="image/png" sizes="32x32" href="${b}favicon-32.png?v=5" />
-    <link rel="apple-touch-icon" href="${b}apple-touch-icon.png?v=5" />
+    <link rel="icon" href="${b}favicon.ico?v=6" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="${b}favicon-32.png?v=6" />
+    <link rel="icon" type="image/png" sizes="48x48" href="${b}favicon-48.png?v=6" />
+    <link rel="icon" type="image/png" sizes="96x96" href="${b}favicon-96.png?v=6" />
+    <link rel="icon" type="image/png" sizes="120x120" href="${b}favicon-120.png?v=6" />
+    <link rel="icon" type="image/png" sizes="192x192" href="${b}favicon-192.png?v=6" />
+    <link rel="apple-touch-icon" href="${b}apple-touch-icon.png?v=6" />
     <link rel="manifest" href="${b}manifest.webmanifest" />
     ${cssTags}
     ${preloadTags}
@@ -113,7 +117,7 @@ if (true) {
 }
 
 // 404 для GitHub Pages и любого статического хостинга
-const notFound = { id: 'notfound', path: '/404', label: 'Страница не найдена', title: 'Страница не найдена — Города и реки', description: 'Такой страницы нет. Вернитесь на главную или напишите нам — подберём тур.', noindex: true }
+const notFound = { id: 'notfound', path: '/404', label: 'Страница не найдена', title: 'Страница не найдена — Личный турагент Ольга', description: 'Такой страницы нет. Вернитесь на главную или напишите нам — подберём тур.', noindex: true }
 fs.writeFileSync(path.join(dist, '404.html'), pageHtml(notFound, render('/404')))
 console.log('  prerender /404')
 
@@ -141,7 +145,7 @@ const today = new Date().toISOString().slice(0, 10)
 const urls = routes.filter(r => !r.redirect && !r.noindex).map(r => {
   const idx = process.env.VITE_INDEX_HTML && r.path !== '/' && r.path.endsWith('/') ? 'index.html' : ''
   const loc = r.path === '/' ? `${origin}${base}` : `${origin}${base}${r.path.replace(/^\//, '')}${idx}`
-  const priority = r.id === 'home' ? '1.0' : ['trips', 'contacts'].includes(r.id) ? '0.9' : '0.7'
+  const priority = r.id === 'home' ? '1.0' : ['trips', 'contacts', 'agent', 'fast', 'cities'].includes(r.id) ? '0.9' : '0.7'
   return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>${priority}</priority>\n  </url>`
 }).join('\n')
 if (!MIRROR) fs.writeFileSync(path.join(dist, 'sitemap.xml'),

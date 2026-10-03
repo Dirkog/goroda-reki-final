@@ -7,7 +7,7 @@ export default function NotFound() {
   return (
     <Page className="notfound-page inner-page">
       <div className="notfound">
-        <p className="eyebrow">ошибка 404</p>
+        
         <h1>Такой страницы нет</h1>
         <p>Возможно, ссылка устарела. Посмотрите разделы ниже или напишите нам — подскажем, где искать нужное.</p>
         <div className="notfound-links">

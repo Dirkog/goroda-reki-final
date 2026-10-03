@@ -85,7 +85,7 @@ export default function Calendar() {
         <div className="subscribe-copy">
           <h2 id="subscribe-title">Чтобы не пропустить даты</h2>
           <p>
-            Добавьте события в календарь телефона — напомню заранее, пока есть выбор отелей и билетов.
+            Добавьте события в календарь телефона: напомню заранее, пока есть выбор отелей и билетов.
             В файле {plural(confirmed.length)} с подтверждёнными датами; остальные добавлю после сверки с организаторами.
           </p>
           <div className="subscribe-actions">
@@ -109,7 +109,7 @@ export default function Calendar() {
               <button className="btn light" type="submit">Подписаться</button>
               {error && <p className="subscribe-error" role="alert">{error}</p>}
               <p className="subscribe-note">
-                Почту использую только для напоминаний. Данные — по{' '}
+                Почту использую только для напоминаний. Данные обрабатываю по{' '}
                 <a href={withBase('/politika-konfidencialnosti/')}>политике конфиденциальности</a>.
               </p>
             </form>
@@ -120,7 +120,7 @@ export default function Calendar() {
       <section className="page-cta">
         <div className="page-cta-copy">
           <h2>Нужна поездка под конкретное событие?</h2>
-          <p>Напишите, какое событие и какие даты — подберу перелёт, отель и программу вокруг него.</p>
+          <p>Напишите, какое событие и какие даты, и я подберу перелёт, отель и программу вокруг него.</p>
         </div>
         <a className="btn glass" href={tgText('Здравствуйте! Хочу поездку под событие. Событие: ___, даты: ___, состав: ___.')}>
           Написать в Telegram

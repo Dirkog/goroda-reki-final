@@ -4,19 +4,15 @@ import LeadForm from '../components/LeadForm'
 import EventsCalendar from '../components/EventsCalendar'
 import { TripImage } from '../components/Media'
 import HeroFilm from '../components/HeroFilm'
-import { contacts, site, tripCards, team, tgText } from '../data/site'
+import { site, tripCards, tgText } from '../data/site'
 import { track } from '../lib/analytics'
 import { withBase } from '../lib/router'
 
-function Scene({ num, kicker, title, note, children, id, kind }) {
+function Scene({ title, note, children, id, kind }) {
   return (
     <section className={`scene reveal ${kind || ''}`} id={id}>
       <div className="scene-head">
-        <span className="scene-num">{num}</span>
-        <div>
-          {kicker && <p className="eyebrow">{kicker}</p>}
-          <h2>{title}</h2>
-        </div>
+        <h2>{title}</h2>
       </div>
       {note && <p className="scene-note" style={{ marginBottom: '28px' }}>{note}</p>}
       {children}
@@ -27,52 +23,70 @@ function Scene({ num, kicker, title, note, children, id, kind }) {
 const B = import.meta.env.BASE_URL
 const stripKruiz = { image: `${B}images/strips/fjord.jpg`, imageWebp: `${B}images/strips/fjord.webp`, title: 'Норвежские фьорды', region: 'Согнефьорд, Норвегия' }
 
+const ROWS = [
+  {
+    path: '/bystryy-tur/',
+    title: 'Быстрый тур',
+    text: 'Вылет через неделю или раньше? Напишите даты, город вылета и бюджет. В течение рабочего дня пришлю варианты, которые есть в наличии.'
+  },
+  {
+    path: '/tury-iz-vashego-goroda/',
+    title: 'Тур из вашего города',
+    text: 'Скажите, откуда летите и куда хотите. Соберу маршрут целиком: перелёт, трансфер, отель, страховка. Если прямого рейса нет, найду удобную пересадку.'
+  },
+  {
+    path: '/turagent/',
+    title: 'Личный турагент вместо колл-центра',
+    text: 'Один человек от первого сообщения до возвращения домой: знает ваш запрос, считает варианты и отвечает сам, когда что-то пошло не так.'
+  }
+]
+
+const STEPS = [
+  ['Вы пишете, что хочется', 'Куда, когда, сколько человек, сколько лет детям, из какого города вылет и какой бюджет. Хватит нескольких строк в Telegram или звонка.'],
+  ['Я считаю варианты', 'Присылаю 2–4 варианта с рейсами, отелями и итоговой ценой, рассказываю, чем они отличаются и где подвох.'],
+  ['Договор и оплата', 'Сначала договор, потом деньги. Оплата на расчётный счёт, после неё приходит электронный чек.'],
+  ['Документы и поездка', 'Билеты, ваучеры и страховку отправляю за 4–7 дней до вылета. В поездке на связи, если что-то нужно изменить или уточнить.']
+]
+
 export default function Home() {
   return (
     <Page className="home-page">
-      {/* Кинематографический экран: живое видео, спокойный темп, личный заголовок */}
       <HeroFilm>
         <div className="cinema-copy">
-          <h1 className="cinema-title">Подберу поездку<br />и останусь на связи</h1>
+          <h1 className="cinema-title">Личный турагент Ольга</h1>
+          <p className="cinema-sub">Подберу поездку и останусь на связи</p>
           <p className="cinema-lead">
-            Здравствуйте! Я Ольга Дударева — ваш личный турагент. Подбираю путешествия для семей, пар и небольших компаний. 
-            Никаких безликих операторов: общаемся напрямую, договор до оплаты, остаюсь на связи в мессенджере вплоть до возвращения домой.
+            Здравствуйте, меня зовут Ольга. Подбираю путешествия для семей, пар и небольших компаний: от быстрого тура на ближайшие даты до круиза или поездки на фестиваль. Вы пишете мне напрямую, а не в колл-центр. Договор до оплаты, на связи до возвращения домой.
           </p>
           <div className="cinema-actions">
             <a className="btn light" href={tgText('Здравствуйте, Ольга! Хочу подобрать тур: направление ___, даты ___, состав ___.')} onClick={() => track('click_telegram', { place: 'hero' })}>Написать в Telegram</a>
             <a className="btn glass" href="#scene-directions">Выбрать направление</a>
           </div>
-          <div className="cinema-sign">
-            <b>Ольга Дударева</b>
-            <span>личный турагент · проверенные маршруты</span>
-            <a href={site.phoneHref} onClick={() => track('click_phone', { place: 'hero' })}>{site.phone}</a>
-          </div>
+          <p className="cinema-phone">
+            Или позвоните: <a href={site.phoneHref} onClick={() => track('click_phone', { place: 'hero' })}>{site.phone}</a>
+          </p>
         </div>
 
-        <div className="cinema-foot">
-          <div><b>РТА 0005142</b><span>в реестре турагентов РФ</span></div>
-          <div><b>Договор до оплаты</b><span>безналичный расчёт, чек ФНС</span></div>
-          <div><b>Индивидуальный подбор</b><span>под ваш бюджет и ритм</span></div>
-          <div><b>Лично на связи</b><span>помощь в поездке 24/7</span></div>
-          <span className="cinema-scroll" aria-hidden="true">листайте<i /></span>
-        </div>
+        <p className="cinema-facts">
+          <span>В реестре турагентов, {site.registry.label}</span>
+          <span>Договор до оплаты</span>
+          <span>Ежедневно 10:00–21:00 МСК</span>
+        </p>
       </HeroFilm>
 
-      {/* Сцена 1: Куда поехать (Направления) */}
-      <Scene num="01" id="scene-directions" kicker="направления" title="Куда сейчас хорошо поехать"
-        note="Ориентиры по сезонам и бюджетам. Сравню проверенные отели и удобные рейсы под ваши даты.">
+      <Scene id="scene-directions" title="Куда поехать"
+        note="Несколько направлений с ориентирами по сезону и бюджету. Цены примерные, точный расчёт делаю под ваши даты.">
         <figure className="interlude reveal">
           <span className="interlude-media" aria-hidden="true">
             <picture>
               {stripKruiz.imageWebp && <source type="image/webp" srcSet={stripKruiz.imageWebp} />}
-              <img src={stripKruiz.image} alt={`${stripKruiz.title} — ${stripKruiz.region}`} width="1800" height="771" loading="lazy" decoding="async" />
+              <img src={stripKruiz.image} alt={`${stripKruiz.title}, ${stripKruiz.region}`} width="1800" height="771" loading="lazy" decoding="async" />
             </picture>
           </span>
           <span className="interlude-scrim" aria-hidden="true" />
           <figcaption>
-            <em>выбор сезона</em>
             <b>{stripKruiz.title}</b>
-            <span>{stripKruiz.region} · круизы и видовые маршруты</span>
+            <span>{stripKruiz.region}</span>
           </figcaption>
         </figure>
         <div className="trip-grid home-grid">
@@ -94,47 +108,39 @@ export default function Home() {
         </p>
       </Scene>
 
-      {/* Сцена 2: События и фестивали */}
-      <Scene num="02" id="scene-events" kicker="события и фестивали" title="Поездки с ярким поводом"
-        note="Фестивали, сезонное цветение и культурные праздники с точными датами. Подберу тур так, чтобы попасть в эпицентр событий.">
+      <Scene id="scene-events" title="Поездки на фестивали и события"
+        note="Цветение, парады, праздники. Даты сверяю с сайтами организаторов и обновляю календарь.">
         <EventsCalendar bare limit={4} />
         <a className="section-link" href={withBase('/kalendar/')}>Смотреть весь календарь событий →</a>
       </Scene>
 
-      {/* Сцена 3: Понятный процесс без канцелярита */}
-      <Scene num="03" id="scene-steps" kicker="порядок работы" title="Как мы готовим ваше путешествие"
-        note="Никакой бюрократии: спокойный диалог в мессенджере и прозрачные этапы.">
-        <div className="steps-track home-steps">
-          <article className="step">
-            <span>01</span>
-            <h3>Диалог и пожелания</h3>
-            <p>Вы рассказываете в Telegram или по телефону о планах, датах, составе семьи и комфортном бюджете.</p>
-          </article>
-          <article className="step">
-            <span>02</span>
-            <h3>Персональный расчет</h3>
-            <p>Готовлю 2–4 подходящих варианта с прямыми рейсами, реальными отзывами об отелях и понятной стоимостью.</p>
-          </article>
-          <article className="step">
-            <span>03</span>
-            <h3>Договор и оплата</h3>
-            <p>Оформляем официальный договор до внесения денег. Оплата на банковский счёт с выдачей электронного чека.</p>
-          </article>
-          <article className="step">
-            <span>04</span>
-            <h3>Документы и забота</h3>
-            <p>Высылаю билеты, ваучеры и страховку за 4–7 дней. Напоминаю об онлайн-регистрации и на связи в поездке.</p>
-          </article>
-        </div>
+      <Scene id="scene-help" title="С чем ко мне приходят">
+        <ul className="rows">
+          {ROWS.map(r => (
+            <li key={r.path}>
+              <a href={withBase(r.path)}>
+                <b>{r.title}</b>
+                <span>{r.text}</span>
+                <i aria-hidden="true">→</i>
+              </a>
+            </li>
+          ))}
+        </ul>
       </Scene>
 
-      {/* Сцена 4: Форма заявки */}
-      <Scene num="04" kicker="заявка на подбор" title="Расскажите о вашей поездке"
-        note="Напишите желаемое направление, примерные даты и бюджет. Отвечу лично в течение рабочего дня (обычно 15–30 минут).">
+      <Scene id="scene-steps" title="Как всё проходит">
+        <ol className="how-list">
+          {STEPS.map(([t, d]) => (
+            <li key={t}><b>{t}</b><span>{d}</span></li>
+          ))}
+        </ol>
+      </Scene>
+
+      <Scene id="scene-request" title="Расскажите о вашей поездке"
+        note="Напишите направление, примерные даты и бюджет. Отвечу в течение рабочего дня, обычно через 15–30 минут.">
         <div className="home-lead-block">
           <div className="home-lead-copy">
-            <p><b>Ольга Дударева</b> · Личный турагент</p>
-            <p>Всегда на связи в Telegram и по телефону. Помогу выбрать отель, перепроверю правила въезда и избавлю от предпраздничной суеты.</p>
+            <p>Если проще написать в мессенджер, пишите туда: сообщение приходит мне лично. Помогу выбрать отель, проверю правила въезда и сроки документов.</p>
             <div className="home-lead-contacts">
               <a href={tgText('Здравствуйте, Ольга! Помогите подобрать тур.')} className="btn light">Написать в Telegram</a>
               <a href={site.phoneHref} className="btn glass">{site.phone}</a>

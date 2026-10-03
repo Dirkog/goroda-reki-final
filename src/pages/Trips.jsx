@@ -63,9 +63,15 @@ export default function Trips() {
   return (
     <Page className="trips-page inner-page">
       <SplitTitle
-        title="Куда поехать: проверенные направления"
-        text="Витрина идей с понятным бюджетом, сезоном и длительностью. Подберу конкретные отели, перелеты и подготовлю расчет под ваши даты."
+        title="Куда поехать"
+        text="Несколько направлений с ориентиром по бюджету, сезону и длительности. Конкретные отели и перелёты подберу под ваши даты."
       />
+
+      <p className="trips-quick">
+        <a className="section-link" href={withBase('/bystryy-tur/')}>Нужен быстрый тур</a>
+        <a className="section-link" href={withBase('/tury-iz-vashego-goroda/')}>Туры из вашего города</a>
+        <a className="section-link" href={withBase('/turagent/')}>Как работает личный турагент</a>
+      </p>
 
       <div className="trips-tools">
         <label className="trips-search">
@@ -98,7 +104,7 @@ export default function Trips() {
       {visible.length === 0 && (
         <div className="empty-state">
           <h2>Ничего не нашлось</h2>
-          <p>Напишите мне в Telegram — соберу индивидуальный маршрут под ваш запрос.</p>
+          <p>Напишите мне в Telegram, соберу маршрут под ваш запрос.</p>
           <a className="btn light" href={tgText('Здравствуйте, Ольга! Не нашёл(ла) нужное направление на сайте. Ищу: ___')}>Написать в Telegram</a>
         </div>
       )}

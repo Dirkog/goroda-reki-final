@@ -1,5 +1,6 @@
 // Чистые SEO-данные: используются и при пререндере (Node), и на клиенте.
 import { site, faq, tripCards, contacts, routes } from '../data/site'
+import { landings } from '../content/landings'
 
 export function basePath() {
   const b = (import.meta.env && import.meta.env.BASE_URL) || '/'
@@ -30,18 +31,46 @@ export function jsonLdFor(id, origin = site.origin) {
   const home = routes.find(r => r.id === 'home')
   blocks.push({
     '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: site.brandFull,
+    alternateName: ['Личный турагент', 'Турагент Ольга'],
+    url: canonicalUrl(home, origin),
+    inLanguage: 'ru'
+  })
+  blocks.push({
+    '@context': 'https://schema.org',
     '@type': 'TravelAgency',
-    name: site.name,
+    name: site.brandFull,
+    alternateName: site.legalName,
     description: site.defaultDescription,
     url: canonicalUrl(home, origin),
     image: ogImageUrl(origin),
+    logo: ogImageUrl(origin).replace(/images\/og-image\.jpg$/, 'logo-mark.png'),
     telephone: site.phone,
     email: site.email,
     priceRange: '₽₽',
     areaServed: ['RU', 'BY', 'KZ'],
+    knowsLanguage: 'ru',
     sameAs: [contacts.vk, contacts.telegram],
     identifier: site.registry.label
   })
+  const landingRoute = routes.find(x => x.id === id && x.landing)
+  if (landingRoute) {
+    const l = landings[landingRoute.landing]
+    blocks.push({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: l.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } }))
+    })
+    blocks.push({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Главная', item: canonicalUrl(home, origin) },
+        { '@type': 'ListItem', position: 2, name: landingRoute.label, item: canonicalUrl(landingRoute, origin) }
+      ]
+    })
+  }
   if (id === 'home' || id === 'contacts') {
     blocks.push({
       '@context': 'https://schema.org',
@@ -91,7 +120,7 @@ export function headFor(route, origin = site.origin) {
       ['name', 'description', description],
       ['name', 'robots', route.noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'],
       ['property', 'og:type', 'website'],
-      ['property', 'og:site_name', site.name],
+      ['property', 'og:site_name', site.brandFull],
       ['property', 'og:locale', 'ru_RU'],
       ['property', 'og:title', title],
       ['property', 'og:description', description],

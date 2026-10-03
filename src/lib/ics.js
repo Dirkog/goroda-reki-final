@@ -83,7 +83,7 @@ export function eventDescription(ev, origin) {
     ev.status ? `Статус: ${ev.status}` : '',
     ev.note || '',
     ev.source ? `Источник: ${ev.source}` : '',
-    origin ? `Поездку под эти даты подбирает личный турагент Ольга Дударева: ${origin}` : ''
+    origin ? `Поездку под эти даты подбирает личный турагент Ольга: ${origin}` : ''
   ]
   return parts.filter(Boolean).join('\n')
 }
@@ -108,7 +108,7 @@ export function buildIcs(events, { origin = '', updated = '' } = {}) {
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Личный турагент Ольга Дударева//Календарь событий//RU',
+    'PRODID:-//Личный турагент Ольга//Календарь событий//RU',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     'X-WR-CALNAME:События и фестивали — Личный турагент',
